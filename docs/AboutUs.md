@@ -13,7 +13,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 ### Ng Wai Keet
 
-<img src="images/arcane-cs.jpg" width="200px">
+<img src="images/arcane-cs.png" width="200px">
 
 [[github](https://github.com/arcane-cs)]
 
