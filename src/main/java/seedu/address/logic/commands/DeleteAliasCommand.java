@@ -3,12 +3,19 @@ package seedu.address.logic.commands;
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ALIAS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_GAME;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
+import seedu.address.model.game.Game;
 import seedu.address.model.person.Alias;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Person;
 
 /**
  * Deletes an alias from an existing person in Harmony.
@@ -17,38 +24,89 @@ public class DeleteAliasCommand extends Command {
 
     public static final String COMMAND_WORD = "alias delete";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Deletes an alias from an existing person in Harmony. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Deletes an alias from a game of an existing person in Harmony. "
             + "Parameters: "
             + PREFIX_NAME + "NAME "
+            + PREFIX_GAME + "GAME "
             + PREFIX_ALIAS + "ALIAS\n"
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "Benjamin "
+            + PREFIX_GAME + "Valorant "
             + PREFIX_ALIAS + "Benjumpin";
 
     public static final String MESSAGE_SUCCESS = "Alias removed from %1$s: %2$s";
     public static final String MESSAGE_PERSON_NOT_FOUND = "No contact found with that name";
     public static final String MESSAGE_ALIAS_NOT_FOUND = "This alias does not exist for this contact";
+    public static final String MESSAGE_GAME_NOT_FOUND = "This game does not exist for this contact";
 
     private final Name targetName;
+    private final Game targetGame;
     private final Alias aliasToDelete;
 
     /**
      * Creates a DeleteAliasCommand to remove {@code alias} from the person with {@code name}.
      */
-    public DeleteAliasCommand(Name name, Alias alias) {
+    public DeleteAliasCommand(Name name, Game game, Alias alias) {
         requireNonNull(name);
+        requireNonNull(game);
         requireNonNull(alias);
         this.targetName = name;
+        this.targetGame = game;
         this.aliasToDelete = alias;
     }
 
     @Override
     public CommandResult execute(Model model) throws CommandException {
-        // TODO: implement once Person supports aliases ie. getAliases(), constructor with aliases
-        // 1. Find person by name. If not found, throw MESSAGE_PERSON_NOT_FOUND
-        // 2. Check if that alias exists for that person. If not, throw MESSAGE_ALIAS_NOT_FOUND
-        // 3. Remove alias from person and update model
-        throw new UnsupportedOperationException("Not implemented yet");
+        requireNonNull(model);
+
+        Optional<Person> personOptional = model.getFilteredPersonList().stream()
+                .filter(person -> person.getName().equals(targetName))
+                .findFirst();
+
+        if (personOptional.isEmpty()) {
+            throw new CommandException(MESSAGE_PERSON_NOT_FOUND);
+        }
+
+        Person personToEdit = personOptional.get();
+
+        Optional<Game> gameOptional = personToEdit.getGames().stream()
+                .filter(game -> game.equals(targetGame))
+                .findFirst();
+
+        if (gameOptional.isEmpty()) {
+            throw new CommandException(MESSAGE_GAME_NOT_FOUND);
+        }
+
+        Game gameToEdit = gameOptional.get();
+
+        if (!gameToEdit.getAliases().contains(aliasToDelete)) {
+            throw new CommandException(MESSAGE_ALIAS_NOT_FOUND);
+        }
+
+        Set<Alias> updatedAliases = new HashSet<>(gameToEdit.getAliases());
+        updatedAliases.remove(aliasToDelete);
+        Game updatedGame = new Game(gameToEdit.gameName, updatedAliases);
+
+        Set<Game> updatedGames = new HashSet<>(personToEdit.getGames());
+        updatedGames.remove(gameToEdit);
+        updatedGames.add(updatedGame);
+
+        Person editedPerson = new Person(
+                personToEdit.getName(),
+                personToEdit.getPhone(),
+                personToEdit.getEmail(),
+                personToEdit.getAddress(),
+                personToEdit.getTags(),
+                updatedGames
+        );
+
+        model.setPerson(personToEdit, editedPerson);
+
+        return new CommandResult(String.format(
+                MESSAGE_SUCCESS,
+                editedPerson.getName(),
+                updatedGame.gameName,
+                aliasToDelete));
     }
 
     @Override
@@ -63,6 +121,7 @@ public class DeleteAliasCommand extends Command {
 
         DeleteAliasCommand otherCommand = (DeleteAliasCommand) other;
         return targetName.equals(otherCommand.targetName)
+                && targetGame.equals(otherCommand.targetGame)
                 && aliasToDelete.equals(otherCommand.aliasToDelete);
     }
 
@@ -70,6 +129,7 @@ public class DeleteAliasCommand extends Command {
     public String toString() {
         return new ToStringBuilder(this)
                 .add("targetName", targetName)
+                .add("targetGame", targetGame)
                 .add("aliasToDelete", aliasToDelete)
                 .toString();
     }

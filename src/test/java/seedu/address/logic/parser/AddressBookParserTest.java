@@ -24,6 +24,7 @@ import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.game.Game;
 import seedu.address.model.person.Alias;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
@@ -106,6 +107,6 @@ public class AddressBookParserTest {
     public void parseCommand_aliasAdd() throws Exception {
         AddAliasCommand command = (AddAliasCommand) parser.parseCommand(
                 "alias add n/Benjamin al/Benjumpin");
-        assertEquals(new AddAliasCommand(new Name("Benjamin"), new Alias("Benjumpin")), command);
+        assertEquals(new AddAliasCommand(new Name("Benjamin"), new Game("Valorant"), new Alias("Benjumpin")), command);
     }
 }

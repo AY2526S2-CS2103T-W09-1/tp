@@ -4,11 +4,13 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.StringUtil;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.game.Game;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Alias;
 import seedu.address.model.person.Email;
@@ -137,5 +139,14 @@ public class ParserUtil {
             tagSet.add(parseTag(tagName));
         }
         return tagSet;
+    }
+
+    public static Game parseGame(String gameName) throws ParseException {
+        requireNonNull(gameName);
+        String trimmedGameName = gameName.trim();
+        if (!Game.isValidGameName(trimmedGameName)) {
+            throw new ParseException(Game.MESSAGE_CONSTRAINTS);
+        }
+        return new Game(trimmedGameName);
     }
 }
