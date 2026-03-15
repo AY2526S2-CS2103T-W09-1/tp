@@ -31,7 +31,7 @@ task coverage(type: JacocoReport) {
     executionData.from files(jacocoTestReport.executionData)
     afterEvaluate {
         classDirectories.from files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['**/*.jar'])
+            fileTree(dir: it, exclude: ['**/*.jar', '**/ui/**'])
         })
     }
     reports {

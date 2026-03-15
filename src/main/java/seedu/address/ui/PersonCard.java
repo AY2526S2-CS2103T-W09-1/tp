@@ -1,12 +1,14 @@
 package seedu.address.ui;
 
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import seedu.address.model.person.Person;
 
 /**
@@ -34,6 +36,8 @@ public class PersonCard extends UiPart<Region> {
     private Label id;
     @FXML
     private FlowPane tags;
+    @FXML
+    private VBox games;
 
     /**
      * Creates a {@code PersonCode} with the given {@code Person} and index to display.
@@ -46,5 +50,22 @@ public class PersonCard extends UiPart<Region> {
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+        person.getGames().stream()
+                .sorted(Comparator.comparing(game -> game.gameName))
+                .forEach(game -> {
+                    String labelText;
+                    if (game.getAliases().isEmpty()) {
+                        labelText = game.gameName;
+                    } else {
+                        String aliasList = game.getAliases().stream()
+                                .map(alias -> alias.value)
+                                .sorted()
+                                .collect(Collectors.joining(", "));
+                        labelText = game.gameName + ": " + aliasList;
+                    }
+                    Label gameLabel = new Label(labelText);
+                    gameLabel.getStyleClass().add("game-label");
+                    games.getChildren().add(gameLabel);
+                });
     }
 }
