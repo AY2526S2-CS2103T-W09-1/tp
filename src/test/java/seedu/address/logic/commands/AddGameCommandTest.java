@@ -36,7 +36,9 @@ public class AddGameCommandTest {
 
         AddGameCommand addGameCommand = new AddGameCommand(firstPerson.getName(), gameToAdd);
 
-        String expectedMessage = String.format(AddGameCommand.MESSAGE_SUCCESS, gameToAdd.gameName, editedPerson.getName().fullName);
+        String expectedMessage = String.format(AddGameCommand.MESSAGE_SUCCESS,
+                gameToAdd.gameName,
+                editedPerson.getName().fullName);
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(firstPerson, editedPerson);

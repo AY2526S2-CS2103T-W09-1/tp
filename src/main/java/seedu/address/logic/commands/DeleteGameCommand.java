@@ -33,6 +33,10 @@ public class DeleteGameCommand extends Command {
     private final Name targetName;
     private final Game gameToDelete;
 
+    /**
+     * @param targetName of the person in the filtered person list to edit.
+     * @param gameToDelete the game to remove from the person.
+     */
     public DeleteGameCommand(Name targetName, Game gameToDelete) {
         this.targetName = targetName;
         this.gameToDelete = gameToDelete;

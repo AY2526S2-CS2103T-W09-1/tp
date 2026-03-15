@@ -10,10 +10,13 @@ import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
+/**
+ * Parses user input for game-related commands.
+ */
 public class GameCommandParser implements Parser<Command> {
 
-    private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
     public static final String COMMAND_WORD = "game";
+    private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
 
     @Override
     public Command parse(String userInput) throws ParseException {

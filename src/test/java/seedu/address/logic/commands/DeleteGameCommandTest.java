@@ -30,7 +30,9 @@ public class DeleteGameCommandTest {
 
         // The expected model is exactly the original clean model (since adding and deleting leaves it unchanged)
         Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
-        String expectedMessage = String.format(DeleteGameCommand.MESSAGE_SUCCESS, gameToProcess.gameName, firstPerson.getName().fullName);
+        String expectedMessage = String.format(DeleteGameCommand.MESSAGE_SUCCESS,
+                gameToProcess.gameName,
+                firstPerson.getName().fullName);
 
         assertCommandSuccess(deleteGameCommand, model, expectedMessage, expectedModel);
     }

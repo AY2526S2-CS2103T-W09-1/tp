@@ -29,7 +29,9 @@ public class ListGameCommandTest {
 
         // Expected model doesn't change during a list command (it's read-only)
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
-        String expectedMessage = String.format(ListGameCommand.MESSAGE_SUCCESS, firstPerson.getName().fullName, "Minecraft");
+        String expectedMessage = String.format(ListGameCommand.MESSAGE_SUCCESS,
+                firstPerson.getName().fullName,
+                "Minecraft");
 
         assertCommandSuccess(listGameCommand, model, expectedMessage, expectedModel);
     }

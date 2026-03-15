@@ -11,6 +11,9 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.game.Game;
 import seedu.address.model.person.Name;
 
+/**
+ * Parses input arguments and creates a new AddGameCommand object.
+ */
 public class AddGameCommandParser implements Parser<AddGameCommand> {
 
     @Override

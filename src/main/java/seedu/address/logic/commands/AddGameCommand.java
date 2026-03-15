@@ -15,6 +15,9 @@ import seedu.address.model.game.Game;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 
+/**
+ * Adds a game to an existing contact in the address book.
+ */
 public class AddGameCommand extends Command {
 
     public static final String COMMAND_WORD = "add";
@@ -30,6 +33,10 @@ public class AddGameCommand extends Command {
     private final Name targetName;
     private final Game gameToAdd;
 
+    /**
+     * @param targetName of the person in the filtered person list to edit.
+     * @param gameToAdd the game to add to the person.
+     */
     public AddGameCommand(Name targetName, Game gameToAdd) {
         this.targetName = targetName;
         this.gameToAdd = gameToAdd;
