@@ -1,24 +1,38 @@
 package seedu.address.storage;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.game.Game;
+import seedu.address.model.person.Alias;
 
 /**
  * Jackson-friendly version of {@link Game}.
  */
 class JsonAdaptedGame {
 
+    public static final String MISSING_FIELD_MESSAGE_FORMAT = "Game's %s field is missing!";
+
     private final String gameName;
+    private final List<JsonAdaptedAlias> aliases = new ArrayList<>();
 
     /**
-     * Constructs a {@code JsonAdaptedGame} with the given {@code gameName}.
+     * Constructs a {@code JsonAdaptedGame} with the given game details.
      */
     @JsonCreator
-    public JsonAdaptedGame(String gameName) {
+    public JsonAdaptedGame(@JsonProperty("gameName") String gameName,
+                           @JsonProperty("aliases") List<JsonAdaptedAlias> aliases) {
         this.gameName = gameName;
+        if (aliases != null) {
+            this.aliases.addAll(aliases);
+        }
     }
 
     /**
@@ -26,11 +40,9 @@ class JsonAdaptedGame {
      */
     public JsonAdaptedGame(Game source) {
         gameName = source.gameName;
-    }
-
-    @JsonValue
-    public String getGameName() {
-        return gameName;
+        aliases.addAll(source.getAliases().stream()
+                .map(JsonAdaptedAlias::new)
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -39,9 +51,20 @@ class JsonAdaptedGame {
      * @throws IllegalValueException if there were any data constraints violated in the adapted game.
      */
     public Game toModelType() throws IllegalValueException {
+        final List<Alias> gameAliases = new ArrayList<>();
+        for (JsonAdaptedAlias alias : aliases) {
+            gameAliases.add(alias.toModelType());
+        }
+
+        if (gameName == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    "gameName"));
+        }
         if (!Game.isValidGameName(gameName)) {
             throw new IllegalValueException(Game.MESSAGE_CONSTRAINTS);
         }
-        return new Game(gameName);
+
+        final Set<Alias> modelAliases = new HashSet<>(gameAliases);
+        return new Game(gameName, modelAliases);
     }
 }
