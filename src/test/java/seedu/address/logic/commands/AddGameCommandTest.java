@@ -66,4 +66,27 @@ public class AddGameCommandTest {
 
         assertCommandFailure(addGameCommand, model, AddGameCommand.MESSAGE_CONTACT_NOT_FOUND);
     }
+
+    @Test
+    public void execute_caseInsensitiveName_success() {
+        Person firstPerson = model.getFilteredPersonList().get(0);
+        Game gameToAdd = new Game("Minecraft");
+
+        // Use all-lowercase version of the stored name
+        Name lowerCaseName = new Name(firstPerson.getName().fullName.toLowerCase());
+        AddGameCommand addGameCommand = new AddGameCommand(lowerCaseName, gameToAdd);
+
+        Set<Game> expectedGames = new HashSet<>(firstPerson.getGames());
+        expectedGames.add(gameToAdd);
+        Person editedPerson = new Person(firstPerson.getName(), firstPerson.getTags(), expectedGames);
+
+        String expectedMessage = String.format(AddGameCommand.MESSAGE_SUCCESS,
+                gameToAdd.gameName,
+                firstPerson.getName().fullName);
+
+        Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
+        expectedModel.setPerson(firstPerson, editedPerson);
+
+        assertCommandSuccess(addGameCommand, model, expectedMessage, expectedModel);
+    }
 }

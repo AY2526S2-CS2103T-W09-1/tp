@@ -54,4 +54,24 @@ public class DeleteGameCommandTest {
 
         assertCommandFailure(deleteGameCommand, model, DeleteGameCommand.MESSAGE_CONTACT_NOT_FOUND);
     }
+
+    @Test
+    public void execute_caseInsensitiveName_success() throws Exception {
+        Person firstPerson = model.getFilteredPersonList().get(0);
+        Game gameToProcess = new Game("Minecraft");
+
+        // Setup: add game using exact name
+        new AddGameCommand(firstPerson.getName(), gameToProcess).execute(model);
+
+        // Use all-lowercase version of the stored name
+        Name lowerCaseName = new Name(firstPerson.getName().fullName.toLowerCase());
+        DeleteGameCommand deleteGameCommand = new DeleteGameCommand(lowerCaseName, gameToProcess);
+
+        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        String expectedMessage = String.format(DeleteGameCommand.MESSAGE_SUCCESS,
+                gameToProcess.gameName,
+                firstPerson.getName().fullName);
+
+        assertCommandSuccess(deleteGameCommand, model, expectedMessage, expectedModel);
+    }
 }
