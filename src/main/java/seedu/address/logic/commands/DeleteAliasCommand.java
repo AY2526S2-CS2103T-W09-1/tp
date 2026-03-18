@@ -6,10 +6,13 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_GAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import seedu.address.commons.core.index.Index;
 import seedu.address.commons.util.ToStringBuilder;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.game.Game;
@@ -25,33 +28,34 @@ public class DeleteAliasCommand extends Command {
     public static final String COMMAND_WORD = "alias delete";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Deletes an alias from a game of an existing person in Harmony. "
-            + "Parameters: "
-            + PREFIX_NAME + "NAME "
-            + PREFIX_GAME + "GAME "
-            + PREFIX_ALIAS + "ALIAS\n"
-            + "Example: " + COMMAND_WORD + " "
-            + PREFIX_NAME + "Benjamin "
-            + PREFIX_GAME + "Valorant "
-            + PREFIX_ALIAS + "Benjumpin";
+            + ": Deletes an alias from a game of a contact using either their index OR their full name.\n"
+            + "Parameters (by Index): INDEX (must be a positive integer) "
+            + PREFIX_GAME + "GAME " + PREFIX_ALIAS + "ALIAS\n"
+            + "Parameters (by Name): "
+            + PREFIX_NAME + "CONTACT_NAME " + PREFIX_GAME + "GAME " + PREFIX_ALIAS + "ALIAS\n"
+            + "Example 1: " + COMMAND_WORD + " 1 " + PREFIX_GAME + "Valorant "
+            + PREFIX_ALIAS + "Benjumpin\n"
+            + "Example 2: " + COMMAND_WORD + " " + PREFIX_NAME + "Benjamin "
+            + PREFIX_GAME + "Valorant " + PREFIX_ALIAS + "Benjumpin";
 
     public static final String MESSAGE_SUCCESS = "Alias \"%3$s\" removed from %1$s in %2$s";
     public static final String MESSAGE_PERSON_NOT_FOUND = "Error: Name does not exist";
     public static final String MESSAGE_ALIAS_NOT_FOUND = "Error: Alias does not exist for this contact";
     public static final String MESSAGE_GAME_NOT_FOUND = "Error: Game does not exist for this contact";
 
+    private final Index targetIndex;
     private final Name targetName;
     private final Game targetGame;
     private final Alias aliasToDelete;
 
     /**
-     * Creates a DeleteAliasCommand to remove {@code alias} from the person with {@code name}.
+     * Creates a DeleteAliasCommand to remove {@code alias} from the person with {@code targetName}.
      */
-    public DeleteAliasCommand(Name name, Game game, Alias alias) {
-        requireNonNull(name);
+    public DeleteAliasCommand(Index targetIndex, Name targetName, Game game, Alias alias) {
         requireNonNull(game);
         requireNonNull(alias);
-        this.targetName = name;
+        this.targetIndex = targetIndex;
+        this.targetName = targetName;
         this.targetGame = game;
         this.aliasToDelete = alias;
     }
@@ -59,17 +63,25 @@ public class DeleteAliasCommand extends Command {
     @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
+        List<Person> lastShownList = model.getFilteredPersonList();
+        Person personToEdit = null;
 
-        Optional<Person> personOptional = model.getFilteredPersonList().stream()
-                .filter(person -> person.getName().fullName
-                .equalsIgnoreCase(targetName.fullName))
-                .findFirst();
+        // 1. Find the target person using either Index OR Name
+        if (targetIndex != null) {
+            if (targetIndex.getZeroBased() >= lastShownList.size()) {
+                throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+            }
+            personToEdit = lastShownList.get(targetIndex.getZeroBased());
+        } else if (targetName != null) {
+            Optional<Person> personOptional = lastShownList.stream()
+                    .filter(person -> person.getName().fullName.equalsIgnoreCase(targetName.fullName))
+                    .findFirst();
 
-        if (personOptional.isEmpty()) {
-            throw new CommandException(MESSAGE_PERSON_NOT_FOUND);
+            if (personOptional.isEmpty()) {
+                throw new CommandException(MESSAGE_PERSON_NOT_FOUND);
+            }
+            personToEdit = personOptional.get();
         }
-
-        Person personToEdit = personOptional.get();
 
         Optional<Game> gameOptional = personToEdit.getGames().stream()
                 .filter(game -> game.equals(targetGame))
@@ -113,20 +125,25 @@ public class DeleteAliasCommand extends Command {
         if (other == this) {
             return true;
         }
-
         if (!(other instanceof DeleteAliasCommand)) {
             return false;
         }
+        DeleteAliasCommand e = (DeleteAliasCommand) other;
 
-        DeleteAliasCommand otherCommand = (DeleteAliasCommand) other;
-        return targetName.equals(otherCommand.targetName)
-                && targetGame.equals(otherCommand.targetGame)
-                && aliasToDelete.equals(otherCommand.aliasToDelete);
+        boolean isSameIndex = (targetIndex == null && e.targetIndex == null)
+                || (targetIndex != null && targetIndex.equals(e.targetIndex));
+        boolean isSameName = (targetName == null && e.targetName == null)
+                || (targetName != null && targetName.equals(e.targetName));
+
+        return isSameIndex && isSameName
+                && targetGame.equals(e.targetGame)
+                && aliasToDelete.equals(e.aliasToDelete);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .add("targetIndex", targetIndex)
                 .add("targetName", targetName)
                 .add("targetGame", targetGame)
                 .add("aliasToDelete", aliasToDelete)

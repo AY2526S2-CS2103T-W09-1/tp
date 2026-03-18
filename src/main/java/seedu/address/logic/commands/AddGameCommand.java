@@ -7,8 +7,11 @@ import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+import seedu.address.commons.core.index.Index;
+import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.game.Game;
@@ -21,23 +24,31 @@ import seedu.address.model.person.Person;
 public class AddGameCommand extends Command {
 
     public static final String COMMAND_WORD = "add";
+
+    // 1. Updated MESSAGE_USAGE to show both Index and Name options
     public static final String MESSAGE_USAGE = "game " + COMMAND_WORD
-            + ": Adds a game to the specified contact.\n"
-            + "Parameters: " + PREFIX_NAME + "CONTACT_NAME " + PREFIX_GAME + "GAME_NAME\n"
-            + "Example: game " + COMMAND_WORD + " " + PREFIX_NAME + "Zi Xuan " + PREFIX_GAME + "Minecraft";
+            + ": Adds a game to a contact using either their index OR their full name.\n"
+            + "Parameters (by Index): INDEX (must be a positive integer) " + PREFIX_GAME + "GAME_NAME\n"
+            + "Parameters (by Name): " + PREFIX_NAME + "CONTACT_NAME " + PREFIX_GAME + "GAME_NAME\n"
+            + "Example 1: game " + COMMAND_WORD + " 1 " + PREFIX_GAME + "Minecraft\n"
+            + "Example 2: game " + COMMAND_WORD + " " + PREFIX_NAME + "Zi Xuan " + PREFIX_GAME + "Minecraft";
 
     public static final String MESSAGE_SUCCESS = "Game %1$s added to %2$s";
     public static final String MESSAGE_CONTACT_NOT_FOUND = "Error: Contact does not exist.";
     public static final String MESSAGE_DUPLICATE_GAME = "Error: Game already exists for the contact.";
 
+    private final Index targetIndex;
     private final Name targetName;
     private final Game gameToAdd;
 
     /**
-     * @param targetName of the person in the filtered person list to edit.
-     * @param gameToAdd the game to add to the person.
+     * @param targetIndex the index of the person.
+     * @param targetName  of the person in the filtered person list to edit.
+     * @param gameToAdd   the game to add to the person.
      */
-    public AddGameCommand(Name targetName, Game gameToAdd) {
+    public AddGameCommand(Index targetIndex, Name targetName, Game gameToAdd) {
+        requireNonNull(gameToAdd); // Added safety check for the required game
+        this.targetIndex = targetIndex;
         this.targetName = targetName;
         this.gameToAdd = gameToAdd;
     }
@@ -46,14 +57,23 @@ public class AddGameCommand extends Command {
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         List<Person> lastShownList = model.getFilteredPersonList();
-
-        // Find the person by name (case-insensitive)
         Person personToEdit = null;
-        for (Person person : lastShownList) {
-            if (person.getName().fullName.equalsIgnoreCase(targetName.fullName)) {
-                personToEdit = person;
-                break;
+
+        // 2. The Universal Find Person Block (handles both Index and Name safely)
+        if (targetIndex != null) {
+            if (targetIndex.getZeroBased() >= lastShownList.size()) {
+                throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
             }
+            personToEdit = lastShownList.get(targetIndex.getZeroBased());
+        } else if (targetName != null) {
+            Optional<Person> personOptional = lastShownList.stream()
+                    .filter(person -> person.getName().fullName.equalsIgnoreCase(targetName.fullName))
+                    .findFirst();
+
+            if (personOptional.isEmpty()) {
+                throw new CommandException(MESSAGE_CONTACT_NOT_FOUND);
+            }
+            personToEdit = personOptional.get();
         }
 
         if (personToEdit == null) {
@@ -88,6 +108,13 @@ public class AddGameCommand extends Command {
             return false;
         }
         AddGameCommand e = (AddGameCommand) other;
-        return targetName.equals(e.targetName) && gameToAdd.equals(e.gameToAdd);
+
+        // 3. Null-safe checks so JUnit tests don't crash
+        boolean isSameIndex = (targetIndex == null && e.targetIndex == null)
+                || (targetIndex != null && targetIndex.equals(e.targetIndex));
+        boolean isSameName = (targetName == null && e.targetName == null)
+                || (targetName != null && targetName.equals(e.targetName));
+
+        return isSameIndex && isSameName && gameToAdd.equals(e.gameToAdd);
     }
 }

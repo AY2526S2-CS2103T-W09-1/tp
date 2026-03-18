@@ -345,6 +345,8 @@
     -fx-border-radius: 2;
     -fx-background-radius: 2;
     -fx-font-size: 11;
+    -fx-max-width: 100px;
+    -fx-text-overrun: ellipsis;
 }
 
 #games .game-label {

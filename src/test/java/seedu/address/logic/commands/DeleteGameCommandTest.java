@@ -23,10 +23,11 @@ public class DeleteGameCommandTest {
         Game gameToProcess = new Game("Minecraft");
 
         // Setup: Add the game to the model first so we have something to delete
-        new AddGameCommand(firstPerson.getName(), gameToProcess).execute(model);
+        new AddGameCommand(null, firstPerson.getName(), gameToProcess).execute(model);
 
         // Now prepare for deletion
-        DeleteGameCommand deleteGameCommand = new DeleteGameCommand(firstPerson.getName(), gameToProcess);
+        DeleteGameCommand deleteGameCommand =
+                new DeleteGameCommand(null, firstPerson.getName(), gameToProcess);
 
         // The expected model is exactly the original clean model (since adding and deleting leaves it unchanged)
         Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
@@ -41,7 +42,8 @@ public class DeleteGameCommandTest {
     public void execute_gameNotFound_failure() {
         Person firstPerson = model.getFilteredPersonList().get(0);
         Game gameToDelete = new Game("NonExistentGame");
-        DeleteGameCommand deleteGameCommand = new DeleteGameCommand(firstPerson.getName(), gameToDelete);
+        DeleteGameCommand deleteGameCommand =
+                new DeleteGameCommand(null, firstPerson.getName(), gameToDelete);
 
         assertCommandFailure(deleteGameCommand, model, DeleteGameCommand.MESSAGE_GAME_NOT_FOUND);
     }
@@ -50,7 +52,7 @@ public class DeleteGameCommandTest {
     public void execute_contactNotFound_failure() {
         Name notInModelName = new Name("Unknown Person Name");
         Game gameToDelete = new Game("Minecraft");
-        DeleteGameCommand deleteGameCommand = new DeleteGameCommand(notInModelName, gameToDelete);
+        DeleteGameCommand deleteGameCommand = new DeleteGameCommand(null, notInModelName, gameToDelete);
 
         assertCommandFailure(deleteGameCommand, model, DeleteGameCommand.MESSAGE_CONTACT_NOT_FOUND);
     }
@@ -61,11 +63,11 @@ public class DeleteGameCommandTest {
         Game gameToProcess = new Game("Minecraft");
 
         // Setup: add game using exact name
-        new AddGameCommand(firstPerson.getName(), gameToProcess).execute(model);
+        new AddGameCommand(null, firstPerson.getName(), gameToProcess).execute(model);
 
         // Use all-lowercase version of the stored name
         Name lowerCaseName = new Name(firstPerson.getName().fullName.toLowerCase());
-        DeleteGameCommand deleteGameCommand = new DeleteGameCommand(lowerCaseName, gameToProcess);
+        DeleteGameCommand deleteGameCommand = new DeleteGameCommand(null, lowerCaseName, gameToProcess);
 
         Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         String expectedMessage = String.format(DeleteGameCommand.MESSAGE_SUCCESS,

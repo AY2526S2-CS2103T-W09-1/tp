@@ -1,7 +1,9 @@
 package seedu.address.testutil;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import seedu.address.model.game.Game;
 import seedu.address.model.person.Name;
@@ -51,6 +53,14 @@ public class PersonBuilder {
      */
     public PersonBuilder withTags(String... tags) {
         this.tags = SampleDataUtil.getTagSet(tags);
+        return this;
+    }
+
+    /**
+     * Parses the {@code games} into a {@code Set<Game>} and set it to the {@code Person} that we are building.
+     */
+    public PersonBuilder withGames(String... games) {
+        this.games = Arrays.stream(games).map(Game::new).collect(Collectors.toSet());
         return this;
     }
 

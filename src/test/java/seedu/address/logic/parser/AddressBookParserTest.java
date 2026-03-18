@@ -15,14 +15,18 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddAliasCommand;
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.AddGameCommand;
 import seedu.address.logic.commands.ClearCommand;
+import seedu.address.logic.commands.DeleteAliasCommand;
 import seedu.address.logic.commands.DeleteCommand;
+import seedu.address.logic.commands.DeleteGameCommand;
 import seedu.address.logic.commands.EditCommand;
 import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
 import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.ListGameCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.game.Game;
 import seedu.address.model.person.Alias;
@@ -100,13 +104,54 @@ public class AddressBookParserTest {
 
     @Test
     public void parseCommand_unknownCommand_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_UNKNOWN_COMMAND, () -> parser.parseCommand("unknownCommand"));
+        assertThrows(ParseException.class,
+                MESSAGE_UNKNOWN_COMMAND, () -> parser.parseCommand("unknownCommand"));
     }
 
     @Test
     public void parseCommand_aliasAdd() throws Exception {
         AddAliasCommand command = (AddAliasCommand) parser.parseCommand(
                 "alias add n/Benjamin g/Valorant al/Benjumpin");
-        assertEquals(new AddAliasCommand(new Name("Benjamin"), new Game("Valorant"), new Alias("Benjumpin")), command);
+        assertEquals(new AddAliasCommand(
+                null,
+                new Name("Benjamin"), new Game("Valorant"), new Alias("Benjumpin")
+        ), command);
+    }
+
+    @Test
+    public void parseCommand_aliasDelete() throws Exception {
+        DeleteAliasCommand command = (DeleteAliasCommand) parser.parseCommand(
+                "alias delete n/Benjamin g/Valorant al/Benjumpin");
+        assertEquals(new DeleteAliasCommand(null,
+                new Name("Benjamin"),
+                new Game("Valorant"), new Alias("Benjumpin")
+        ), command);
+    }
+
+    @Test
+    public void parseCommand_gameAdd() throws Exception {
+        AddGameCommand command = (AddGameCommand) parser.parseCommand(
+                "game add n/Benjamin g/Valorant");
+        assertEquals(new AddGameCommand(null,
+                new Name("Benjamin"),
+                new Game("Valorant")
+        ), command);
+    }
+
+    @Test
+    public void parseCommand_gameDelete() throws Exception {
+        DeleteGameCommand command = (DeleteGameCommand) parser.parseCommand(
+                "game delete n/Benjamin g/Valorant");
+        assertEquals(new DeleteGameCommand(null,
+                new Name("Benjamin"),
+                new Game("Valorant")
+        ), command);
+    }
+
+    @Test
+    public void parseCommand_gameList() throws Exception {
+        ListGameCommand command = (ListGameCommand) parser.parseCommand(
+                "game list n/Benjamin");
+        assertEquals(new ListGameCommand(null, new Name("Benjamin")), command);
     }
 }

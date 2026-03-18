@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -49,7 +50,14 @@ public class PersonCard extends UiPart<Region> {
         name.setText(person.getName().fullName);
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
-                .forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));
+                .forEach(tag -> {
+                    Label tagLabel = new Label(tag.tagName);
+                    tagLabel.setMaxWidth(100);
+                    Tooltip tooltip = new Tooltip(tag.tagName);
+                    tooltip.setShowDelay(javafx.util.Duration.millis(100));
+                    tagLabel.setTooltip(tooltip);
+                    tags.getChildren().add(tagLabel);
+                });
         person.getGames().stream()
                 .sorted(Comparator.comparing(game -> game.gameName))
                 .forEach(game -> {
