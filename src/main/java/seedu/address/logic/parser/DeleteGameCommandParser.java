@@ -6,6 +6,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 
 import java.util.stream.Stream;
 
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.DeleteGameCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.game.Game;
@@ -21,20 +22,28 @@ public class DeleteGameCommandParser implements Parser<DeleteGameCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_GAME);
 
-        if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_GAME)
-                || !argMultimap.getPreamble().isEmpty()) {
+        if (argMultimap.getValue(PREFIX_GAME).isEmpty()) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteGameCommand.MESSAGE_USAGE));
         }
 
-        Name name = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
+        String preamble = argMultimap.getPreamble();
+        boolean hasNamePrefix = argMultimap.getValue(PREFIX_NAME).isPresent();
 
+        // 1. Validate mutually exclusive index/name using our new helper
+        ParserUtil.verifyIndexOrNamePresent(preamble, hasNamePrefix, DeleteGameCommand.MESSAGE_USAGE);
+
+        // 2. Extract whichever target is present (the other will safely be null)
+        Index index = preamble.isEmpty() ? null : ParserUtil.parseIndex(preamble);
+        Name name = hasNamePrefix ? ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get()) : null;
+
+        // 3. Parse the game
         String gameString = argMultimap.getValue(PREFIX_GAME).get();
         if (!Game.isValidGameName(gameString)) {
             throw new ParseException(Game.MESSAGE_CONSTRAINTS);
         }
         Game game = new Game(gameString);
 
-        return new DeleteGameCommand(name, game);
+        return new DeleteGameCommand(index, name, game);
     }
 
     private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {

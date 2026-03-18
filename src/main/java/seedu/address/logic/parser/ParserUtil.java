@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -102,5 +103,19 @@ public class ParserUtil {
             throw new ParseException(Game.MESSAGE_CONSTRAINTS);
         }
         return new Game(trimmedGameName);
+    }
+
+    /**
+     * Ensures the user has provided either an index (preamble) or a name prefix, but not both.
+     * @throws ParseException if both are provided, or if neither is provided.
+     */
+    public static void verifyIndexOrNamePresent(String preamble,
+                                                boolean hasNamePrefix, String messageUsage) throws ParseException {
+        if (!preamble.isEmpty() && hasNamePrefix) {
+            throw new ParseException("Please provide either an index OR a name, not both.");
+        }
+        if (preamble.isEmpty() && !hasNamePrefix) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, messageUsage));
+        }
     }
 }

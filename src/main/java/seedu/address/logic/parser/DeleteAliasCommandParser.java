@@ -7,6 +7,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 
 import java.util.stream.Stream;
 
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.DeleteAliasCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.game.Game;
@@ -28,18 +29,30 @@ public class DeleteAliasCommandParser implements Parser<DeleteAliasCommand> {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_GAME, PREFIX_ALIAS);
 
-        if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_GAME, PREFIX_ALIAS)
-                || !argMultimap.getPreamble().isEmpty()) {
+        // 1. Game and Alias prefixes are always strictly required
+        if (!arePrefixesPresent(argMultimap, PREFIX_GAME, PREFIX_ALIAS)) {
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
                     DeleteAliasCommand.MESSAGE_USAGE));
         }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_GAME, PREFIX_ALIAS);
-        Name name = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
+
+        String preamble = argMultimap.getPreamble();
+        boolean hasNamePrefix = argMultimap.getValue(PREFIX_NAME).isPresent();
+
+        // 2. Validate mutually exclusive index/name using our helper
+        ParserUtil.verifyIndexOrNamePresent(preamble, hasNamePrefix, DeleteAliasCommand.MESSAGE_USAGE);
+
+        // 3. Extract whichever target is present (the other will safely be null)
+        Index index = preamble.isEmpty() ? null : ParserUtil.parseIndex(preamble);
+        Name name = hasNamePrefix ? ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get()) : null;
+
+        // 4. Parse the game and alias
         Game game = ParserUtil.parseGame(argMultimap.getValue(PREFIX_GAME).get());
         Alias alias = ParserUtil.parseAlias(argMultimap.getValue(PREFIX_ALIAS).get());
 
-        return new DeleteAliasCommand(name, game, alias);
+        // 5. Pass both index and name to the command
+        return new DeleteAliasCommand(index, name, game, alias);
     }
 
     /**
@@ -49,5 +62,4 @@ public class DeleteAliasCommandParser implements Parser<DeleteAliasCommand> {
     private static boolean arePrefixesPresent(ArgumentMultimap argumentMultimap, Prefix... prefixes) {
         return Stream.of(prefixes).allMatch(prefix -> argumentMultimap.getValue(prefix).isPresent());
     }
-
 }
