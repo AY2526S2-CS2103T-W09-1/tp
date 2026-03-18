@@ -113,7 +113,7 @@ public class AddressBookParserTest {
                 "alias add n/Benjamin g/Valorant al/Benjumpin");
         assertEquals(new AddAliasCommand(null, new Name("Benjamin"), new Game("Valorant"), new Alias("Benjumpin")), command);
     }
-    
+
     @Test
     public void parseCommand_aliasDelete() throws Exception {
         DeleteAliasCommand command = (DeleteAliasCommand) parser.parseCommand(

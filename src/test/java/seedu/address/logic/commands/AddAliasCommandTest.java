@@ -114,7 +114,7 @@ public class AddAliasCommandTest {
 
         assertCommandSuccess(addAliasCommand, model, expectedMessage, expectedModel);
     }
-    
+
     @Test
     public void execute_addAliasByIndex_success() throws Exception {
         Person firstPerson = model.getFilteredPersonList().get(0);

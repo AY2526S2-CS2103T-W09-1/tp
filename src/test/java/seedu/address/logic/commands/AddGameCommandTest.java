@@ -91,7 +91,7 @@ public class AddGameCommandTest {
 
         assertCommandSuccess(addGameCommand, model, expectedMessage, expectedModel);
     }
-    
+
     @Test
     public void execute_addGameByIndex_success() {
         Person firstPerson = model.getFilteredPersonList().get(0);
