@@ -57,9 +57,7 @@ public class ListGameCommandTest {
         assertCommandFailure(listGameCommand, model, ListGameCommand.MESSAGE_CONTACT_NOT_FOUND);
     }
 
-    // ============================================
     // NEW TESTS: Index Support and Equals Method
-    // ============================================
 
     @Test
     public void execute_listGamesByIndex_success() throws Exception {

@@ -18,7 +18,8 @@ public class AliasCommandParserTest {
 
     private final AliasCommandParser parser = new AliasCommandParser();
 
-    // Tests for add alias command
+    // Tests for ADD alias command
+
     @Test
     public void parse_addAliasValidInputByName_success() {
         AddAliasCommand expected = new AddAliasCommand(null, new Name("Benjamin"),
@@ -34,30 +35,26 @@ public class AliasCommandParserTest {
     }
 
     @Test
-    public void parse_addAliasMissingNamePrefix_failure() {
-        assertParseFailure(parser, "add Benjamin al/Benjumpin",
+    public void parse_addAliasMutuallyExclusive_failure() {
+        // Triggers the mutually exclusive error by providing both an index and a name
+        assertParseFailure(parser, "add 1 n/Benjamin g/Valorant al/Benjumpin",
+                "Please provide either an index OR a name, not both.");
+    }
+
+    @Test
+    public void parse_addAliasMissingBothIndexAndName_failure() {
+        assertParseFailure(parser, "add g/Valorant al/Benjumpin",
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddAliasCommand.MESSAGE_USAGE));
     }
 
     @Test
-    public void parse_addAliasMissingAliasPrefix_failure() {
+    public void parse_addAliasMissingGameOrAliasPrefix_failure() {
         assertParseFailure(parser, "add n/Benjamin Benjumpin",
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddAliasCommand.MESSAGE_USAGE));
     }
 
-    @Test
-    public void parse_addAliasMissingBothPrefixes_failure() {
-        assertParseFailure(parser, "add Benjamin Benjumpin",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddAliasCommand.MESSAGE_USAGE));
-    }
+    // Tests for DELETE alias command
 
-    @Test
-    public void parse_addAliasNonEmptyPreamble_failure() {
-        assertParseFailure(parser, "add extrawords n/Benjamin al/Benjumpin",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddAliasCommand.MESSAGE_USAGE));
-    }
-
-    // Tests for delete alias command
     @Test
     public void parse_deleteAliasValidInputByName_success() {
         DeleteAliasCommand expected = new DeleteAliasCommand(null, new Name("Benjamin"),
@@ -73,23 +70,25 @@ public class AliasCommandParserTest {
     }
 
     @Test
-    public void parse_deleteAliasMissingNamePrefix_failure() {
-        assertParseFailure(parser, "delete Benjamin al/Benjumpin",
+    public void parse_deleteAliasMutuallyExclusive_failure() {
+        // Triggers the mutually exclusive error by providing both an index and a name
+        assertParseFailure(parser, "delete 1 n/Benjamin g/Valorant al/Benjumpin",
+                "Please provide either an index OR a name, not both.");
+    }
+
+    @Test
+    public void parse_deleteAliasMissingBothIndexAndName_failure() {
+        assertParseFailure(parser, "delete g/Valorant al/Benjumpin",
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAliasCommand.MESSAGE_USAGE));
     }
 
     @Test
-    public void parse_deleteAliasMissingAliasPrefix_failure() {
+    public void parse_deleteAliasMissingGameOrAliasPrefix_failure() {
         assertParseFailure(parser, "delete n/Benjamin Benjumpin",
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAliasCommand.MESSAGE_USAGE));
     }
 
-    @Test
-    public void parse_deleteAliasNonEmptyPreamble_failure() {
-        assertParseFailure(parser, "delete extrawords n/Benjamin al/Benjumpin",
-                String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAliasCommand.MESSAGE_USAGE));
-    }
-    // Tests for unknown actions and invalid formats
+    // Tests for unknown actions and formats
 
     @Test
     public void parse_unknownAction_failure() {
