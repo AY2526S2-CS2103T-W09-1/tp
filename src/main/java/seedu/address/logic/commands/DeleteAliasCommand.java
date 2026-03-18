@@ -35,10 +35,10 @@ public class DeleteAliasCommand extends Command {
             + PREFIX_GAME + "Valorant "
             + PREFIX_ALIAS + "Benjumpin";
 
-    public static final String MESSAGE_SUCCESS = "Alias removed from %1$s: %2$s";
-    public static final String MESSAGE_PERSON_NOT_FOUND = "No contact found with that name";
-    public static final String MESSAGE_ALIAS_NOT_FOUND = "This alias does not exist for this contact";
-    public static final String MESSAGE_GAME_NOT_FOUND = "This game does not exist for this contact";
+    public static final String MESSAGE_SUCCESS = "Alias \"%3$s\" removed from %1$s in %2$s";
+    public static final String MESSAGE_PERSON_NOT_FOUND = "Error: Name does not exist";
+    public static final String MESSAGE_ALIAS_NOT_FOUND = "Error: Alias does not exist for this contact";
+    public static final String MESSAGE_GAME_NOT_FOUND = "Error: Game does not exist for this contact";
 
     private final Name targetName;
     private final Game targetGame;

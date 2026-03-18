@@ -36,9 +36,11 @@ public class AddAliasCommand extends Command {
             + PREFIX_ALIAS + "Benjumpin";
 
     public static final String MESSAGE_SUCCESS = "Alias added to %1$s in %2$s: %3$s";
-    public static final String MESSAGE_DUPLICATE_ALIAS = "This alias already exists for this game";
     public static final String MESSAGE_PERSON_NOT_FOUND = "Error: Name does not exist";
-    public static final String MESSAGE_GAME_NOT_FOUND = "This game does not exist for this contact";
+    public static final String MESSAGE_ALIAS_NOT_FOUND = "Error: Alias does not exist for this contact";
+    public static final String MESSAGE_GAME_NOT_FOUND = "Error: Game does not exist for this contact";
+    public static final String MESSAGE_DUPLICATE_ALIAS = "Error: This alias already exists for this game";
+
 
     private final Name targetName;
     private final Game targetGame;
