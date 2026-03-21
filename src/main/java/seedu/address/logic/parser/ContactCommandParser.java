@@ -10,15 +10,15 @@ import seedu.address.logic.commands.Command;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
- * Parses alias-related commands by dispatching on the action word (add, delete, etc.).
+ * Parses contact-related commands by dispatching on the action word (add, delete, edit, etc.).
  */
-public class AliasCommandParser implements Parser<Command> {
+public class ContactCommandParser implements Parser<Command> {
 
-    public static final String COMMAND_WORD = "alias";
+    public static final String COMMAND_WORD = "contact";
     public static final String MESSAGE_USAGE = """
-              alias: Manages aliases.
-              alias add n/NAME g/GAME al/ALIAS
-              alias delete n/NAME g/GAME al/ALIAS""";
+              contact: Manages contacts.
+              contact add n/NAME [t/TAG]...
+              contact delete INDEX""";
 
     private static final Pattern ACTION_FORMAT = Pattern.compile("(?<action>\\S+)(?<arguments>.*)");
 
@@ -33,8 +33,9 @@ public class AliasCommandParser implements Parser<Command> {
         final String arguments = matcher.group("arguments");
 
         return switch (action) {
-        case "add" -> new AddAliasCommandParser().parse(arguments);
-        case "delete" -> new DeleteAliasCommandParser().parse(arguments);
+        case "add" -> new AddContactCommandParser().parse(arguments);
+        case "delete" -> new DeleteContactCommandParser().parse(arguments);
+        case "edit" -> throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
         default -> throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
         };
     }

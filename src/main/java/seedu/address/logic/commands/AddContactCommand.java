@@ -13,9 +13,9 @@ import seedu.address.model.person.Person;
 /**
  * Adds a person to the address book.
  */
-public class AddCommand extends Command {
+public class AddContactCommand extends Command {
 
-    public static final String COMMAND_WORD = "add";
+    public static final String COMMAND_WORD = "contact add";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a person to the address book. "
             + "Parameters: "
@@ -26,15 +26,15 @@ public class AddCommand extends Command {
             + PREFIX_TAG + "friends "
             + PREFIX_TAG + "owesMoney";
 
-    public static final String MESSAGE_SUCCESS = "New person added: %1$s";
-    public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book";
+    public static final String MESSAGE_SUCCESS = "Contact added: %1$s";
+    public static final String MESSAGE_DUPLICATE_PERSON = "Error: Contact already exists in the address book";
 
     private final Person toAdd;
 
     /**
-     * Creates an AddCommand to add the specified {@code Person}
+     * Creates an AddContactCommand to add the specified {@code Person}
      */
-    public AddCommand(Person person) {
+    public AddContactCommand(Person person) {
         requireNonNull(person);
         toAdd = person;
     }
@@ -58,11 +58,11 @@ public class AddCommand extends Command {
         }
 
         // instanceof handles nulls
-        if (!(other instanceof AddCommand)) {
+        if (!(other instanceof AddContactCommand)) {
             return false;
         }
 
-        AddCommand otherAddCommand = (AddCommand) other;
+        AddContactCommand otherAddCommand = (AddContactCommand) other;
         return toAdd.equals(otherAddCommand.toAdd);
     }
 
