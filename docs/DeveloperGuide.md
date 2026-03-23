@@ -296,8 +296,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *`  | user       | display all contacts               |                                                              |
 | `* *`    | user       | add an alias to a contact          | keep track of alternate usernames used by the contact        |
 | `* *`    | user       | delete an alias from a contact     | remove aliases that the contact is no longer using           |
-| `* *`    | user       | add a game that the contact plays  | keep track of which games the contact plays                  |  
-| `* *`    | user       | delete a game that a contact plays | remove games that the contact no longer plays                | 
+| `* *`    | user       | add a game that the contact plays  | keep track of which games the contact plays                  |
+| `* *`    | user       | delete a game that a contact plays | remove games that the contact no longer plays                |
 | `*`      | new user   | see usage instructions             | refer to command syntax when I forget how to use the app     | \
 
 *{More to be added}*
@@ -319,15 +319,15 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **Extensions**
 
 * 1a. Contact already exists.
-  
+
     * 1a1. System displays error message indicating duplicate Contact name.
-  
+
       Use case ends.
 
 
 **Use Case: UC2 - Delete contact**
 
-**Precondition** 
+**Precondition**
 * The list is not empty.
 
 **MSS**
@@ -335,14 +335,14 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 2.  System identifies the matching contact.
 3.  System removes the contact and its associated aliases and games.
 4.  System confirms deletion.
-    
+
     Use case ends.
 
 **Extensions**
 
 * 2a. No contact is found with matching name.
   * 2a1. System informs user that no matching user is found.
-  
+
     Use case ends.
 
 **Use case: UC3 -  Add an alias**
@@ -362,13 +362,13 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   * 1a2. User re-enter the field.
 
      Steps 1a1-1a2 are repeated until the data entered are correct.
-  
+
      Use case resumes from step 2.
-  
+
 
 * 1b. Contact not in database.
   * 1b1. System notify user of the invalid contact.
-  
+
     Use case ends.
 
 **Use Case: UC4 - Edit contact’s name**
@@ -390,7 +390,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * 3a. User inputs name with violations .
   * 3a1. System outputs: invalid names message.
-  
+
     Use case ends.
 
 **Use Case: UC5 - Listing all User’s contacts**
@@ -398,7 +398,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 1. User requests to list all contacts.
 2. System displays all contacts.
-   
+
    Use case ends.
 
 **Extensions**
@@ -409,7 +409,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **Use Case: UC6 - Delete an alias**
 
-**Precondition** 
+**Precondition**
 * The contact and alias exist.
 
 **MSS**
@@ -429,7 +429,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 1. User requests to add a game that a specific contact plays.
 2. System adds the game to the contact’s profile.
 3. System displays the contact’s detail panel to with the games added.
- 
+
    Use case ends.
 
 **Extensions**
@@ -445,7 +445,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * *a. At any time, the user chooses to cancel the operation
   * *a1. System stops the process
-  
+
     Use case ends
 
 

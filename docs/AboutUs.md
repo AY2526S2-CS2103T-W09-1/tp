@@ -19,13 +19,13 @@ You can reach us at the email `e1408790@u.nus.edu`
 
 * Role: Developer
 
-### Benjamin Ong ZhenYu 
+### Benjamin Ong ZhenYu
 
 <img src="images/benjumpin.png" width="200px">
 
 [[github](http://github.com/benjumpin)]
 
-* Role: Developer 
+* Role: Developer
 * Responsibilities: Team Morale
 
 ### Yeo Xin Yu
