@@ -1,10 +1,10 @@
 package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ALIAS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_GAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
 import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.logic.Messages;
@@ -65,11 +65,10 @@ public class AddContactCommand extends Command {
         }
 
         // instanceof handles nulls
-        if (!(other instanceof AddContactCommand)) {
+        if (!(other instanceof AddContactCommand otherAddCommand)) {
             return false;
         }
 
-        AddContactCommand otherAddCommand = (AddContactCommand) other;
         return toAdd.equals(otherAddCommand.toAdd);
     }
 
