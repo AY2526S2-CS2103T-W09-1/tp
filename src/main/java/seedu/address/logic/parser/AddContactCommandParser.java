@@ -1,21 +1,21 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ALIAS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_GAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import seedu.address.logic.commands.AddContactCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Alias;
 import seedu.address.model.game.Game;
+import seedu.address.model.person.Alias;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.tag.Tag;
@@ -28,7 +28,6 @@ public class AddContactCommandParser implements Parser<AddContactCommand> {
     /**
      * Parses the given {@code String} of arguments in the context of the AddContactCommand
      * and returns an AddContactCommand object for execution.
-     *
      * Games and Aliases are parsed linearly (left-to-right). Any {@code PREFIX_ALIAS} encountered
      * is automatically assigned to the most recently declared {@code PREFIX_GAME}. This allows a single
      * game to have multiple aliases, or zero aliases.
@@ -36,7 +35,7 @@ public class AddContactCommandParser implements Parser<AddContactCommand> {
      * @param args The user input string containing the command arguments.
      * @return An AddContactCommand ready for execution.
      * @throws ParseException if the user input does not conform to the expected format,
-     * or if an alias is declared before any game prefix.
+     *     or if an alias is declared before any game prefix.
      */
     public AddContactCommand parse(String args) throws ParseException {
         // 1. Add Game and Alias prefixes to tokenizer
