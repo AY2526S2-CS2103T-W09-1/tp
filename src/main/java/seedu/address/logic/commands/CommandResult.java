@@ -17,17 +17,17 @@ public class CommandResult {
     /**
      * Help information should be shown to the user.
      */
-    private final boolean showHelp;
+    private final boolean isShowHelp;
 
     /**
      * The application should exit.
      */
-    private final boolean exit;
+    private final boolean isExit;
 
     /**
      * A confirmation is required before proceeding.
      */
-    private final boolean awaitingConfirmation;
+    private final boolean isAwaitingConfirmation;
 
     /**
      * The person pending deletion confirmation, or null if not applicable.
@@ -39,9 +39,9 @@ public class CommandResult {
      */
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit) {
         this.feedbackToUser = requireNonNull(feedbackToUser);
-        this.showHelp = showHelp;
-        this.exit = exit;
-        this.awaitingConfirmation = false;
+        this.isShowHelp = showHelp;
+        this.isExit = exit;
+        this.isAwaitingConfirmation = false;
         this.pendingPerson = null;
     }
 
@@ -58,9 +58,9 @@ public class CommandResult {
      */
     public CommandResult(String feedbackToUser, Person pendingPerson) {
         this.feedbackToUser = requireNonNull(feedbackToUser);
-        this.showHelp = false;
-        this.exit = false;
-        this.awaitingConfirmation = true;
+        this.isShowHelp = false;
+        this.isExit = false;
+        this.isAwaitingConfirmation = true;
         this.pendingPerson = requireNonNull(pendingPerson);
     }
 
@@ -69,15 +69,15 @@ public class CommandResult {
     }
 
     public boolean isShowHelp() {
-        return showHelp;
+        return isShowHelp;
     }
 
     public boolean isExit() {
-        return exit;
+        return isExit;
     }
 
     public boolean isAwaitingConfirmation() {
-        return awaitingConfirmation;
+        return isAwaitingConfirmation;
     }
 
     public Person getPendingPerson() {
@@ -97,23 +97,23 @@ public class CommandResult {
 
         CommandResult otherCommandResult = (CommandResult) other;
         return feedbackToUser.equals(otherCommandResult.feedbackToUser)
-                && showHelp == otherCommandResult.showHelp
-                && exit == otherCommandResult.exit
-                && awaitingConfirmation == otherCommandResult.awaitingConfirmation;
+                && isShowHelp == otherCommandResult.isShowHelp
+                && isExit == otherCommandResult.isExit
+                && isAwaitingConfirmation == otherCommandResult.isAwaitingConfirmation;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(feedbackToUser, showHelp, exit, awaitingConfirmation);
+        return Objects.hash(feedbackToUser, isShowHelp, isExit, isAwaitingConfirmation);
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
                 .add("feedbackToUser", feedbackToUser)
-                .add("showHelp", showHelp)
-                .add("exit", exit)
-                .add("awaitingConfirmation", awaitingConfirmation)
+                .add("showHelp", isShowHelp)
+                .add("exit", isExit)
+                .add("awaitingConfirmation", isAwaitingConfirmation)
                 .toString();
     }
 
