@@ -1,5 +1,6 @@
 package seedu.address.logic.parser;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +25,12 @@ public class ArgumentMultimap {
      **/
     private final Map<Prefix, List<String>> argMultimap = new HashMap<>();
 
+    private final List<Map.Entry<Prefix, String>> orderedArgs = new ArrayList<>();
+
     /**
      * Associates the specified argument value with {@code prefix} key in this map.
      * If the map previously contained a mapping for the key, the new value is appended to the list of existing values.
+     * Order of tags are maintained.
      *
      * @param prefix   Prefix key with which the specified argument value is to be associated
      * @param argValue Argument value to be associated with the specified prefix key
@@ -35,14 +39,24 @@ public class ArgumentMultimap {
         List<String> argValues = getAllValues(prefix);
         argValues.add(argValue);
         argMultimap.put(prefix, argValues);
-    }
 
+        orderedArgs.add(new AbstractMap.SimpleEntry<>(prefix, argValue));
+    }
     /**
      * Returns the last value of {@code prefix}.
      */
     public Optional<String> getValue(Prefix prefix) {
         List<String> values = getAllValues(prefix);
         return values.isEmpty() ? Optional.empty() : Optional.of(values.get(values.size() - 1));
+    }
+
+    /**
+     * Returns a list of all prefix-argument pairs in the exact order they were parsed from the user's input.
+     *
+     * @return A chronological list of Map.Entry objects containing the Prefix and its associated argument string.
+     */
+    public List<Map.Entry<Prefix, String>> getOrderedArguments() {
+        return new ArrayList<>(orderedArgs);
     }
 
     /**
