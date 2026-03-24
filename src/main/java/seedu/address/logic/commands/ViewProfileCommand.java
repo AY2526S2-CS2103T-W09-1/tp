@@ -85,7 +85,8 @@ public class ViewProfileCommand extends Command {
             }
             model.updateFilteredPersonList(Person::isUserProfile);
             Person userProfile = model.getUserProfile().get();
-            return new CommandResult(MESSAGE_SUCCESS_SELF, false, false, userProfile);
+            String profileText = "Displaying your profile.\n\n" + formatProfileDisplay(userProfile);
+            return new CommandResult(profileText, false, false, userProfile);
         }
         // VIEW CONTACT
         List<Person> lastShownList = model.getFilteredPersonList();
@@ -107,12 +108,33 @@ public class ViewProfileCommand extends Command {
             personToView = personOptional.get();
         }
 
-        if (personToView == null) {
-            throw new CommandException(MESSAGE_PERSON_NOT_FOUND);
-        }
+        String contactText = formatProfileDisplay(personToView);
+        return new CommandResult(contactText, false, false, personToView);
+    }
 
-        return new CommandResult(
-                String.format(MESSAGE_SUCCESS_CONTACT, personToView.getName().fullName),
-                false, false, personToView);
+    /**
+     * Formats the user's details into a readable string for display.
+     */
+    public static String formatProfileDisplay(Person person) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Viewing Contact: ").append(person.getName().fullName).append("\n");
+
+        if (person.getGames().isEmpty()) {
+            builder.append("Games: None added yet.");
+        } else {
+            builder.append("Games:\n");
+            person.getGames().forEach(game -> {
+                builder.append(" - ").append(game.gameName);
+                if (!game.getAliases().isEmpty()) {
+                    builder.append(" [Aliases: ");
+                    game.getAliases().forEach(alias -> builder.append(alias).append(", "));
+                    // Remove the trailing comma and space
+                    builder.setLength(builder.length() - 2);
+                    builder.append("]");
+                }
+                builder.append("\n");
+            });
+        }
+        return builder.toString().trim();
     }
 }

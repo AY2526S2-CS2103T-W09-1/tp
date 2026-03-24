@@ -16,7 +16,7 @@ public class CommandResultTest {
     public void equals() {
         CommandResult commandResult = new CommandResult("feedback");
 
-        // same values -> returns true-
+        // same values -> returns true
         assertTrue(commandResult.equals(new CommandResult("feedback")));
         assertTrue(commandResult.equals(new CommandResult("feedback", false, false)));
         assertTrue(commandResult.equals(new CommandResult("feedback", false, false, null)));
@@ -45,6 +45,13 @@ public class CommandResultTest {
 
         // different personToView value -> returns false
         assertFalse(commandResult.equals(new CommandResult("feedback", false, false, person)));
+
+        // different pendingPerson value -> returns false
+        Person alice = new PersonBuilder().withName("Alice").build();
+        Person bob = new PersonBuilder().withName("Bob").build();
+        CommandResult commandResultAlice = new CommandResult("feedback", alice);
+        CommandResult commandResultBob = new CommandResult("feedback", bob);
+        assertFalse(commandResultAlice.equals(commandResultBob));
     }
 
     @Test

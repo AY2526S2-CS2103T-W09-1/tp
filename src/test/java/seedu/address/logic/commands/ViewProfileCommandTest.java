@@ -35,7 +35,10 @@ public class ViewProfileCommandTest {
 
         CommandResult result = new ViewProfileCommand().execute(model);
 
-        assertEquals(ViewProfileCommand.MESSAGE_SUCCESS_SELF, result.getFeedbackToUser());
+        // We use your static helper method here to predict the exact string!
+        String expectedMessage = "Displaying your profile.\n\n" + ViewProfileCommand.formatProfileDisplay(userProfile);
+
+        assertEquals(expectedMessage, result.getFeedbackToUser());
         assertEquals(userProfile, result.getViewedPerson());
     }
 
@@ -46,17 +49,31 @@ public class ViewProfileCommandTest {
         assertThrows(CommandException.class,
                 ViewProfileCommand.MESSAGE_NO_PROFILE, () -> new ViewProfileCommand().execute(model));
     }
+
+    @Test
+    public void execute_viewByName_success() {
+        Person personToView = typicalModel.getFilteredPersonList().get(0);
+        ViewProfileCommand viewCommand = new ViewProfileCommand(null, personToView.getName());
+
+        // Use the formatted display to match our new text box output
+        String expectedMessage = ViewProfileCommand.formatProfileDisplay(personToView);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage,
+                false,
+                false,
+                personToView);
+        Model expectedModel = new ModelManager(typicalModel.getAddressBook(), new UserPrefs());
+
+        assertCommandSuccess(viewCommand, typicalModel, expectedCommandResult, expectedModel);
+    }
+
     @Test
     public void execute_viewByIndex_success() {
         Person personToView = typicalModel.getFilteredPersonList().get(0);
         ViewProfileCommand viewCommand = new ViewProfileCommand(INDEX_FIRST_PERSON, null);
 
-        String expectedMessage = String.format(ViewProfileCommand.MESSAGE_SUCCESS_CONTACT,
-                personToView.getName().fullName);
-        CommandResult expectedCommandResult = new CommandResult(expectedMessage,
-                false,
-                false,
-                personToView);
+        // Use the formatted display to match our new text box output
+        String expectedMessage = ViewProfileCommand.formatProfileDisplay(personToView);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, false, false, personToView);
         Model expectedModel = new ModelManager(typicalModel.getAddressBook(), new UserPrefs());
 
         assertCommandSuccess(viewCommand, typicalModel, expectedCommandResult, expectedModel);
@@ -105,5 +122,14 @@ public class ViewProfileCommandTest {
         org.junit.jupiter.api.Assertions.assertFalse(viewSelf.equals(viewByIndexFirst));
         org.junit.jupiter.api.Assertions.assertFalse(viewByIndexFirst.equals(viewByNameA));
         org.junit.jupiter.api.Assertions.assertFalse(viewByIndexFirst.equals(viewByIndexSecond));
+    }
+
+    @Test
+    public void hashCodeMethod() {
+        ViewProfileCommand command1 = new ViewProfileCommand(INDEX_FIRST_PERSON, null);
+        ViewProfileCommand command2 = new ViewProfileCommand(INDEX_FIRST_PERSON, null);
+
+        // same values -> returns same hashcode
+        assertEquals(command1.hashCode(), command2.hashCode());
     }
 }
