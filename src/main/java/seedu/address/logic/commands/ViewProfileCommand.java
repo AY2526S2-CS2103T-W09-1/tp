@@ -15,6 +15,16 @@ public class ViewProfileCommand extends Command {
     public static final String MESSAGE_NO_PROFILE = "No user profile found.";
 
     @Override
+    public boolean equals(Object other) {
+        return other instanceof ViewProfileCommand;
+    }
+
+    @Override
+    public int hashCode() {
+        return ViewProfileCommand.class.hashCode();
+    }
+
+    @Override
     public CommandResult execute(Model model) throws CommandException {
         requireNonNull(model);
         if (model.getUserProfile().isEmpty()) {

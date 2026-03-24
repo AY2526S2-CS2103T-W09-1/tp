@@ -1,11 +1,18 @@
 package seedu.address.logic.commands;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
+
+import java.util.HashSet;
 
 import org.junit.jupiter.api.Test;
 
+import seedu.address.logic.commands.exceptions.CommandException;
+import seedu.address.model.AddressBook;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
@@ -55,6 +62,65 @@ public class DeleteGameCommandTest {
         DeleteGameCommand deleteGameCommand = new DeleteGameCommand(null, notInModelName, gameToDelete, false);
 
         assertCommandFailure(deleteGameCommand, model, DeleteGameCommand.MESSAGE_CONTACT_NOT_FOUND);
+    }
+
+    @Test
+    public void execute_deleteGameByIndex_success() throws Exception {
+        Person firstPerson = model.getFilteredPersonList().get(0);
+        Game gameToProcess = new Game("Minecraft");
+
+        new AddGameCommand(INDEX_FIRST_PERSON, null, gameToProcess, false).execute(model);
+
+        DeleteGameCommand deleteGameCommand =
+                new DeleteGameCommand(INDEX_FIRST_PERSON, null, gameToProcess, false);
+
+        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        String expectedMessage = String.format(DeleteGameCommand.MESSAGE_SUCCESS,
+                gameToProcess.gameName,
+                firstPerson.getName().fullName);
+
+        assertCommandSuccess(deleteGameCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_invalidIndex_failure() {
+        seedu.address.commons.core.index.Index outOfBoundIndex =
+                seedu.address.commons.core.index.Index.fromOneBased(model.getFilteredPersonList().size() + 1);
+        Game gameToDelete = new Game("Minecraft");
+        DeleteGameCommand deleteGameCommand = new DeleteGameCommand(outOfBoundIndex, null, gameToDelete, false);
+
+        assertCommandFailure(deleteGameCommand, model,
+                seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+    }
+
+    @Test
+    public void execute_useUserProfile_success() throws Exception {
+        Person userProfile = new Person(new seedu.address.model.person.Name("John Doe"),
+                new HashSet<>(), new HashSet<>(), true);
+        AddressBook ab = new AddressBook();
+        ab.addPerson(userProfile);
+        Model profileModel = new ModelManager(ab, new UserPrefs());
+
+        Game gameToAdd = new Game("Valorant");
+        new AddGameCommand(null, null, gameToAdd, true).execute(profileModel);
+
+        DeleteGameCommand deleteGameCommand = new DeleteGameCommand(null, null, gameToAdd, true);
+        String expectedMessage = String.format(DeleteGameCommand.MESSAGE_SUCCESS,
+                gameToAdd.gameName, "John Doe");
+
+        CommandResult result = deleteGameCommand.execute(profileModel);
+        assertEquals(expectedMessage, result.getFeedbackToUser());
+        assertTrue(profileModel.getUserProfile().isPresent());
+        assertTrue(profileModel.getUserProfile().get().getGames().isEmpty());
+    }
+
+    @Test
+    public void execute_useUserProfile_noProfile_failure() {
+        Model emptyModel = new ModelManager(new AddressBook(), new UserPrefs());
+        Game gameToDelete = new Game("Valorant");
+        DeleteGameCommand deleteGameCommand = new DeleteGameCommand(null, null, gameToDelete, true);
+
+        assertCommandFailure(deleteGameCommand, emptyModel, "No user profile found.");
     }
 
     @Test

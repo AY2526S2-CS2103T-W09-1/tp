@@ -46,4 +46,24 @@ public class AddGameCommandParserTest {
         assertParseFailure(parser, " 1", expectedMessage);
         assertParseFailure(parser, " n/Zi Xuan", expectedMessage);
     }
+
+    @Test
+    public void parse_indexZero_returnsUserProfileCommand() {
+        // Simulates: game add 0 g/Minecraft (user profile)
+        assertParseSuccess(parser, " 0 g/Minecraft",
+                new AddGameCommand(null, null, validGame, true));
+    }
+
+    @Test
+    public void parse_indexZeroWithName_throwsParseException() {
+        // Index 0 and name prefix together is invalid
+        assertParseFailure(parser, " 0 n/Zi Xuan g/Minecraft",
+                "Please provide either an index OR a name, not both.");
+    }
+
+    @Test
+    public void parse_invalidGameName_throwsParseException() {
+        // Empty game name is invalid
+        assertParseFailure(parser, " 1 g/", seedu.address.model.game.Game.MESSAGE_CONSTRAINTS);
+    }
 }
