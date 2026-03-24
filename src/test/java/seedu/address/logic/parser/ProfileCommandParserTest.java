@@ -3,6 +3,7 @@ package seedu.address.logic.parser;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,13 @@ public class ProfileCommandParserTest {
 
     @Test
     public void parse_viewAction_returnsViewProfileCommand() {
-        assertParseSuccess(parser, " view", new ViewProfileCommand());
+        assertParseSuccess(parser, " view", new ViewProfileCommand(null, null));
+    }
+
+    @Test
+    public void parse_viewActionWithArgs_returnsViewProfileCommand() {
+        // Simulates: profile view 1
+        assertParseSuccess(parser, " view 1", new ViewProfileCommand(INDEX_FIRST_PERSON, null));
     }
 
     @Test

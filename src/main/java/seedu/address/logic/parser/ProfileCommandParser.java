@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import seedu.address.logic.commands.Command;
-import seedu.address.logic.commands.ViewProfileCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 
 /**
@@ -30,9 +29,10 @@ public class ProfileCommandParser implements Parser<Command> {
         }
 
         final String action = matcher.group("action");
+        final String arguments = matcher.group("arguments"); // pass in name/index
 
         return switch (action) {
-        case "view" -> new ViewProfileCommand();
+        case "view" -> new ViewProfileCommandParser().parse(arguments);
         default -> throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
         };
     }
