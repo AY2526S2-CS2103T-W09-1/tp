@@ -81,7 +81,7 @@ public class AddressBookParser {
 
         case CopyCommand.COMMAND_WORD:
             return new CopyCommandParser().parse(arguments);
-            
+
         case ProfileCommandParser.COMMAND_WORD:
             return new ProfileCommandParser().parse(arguments);
 
