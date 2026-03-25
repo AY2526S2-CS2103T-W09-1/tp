@@ -41,6 +41,15 @@ public class CommandResultTest {
         // awaiting confirmation vs not -> returns false
         Person person = new PersonBuilder().withName("Alice Pauline").build();
         assertFalse(commandResult.equals(new CommandResult("feedback", person)));
+
+        //same themeToSwitch -> returns true
+        assertEquals(new CommandResult("feedback", "light"), new CommandResult("feedback", "light"));
+
+        // different themeToSwitch -> returns false
+        assertNotEquals(new CommandResult("feedback", "light"), new CommandResult("feedback", "dark"));
+
+        // one with theme, one without -> returns false
+        assertNotEquals(new CommandResult("feedback", "light"), new CommandResult("feedback"));
     }
 
     @Test
@@ -58,6 +67,10 @@ public class CommandResultTest {
 
         // different exit value -> returns different hashcode
         assertNotEquals(commandResult.hashCode(), new CommandResult("feedback", false, true).hashCode());
+
+        // different themeToSwitch -> returns different hashcode
+        assertNotEquals(new CommandResult("feedback", "light").hashCode(),
+                new CommandResult("feedback", "dark").hashCode());
     }
 
     @Test
@@ -84,7 +97,8 @@ public class CommandResultTest {
         String expected = CommandResult.class.getCanonicalName() + "{feedbackToUser="
                 + commandResult.getFeedbackToUser() + ", showHelp=" + commandResult.isShowHelp()
                 + ", exit=" + commandResult.isExit() + ", awaitingConfirmation="
-                + commandResult.isAwaitingConfirmation() + "}";
+                + commandResult.isAwaitingConfirmation()+ ", themeToSwitch="
+                + commandResult.getThemeToSwitch() + "}";
         assertEquals(expected, commandResult.toString());
     }
 }
