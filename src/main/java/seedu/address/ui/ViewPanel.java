@@ -1,9 +1,12 @@
 package seedu.address.ui;
 
+import java.util.Comparator;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 //import javafx.scene.control.Tooltip;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import seedu.address.model.person.Person;
@@ -22,6 +25,8 @@ public class ViewPanel extends UiPart<Region> {
     private Label name;
     @FXML
     private VBox gamesList;
+    @FXML
+    private FlowPane tags;
 
     /**
      * Constructor for ViewPanel
@@ -38,19 +43,32 @@ public class ViewPanel extends UiPart<Region> {
             return;
         }
 
-        // 1. show profile container, hide placeholder text
+        // Show profile container, hide placeholder text
         placeholderText.setVisible(false);
         placeholderText.setManaged(false);
         profileContainer.setVisible(true);
         profileContainer.setManaged(true);
 
-        // 2. Set the Name
+        // Set the Name
         name.setText("User: " + person.getName().fullName);
 
-        // 3. Clear out any previous games
+        // Clear out any prev tags
+        tags.getChildren().clear();
+
+        person.getTags().stream()
+                .sorted(Comparator.comparing(tag -> tag.tagName))
+                .forEach(tag -> {
+                    Label tagLabel = new Label(tag.tagName);
+                    // Give it a nice, modern blue tag styling to match the dark theme
+                    tagLabel.setStyle("-fx-background-color: #3e7b91; -fx-text-fill: white; "
+                            + "-fx-padding: 3 7 3 7; -fx-background-radius: 3; -fx-font-size: 11px;");
+                    tags.getChildren().add(tagLabel);
+                });
+
+        // Clear out any previous games
         gamesList.getChildren().clear();
 
-        // 3. Populate the Games and Aliases
+        // Populate the Games and Aliases
         if (person.getGames().isEmpty()) {
             Label emptyLabel = new Label("No games added yet.");
             emptyLabel.setStyle("-fx-text-fill: derive(white, -30%); -fx-font-style: italic;");

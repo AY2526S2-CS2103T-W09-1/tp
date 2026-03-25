@@ -48,7 +48,9 @@ public class EditCommandTest {
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(model.getFilteredPersonList().get(0), editedPerson);
 
-        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, false, false, editedPerson);
+
+        assertCommandSuccess(editCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test
@@ -68,8 +70,10 @@ public class EditCommandTest {
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(lastPerson, editedPerson);
+        
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, false, false, editedPerson);
 
-        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+        assertCommandSuccess(editCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test
@@ -81,7 +85,9 @@ public class EditCommandTest {
 
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
 
-        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, false, false, editedPerson);
+
+        assertCommandSuccess(editCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test
@@ -98,7 +104,9 @@ public class EditCommandTest {
         Model expectedModel = new ModelManager(new AddressBook(model.getAddressBook()), new UserPrefs());
         expectedModel.setPerson(model.getFilteredPersonList().get(0), editedPerson);
 
-        assertCommandSuccess(editCommand, model, expectedMessage, expectedModel);
+        CommandResult expectedCommandResult = new CommandResult(expectedMessage, false, false, editedPerson);
+
+        assertCommandSuccess(editCommand, model, expectedCommandResult, expectedModel);
     }
 
     @Test
@@ -186,6 +194,8 @@ public class EditCommandTest {
         CommandResult result = editCommand.execute(profileModel);
         assertEquals(String.format(EditCommand.MESSAGE_EDIT_PERSON_SUCCESS,
                 Messages.format(profileModel.getUserProfile().get())), result.getFeedbackToUser());
+        assertEquals(profileModel.getUserProfile().get(), result.getViewedPerson());
+        assertEquals("Jane Doe", profileModel.getUserProfile().get().getName().fullName);
     }
 
     @Test

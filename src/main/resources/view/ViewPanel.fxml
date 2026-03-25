@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
 
+<?import javafx.scene.layout.FlowPane?>
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       styleClass="pane-with-border" alignment="CENTER" VBox.vgrow="ALWAYS">
 
@@ -28,6 +29,8 @@
 
             <Label fx:id="name" styleClass="label-header" style="-fx-font-size: 26px;
              -fx-text-fill: white; -fx-font-weight: bold;" wrapText="true"/>
+
+            <FlowPane fx:id="tags" hgap="5" vgap="5" />
 
             <VBox fx:id="gamesList" spacing="8" />
         </VBox>
