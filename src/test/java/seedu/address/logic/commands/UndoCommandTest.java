@@ -36,7 +36,7 @@ public class UndoCommandTest {
         CommandResult result = undoCommand.execute(model);
 
         assertEquals(UndoCommand.MESSAGE_SUCCESS, result.getFeedbackToUser());
-        assertEquals(1, tracker.undoCallCount);
+        assertEquals(1, tracker.getUndoCallCount());
         assertEquals(0, history.size());
     }
 
@@ -52,8 +52,8 @@ public class UndoCommandTest {
 
         new UndoCommand(history).execute(model);
 
-        assertEquals(1, second.undoCallCount);
-        assertEquals(0, first.undoCallCount);
+        assertEquals(1, second.getUndoCallCount());
+        assertEquals(0, first.getUndoCallCount());
         assertEquals(1, history.size());
     }
 
@@ -61,7 +61,11 @@ public class UndoCommandTest {
      * A stub UndoableCommand that tracks how many times undo() was called.
      */
     private static class UndoCallTracker implements UndoableCommand {
-        int undoCallCount = 0;
+        private int undoCallCount = 0;
+
+        public int getUndoCallCount() {
+            return undoCallCount;
+        }
 
         @Override
         public void undo(Model model) {
