@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddAliasCommand;
 import seedu.address.logic.commands.DeleteAliasCommand;
+import seedu.address.logic.commands.EditAliasCommand;
 import seedu.address.model.game.Game;
 import seedu.address.model.person.Alias;
 import seedu.address.model.person.Name;
@@ -88,11 +89,45 @@ public class AliasCommandParserTest {
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteAliasCommand.MESSAGE_USAGE));
     }
 
+    // Tests for EDIT alias command
+
+    @Test
+    public void parse_editAliasValidInputByName_success() {
+        EditAliasCommand expected = new EditAliasCommand(null, new Name("Benjamin"),
+                new Game("Valorant"), new Alias("JohnnyV"), new Alias("JohnnyValorant"), false);
+        assertParseSuccess(parser, "edit n/Benjamin g/Valorant al/JohnnyV na/JohnnyValorant", expected);
+    }
+
+    @Test
+    public void parse_editAliasValidInputByIndex_success() {
+        EditAliasCommand expected = new EditAliasCommand(INDEX_FIRST_PERSON, null,
+                new Game("Valorant"), new Alias("JohnnyV"), new Alias("JohnnyValorant"), false);
+        assertParseSuccess(parser, "edit 1 g/Valorant al/JohnnyV na/JohnnyValorant", expected);
+    }
+
+    @Test
+    public void parse_editAliasMissingNewAliasPrefix_failure() {
+        assertParseFailure(parser, "edit n/Benjamin g/Valorant al/JohnnyV",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditAliasCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_editAliasMutuallyExclusive_failure() {
+        assertParseFailure(parser, "edit 1 n/Benjamin g/Valorant al/JohnnyV na/JohnnyValorant",
+                "Please provide either an index OR a name, not both.");
+    }
+
+    @Test
+    public void parse_editAliasUserProfileWithName_failure() {
+        assertParseFailure(parser, "edit 0 n/Benjamin g/Valorant al/JohnnyV na/JohnnyValorant",
+                "Please provide either an index OR a name, not both.");
+    }
+
     // Tests for unknown actions and formats
 
     @Test
     public void parse_unknownAction_failure() {
-        assertParseFailure(parser, "edit n/Benjamin al/Benjumpin", MESSAGE_UNKNOWN_COMMAND);
+        assertParseFailure(parser, "unknown n/Benjamin al/Benjumpin", MESSAGE_UNKNOWN_COMMAND);
     }
 
     @Test

@@ -18,7 +18,8 @@ public class AliasCommandParser implements Parser<Command> {
     public static final String MESSAGE_USAGE = """
               alias: Manages aliases.
               alias add n/NAME g/GAME al/ALIAS
-              alias delete n/NAME g/GAME al/ALIAS""";
+              alias delete n/NAME g/GAME al/ALIAS
+              alias edit n/NAME g/GAME al/OLD_ALIAS na/NEW_ALIAS""";
 
     private static final Pattern ACTION_FORMAT = Pattern.compile("(?<action>\\S+)(?<arguments>.*)");
 
@@ -35,6 +36,7 @@ public class AliasCommandParser implements Parser<Command> {
         return switch (action) {
         case "add" -> new AddAliasCommandParser().parse(arguments);
         case "delete" -> new DeleteAliasCommandParser().parse(arguments);
+        case "edit" -> new EditAliasCommandParser().parse(arguments);
         default -> throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
         };
     }
