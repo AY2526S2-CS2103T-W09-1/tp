@@ -57,9 +57,8 @@ public class EditContactCommandTest {
 
     @Test
     public void execute_sameNameEdit_success() throws Exception {
-        Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
-        EditContactCommand command = new EditContactCommand(
-                ALICE.getName(), ALICE.getName());
+        Person person = model.getFilteredPersonList().get(0); // Alice Pauline
+        EditContactCommand command = new EditContactCommand(person.getName(), person.getName());
         // isSamePerson returns true → duplicate check skipped → succeeds
         command.execute(model);
     }
