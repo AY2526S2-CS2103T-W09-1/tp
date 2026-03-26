@@ -3,6 +3,8 @@ package seedu.address.logic;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Path;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
@@ -11,6 +13,8 @@ import seedu.address.commons.core.LogsCenter;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.DeleteContactCommand;
+import seedu.address.logic.commands.UndoCommand;
+import seedu.address.logic.commands.UndoableCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.AddressBookParser;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -34,6 +38,8 @@ public class LogicManager implements Logic {
     private final Storage storage;
     private final AddressBookParser addressBookParser;
     private Person pendingDeletePerson = null;
+    private DeleteContactCommand pendingDeleteCommand = null;
+    private final Deque<UndoableCommand> commandHistory = new ArrayDeque<>();
 
     /**
      * Constructs a {@code LogicManager} with the given {@code Model} and {@code Storage}.
@@ -53,12 +59,21 @@ public class LogicManager implements Logic {
         }
 
         CommandResult commandResult;
-        Command command = addressBookParser.parseCommand(commandText);
+        Command command = commandText.trim().equals(UndoCommand.COMMAND_WORD)
+                ? new UndoCommand(commandHistory)
+                : addressBookParser.parseCommand(commandText);
         commandResult = command.execute(model);
 
         if (commandResult.isAwaitingConfirmation()) {
             pendingDeletePerson = commandResult.getPendingPerson();
+            if (command instanceof DeleteContactCommand) {
+                pendingDeleteCommand = (DeleteContactCommand) command;
+            }
             return commandResult;
+        }
+
+        if (command instanceof UndoableCommand) {
+            commandHistory.push((UndoableCommand) command);
         }
 
         try {
@@ -80,9 +95,15 @@ public class LogicManager implements Logic {
         Person person = pendingDeletePerson;
         String name = person.getName().toString();
         pendingDeletePerson = null;
+        DeleteContactCommand deleteCommand = pendingDeleteCommand;
+        pendingDeleteCommand = null;
 
         if (response.equals("y") || response.equals("yes")) {
             model.deletePerson(person);
+            if (deleteCommand != null) {
+                deleteCommand.setDeletedPerson(person);
+                commandHistory.push(deleteCommand);
+            }
             try {
                 storage.saveAddressBook(model.getAddressBook());
             } catch (AccessDeniedException e) {

@@ -8,6 +8,7 @@ import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.commons.core.index.Index;
@@ -141,6 +142,52 @@ public class AddGameCommandTest {
     }
 
     @Test
+    public void execute_useUserProfile_success() throws Exception {
+        Person userProfile = new Person(new Name("John Doe"), new java.util.HashSet<>(), new java.util.HashSet<>(),
+                true);
+        AddressBook ab = new AddressBook();
+        ab.addPerson(userProfile);
+        Model profileModel = new ModelManager(ab, new UserPrefs());
+
+        Game gameToAdd = new Game("Minecraft");
+        AddGameCommand addGameCommand = new AddGameCommand(null, null, gameToAdd, true);
+        String expectedMessage = String.format(AddGameCommand.MESSAGE_SUCCESS, gameToAdd.gameName, "John Doe");
+
+        CommandResult result = addGameCommand.execute(profileModel);
+        org.junit.jupiter.api.Assertions.assertEquals(expectedMessage, result.getFeedbackToUser());
+        org.junit.jupiter.api.Assertions.assertTrue(profileModel.getUserProfile().isPresent());
+        org.junit.jupiter.api.Assertions.assertTrue(
+                profileModel.getUserProfile().get().getGames().contains(gameToAdd));
+    }
+
+    @Test
+    public void execute_noProfile_failure() {
+        Model emptyModel = new ModelManager(new AddressBook(), new UserPrefs());
+        Game gameToAdd = new Game("Minecraft");
+        AddGameCommand addGameCommand = new AddGameCommand(null, null, gameToAdd, true);
+        assertCommandFailure(addGameCommand, emptyModel, "No user profile found.");
+    }
+
+    @Test
+    public void execute_nullIndexAndName_failure() {
+        Game gameToAdd = new Game("Minecraft");
+        AddGameCommand addGameCommand = new AddGameCommand(null, null, gameToAdd, false);
+        assertCommandFailure(addGameCommand, model, AddGameCommand.MESSAGE_CONTACT_NOT_FOUND);
+    }
+
+    @Test
+    public void undo_addGame_gameRemoved() throws Exception {
+        Person firstPerson = model.getFilteredPersonList().get(0);
+        Game gameToAdd = new Game("Minecraft");
+        AddGameCommand addGameCommand = new AddGameCommand(null, firstPerson.getName(), gameToAdd, false);
+
+        addGameCommand.execute(model);
+        addGameCommand.undo(model);
+
+        Assertions.assertFalse(model.getFilteredPersonList().get(0).getGames().contains(gameToAdd));
+    }
+
+    @Test
     public void equals() {
         Game gameA = new Game("Minecraft");
         Game gameB = new Game("Valorant");
@@ -150,23 +197,31 @@ public class AddGameCommandTest {
         AddGameCommand addGameByName = new AddGameCommand(null, nameA, gameA, false);
 
         // same object -> returns true
-        org.junit.jupiter.api.Assertions.assertTrue(addGameByIndex.equals(addGameByIndex));
+        Assertions.assertTrue(addGameByIndex.equals(addGameByIndex));
 
         // same values -> returns true
         AddGameCommand addGameByIndexCopy = new AddGameCommand(INDEX_FIRST_PERSON, null, gameA, false);
-        org.junit.jupiter.api.Assertions.assertTrue(addGameByIndex.equals(addGameByIndexCopy));
+        Assertions.assertTrue(addGameByIndex.equals(addGameByIndexCopy));
 
         // different types -> returns false
-        org.junit.jupiter.api.Assertions.assertFalse(addGameByIndex.equals(1));
+        Assertions.assertFalse(addGameByIndex.equals(1));
 
         // null -> returns false
-        org.junit.jupiter.api.Assertions.assertFalse(addGameByIndex.equals(null));
+        Assertions.assertFalse(addGameByIndex.equals(null));
 
         // different game -> returns false
         AddGameCommand addDiffGame = new AddGameCommand(INDEX_FIRST_PERSON, null, gameB, false);
-        org.junit.jupiter.api.Assertions.assertFalse(addGameByIndex.equals(addDiffGame));
+        Assertions.assertFalse(addGameByIndex.equals(addDiffGame));
 
         // different target types (index vs name) -> returns false
-        org.junit.jupiter.api.Assertions.assertFalse(addGameByIndex.equals(addGameByName));
+        Assertions.assertFalse(addGameByIndex.equals(addGameByName));
+
+        // different useUserProfile -> returns false
+        AddGameCommand addGameWithProfile = new AddGameCommand(INDEX_FIRST_PERSON, null, gameA, true);
+        Assertions.assertFalse(addGameByIndex.equals(addGameWithProfile));
+
+        // same values by name -> returns true
+        AddGameCommand addGameByNameCopy = new AddGameCommand(null, nameA, gameA, false);
+        Assertions.assertTrue(addGameByName.equals(addGameByNameCopy));
     }
 }

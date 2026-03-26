@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
@@ -192,6 +193,27 @@ public class DeleteAliasCommandTest {
     }
 
     @Test
+    public void undo_deleteAlias_aliasRestored() throws Exception {
+        Person firstPerson = model.getFilteredPersonList().get(0);
+        Game game = new Game("Valorant");
+        Alias alias = new Alias("Benjumpin");
+
+        new AddGameCommand(null, firstPerson.getName(), game, false).execute(model);
+        new AddAliasCommand(null, firstPerson.getName(), game, alias, false).execute(model);
+
+        DeleteAliasCommand deleteAliasCommand =
+                new DeleteAliasCommand(null, firstPerson.getName(), game, alias, false);
+        deleteAliasCommand.execute(model);
+        deleteAliasCommand.undo(model);
+
+        Game gameAfterUndo = model.getFilteredPersonList().get(0).getGames().stream()
+                .filter(g -> g.equals(game))
+                .findFirst()
+                .orElseThrow();
+        assertTrue(gameAfterUndo.getAliases().contains(alias));
+    }
+
+    @Test
     public void toStringMethod() {
         Game game = new Game("Valorant");
         Alias alias = new Alias("Benjumpin");
@@ -236,5 +258,14 @@ public class DeleteAliasCommandTest {
         DeleteAliasCommand deleteDiffAlias =
                 new DeleteAliasCommand(INDEX_FIRST_PERSON, null, gameA, aliasB, false);
         org.junit.jupiter.api.Assertions.assertFalse(deleteAliasByIndex.equals(deleteDiffAlias));
+
+        // different useUserProfile -> returns false
+        DeleteAliasCommand deleteWithProfile =
+                new DeleteAliasCommand(INDEX_FIRST_PERSON, null, gameA, aliasA, true);
+        org.junit.jupiter.api.Assertions.assertFalse(deleteAliasByIndex.equals(deleteWithProfile));
+
+        // same values by name -> returns true
+        DeleteAliasCommand deleteAliasByNameCopy = new DeleteAliasCommand(null, nameA, gameA, aliasA, false);
+        org.junit.jupiter.api.Assertions.assertTrue(deleteAliasByName.equals(deleteAliasByNameCopy));
     }
 }

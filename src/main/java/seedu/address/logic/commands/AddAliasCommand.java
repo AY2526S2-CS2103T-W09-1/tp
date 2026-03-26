@@ -23,7 +23,7 @@ import seedu.address.model.person.Person;
 /**
  * Adds an alias to a game of an existing person in Harmony.
  */
-public class AddAliasCommand extends Command {
+public class AddAliasCommand extends Command implements UndoableCommand {
 
     public static final String COMMAND_WORD = "alias add";
 
@@ -49,6 +49,8 @@ public class AddAliasCommand extends Command {
     private final Game targetGame;
     private final Alias aliasToAdd;
     private final boolean useUserProfile;
+    private Person personBeforeEdit;
+    private Person personAfterEdit;
 
     /**
      * Creates a AddAliasCommand to add {@code alias} to the person.
@@ -120,6 +122,8 @@ public class AddAliasCommand extends Command {
                 personToEdit.isUserProfile()
         );
 
+        personBeforeEdit = personToEdit;
+        personAfterEdit = editedPerson;
         model.setPerson(personToEdit, editedPerson);
 
         return new CommandResult(String.format(
@@ -130,6 +134,11 @@ public class AddAliasCommand extends Command {
                 false,
                 false,
                 editedPerson);
+    }
+
+    @Override
+    public void undo(Model model) {
+        model.setPerson(personAfterEdit, personBeforeEdit);
     }
 
     @Override

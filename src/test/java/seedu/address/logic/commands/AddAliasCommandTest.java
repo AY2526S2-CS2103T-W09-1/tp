@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
@@ -207,6 +208,24 @@ public class AddAliasCommandTest {
     }
 
     @Test
+    public void undo_addAlias_aliasRemoved() throws Exception {
+        Person firstPerson = model.getFilteredPersonList().get(0);
+        Game game = new Game("Valorant");
+        Alias alias = new Alias("Benjumpin");
+
+        new AddGameCommand(null, firstPerson.getName(), game, false).execute(model);
+        AddAliasCommand addAliasCommand = new AddAliasCommand(null, firstPerson.getName(), game, alias, false);
+        addAliasCommand.execute(model);
+        addAliasCommand.undo(model);
+
+        Game gameAfterUndo = model.getFilteredPersonList().get(0).getGames().stream()
+                .filter(g -> g.equals(game))
+                .findFirst()
+                .orElseThrow();
+        assertFalse(gameAfterUndo.getAliases().contains(alias));
+    }
+
+    @Test
     public void toStringMethod() {
         Game game = new Game("Valorant");
         Alias alias = new Alias("Benjumpin");
@@ -248,5 +267,13 @@ public class AddAliasCommandTest {
         // different alias -> returns false
         AddAliasCommand addDiffAlias = new AddAliasCommand(INDEX_FIRST_PERSON, null, gameA, aliasB, false);
         org.junit.jupiter.api.Assertions.assertFalse(addAliasByIndex.equals(addDiffAlias));
+
+        // different useUserProfile -> returns false
+        AddAliasCommand addWithProfile = new AddAliasCommand(INDEX_FIRST_PERSON, null, gameA, aliasA, true);
+        org.junit.jupiter.api.Assertions.assertFalse(addAliasByIndex.equals(addWithProfile));
+
+        // same values by name -> returns true
+        AddAliasCommand addAliasByNameCopy = new AddAliasCommand(null, nameA, gameA, aliasA, false);
+        org.junit.jupiter.api.Assertions.assertTrue(addAliasByName.equals(addAliasByNameCopy));
     }
 }

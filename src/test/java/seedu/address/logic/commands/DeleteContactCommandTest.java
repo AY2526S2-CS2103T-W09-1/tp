@@ -102,6 +102,20 @@ public class DeleteContactCommandTest {
     }
 
     @Test
+    public void undo_deleteContact_personRestored() {
+        Person personToDelete = ALICE;
+        DeleteContactCommand deleteCommand = new DeleteContactCommand(personToDelete.getName());
+        deleteCommand.setDeletedPerson(personToDelete);
+        model.deletePerson(personToDelete);
+
+        assertFalse(model.getFilteredPersonList().contains(personToDelete));
+
+        deleteCommand.undo(model);
+
+        assertTrue(model.getFilteredPersonList().contains(personToDelete));
+    }
+
+    @Test
     public void toStringMethod() {
         DeleteContactCommand deleteCommand = new DeleteContactCommand(ALICE.getName());
         String expected = DeleteContactCommand.class.getCanonicalName() + "{targetName=" + ALICE.getName() + "}";
