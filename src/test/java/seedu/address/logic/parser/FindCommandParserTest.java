@@ -59,4 +59,61 @@ public class FindCommandParserTest {
     public void parse_emptyAliasPrefix_throwsParseException() {
         assertParseFailure(parser, "al/", String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
     }
+
+    @Test
+    public void parse_nameAndGameCombined_returnsFindCommand() {
+        // Combined name + game returns a non-null FindCommand without throwing
+        FindCommand result = null;
+        try {
+            result = parser.parse("Alice g/Valorant");
+        } catch (Exception e) {
+            org.junit.jupiter.api.Assertions.fail("Parsing combined name and game should not throw: " + e.getMessage());
+        }
+        org.junit.jupiter.api.Assertions.assertNotNull(result);
+    }
+
+    @Test
+    public void parse_nameAndAliasCombined_returnsFindCommand() {
+        FindCommand result = null;
+        try {
+            result = parser.parse("Alice al/BenJumpin");
+        } catch (Exception e) {
+            org.junit.jupiter.api.Assertions.fail("Parsing combined name and alias should not throw: " + e.getMessage());
+        }
+        org.junit.jupiter.api.Assertions.assertNotNull(result);
+    }
+
+    @Test
+    public void parse_gameAndAliasCombined_returnsFindCommand() {
+        FindCommand result = null;
+        try {
+            result = parser.parse("g/Valorant al/BenJumpin");
+        } catch (Exception e) {
+            org.junit.jupiter.api.Assertions.fail("Parsing combined game and alias should not throw: " + e.getMessage());
+        }
+        org.junit.jupiter.api.Assertions.assertNotNull(result);
+    }
+
+    @Test
+    public void parse_allThreeCombined_returnsFindCommand() {
+        FindCommand result = null;
+        try {
+            result = parser.parse("Alice g/Valorant al/BenJumpin");
+        } catch (Exception e) {
+            org.junit.jupiter.api.Assertions.fail("Parsing all three constraints should not throw: " + e.getMessage());
+        }
+        org.junit.jupiter.api.Assertions.assertNotNull(result);
+    }
+
+    @Test
+    public void parse_emptyGameInCombined_throwsParseException() {
+        assertParseFailure(parser, "Alice g/",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
+    }
+
+    @Test
+    public void parse_emptyAliasInCombined_throwsParseException() {
+        assertParseFailure(parser, "Alice al/",
+                String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
+    }
 }
