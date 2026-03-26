@@ -122,7 +122,6 @@ public class AliasCommandParserTest {
         assertParseFailure(parser, "edit 0 n/Benjamin g/Valorant al/JohnnyV na/JohnnyValorant",
                 "Please provide either an index OR a name, not both.");
     }
-    
 
     // Tests for unknown actions and formats
 
