@@ -78,7 +78,7 @@ public class FindCommandParserTest {
         try {
             result = parser.parse("Alice al/BenJumpin");
         } catch (Exception e) {
-            org.junit.jupiter.api.Assertions.fail("Parsing combined name and alias should not throw: " + e.getMessage());
+            org.junit.jupiter.api.Assertions.fail("Should not throw: " + e.getMessage());
         }
         org.junit.jupiter.api.Assertions.assertNotNull(result);
     }
@@ -89,7 +89,7 @@ public class FindCommandParserTest {
         try {
             result = parser.parse("g/Valorant al/BenJumpin");
         } catch (Exception e) {
-            org.junit.jupiter.api.Assertions.fail("Parsing combined game and alias should not throw: " + e.getMessage());
+            org.junit.jupiter.api.Assertions.fail("Should not throw: " + e.getMessage());
         }
         org.junit.jupiter.api.Assertions.assertNotNull(result);
     }
