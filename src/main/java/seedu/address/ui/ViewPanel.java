@@ -36,6 +36,19 @@ public class ViewPanel extends UiPart<Region> {
     }
 
     /**
+     * Clears the ViewPanel and shows the placeholder text.
+     */
+    public void clearPerson() {
+        placeholderText.setVisible(true);
+        placeholderText.setManaged(true);
+        profileContainer.setVisible(false);
+        profileContainer.setManaged(false);
+        name.setText("");
+        tags.getChildren().clear();
+        gamesList.getChildren().clear();
+    }
+
+    /**
      * Updates the UI to display the details of the given {@code Person}.
      */
     public void setPerson(Person person) {

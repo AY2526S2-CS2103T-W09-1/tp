@@ -187,7 +187,9 @@ public class MainWindow extends UiPart<Stage> {
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
 
-            if (commandResult.getViewedPerson() != null) {
+            if (commandResult.isClearView()) {
+                viewPanel.clearPerson();
+            } else if (commandResult.getViewedPerson() != null) {
                 viewPanel.setPerson(commandResult.getViewedPerson());
             }
 

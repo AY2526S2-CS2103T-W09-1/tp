@@ -29,6 +29,6 @@ public class UndoCommand extends Command {
             throw new CommandException(MESSAGE_NOTHING_TO_UNDO);
         }
         commandHistory.pop().undo(model);
-        return new CommandResult(MESSAGE_SUCCESS);
+        return new CommandResult(MESSAGE_SUCCESS, true);
     }
 }
