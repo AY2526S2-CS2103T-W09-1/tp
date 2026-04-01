@@ -1,0 +1,18 @@
+@startuml
+skin rose
+skinparam ActivityFontSize 15
+skinparam ArrowFontSize 12
+start
+:User executes command;
+
+if () then ([command succeeds])
+    if () then ([implements UndoableCommand])
+        :Push command onto\ncommandHistory stack;
+    else ([else])
+    endif
+    :Save AddressBook to storage;
+else ([command fails])
+    :Throw CommandException;
+endif
+stop
+@enduml

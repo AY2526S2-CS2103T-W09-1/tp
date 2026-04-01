@@ -11,6 +11,8 @@ package "Parser Classes" as ParserClasses{
 Class XYZCommand
 Class CommandResult
 Class "{abstract}\nCommand" as Command
+Class "<<interface>>\nUndoableCommand" as UndoableCommand
+Class UndoCommand
 
 
 Class "<<interface>>\nLogic" as Logic
@@ -29,9 +31,13 @@ HiddenOutside ..> Logic
 
 LogicManager .right.|> Logic
 LogicManager -right->"1" ParserClasses
+LogicManager ->"*" UndoableCommand : commandHistory
 ParserClasses ..> XYZCommand : <<create>>
 
 XYZCommand -up-|> Command
+XYZCommand .up.|> UndoableCommand
+UndoCommand -up-|> Command
+UndoCommand .right.> UndoableCommand : <<call undo>>
 LogicManager .left.> Command : <<call>>
 
 LogicManager --> Model
@@ -39,7 +45,7 @@ LogicManager --> Storage
 Storage --[hidden] Model
 Command .[hidden]up.> Storage
 Command .right.> Model
-note right of XYZCommand: XYZCommand = AddCommand, \nFindCommand, etc
+note right of XYZCommand: XYZCommand = AddContactCommand,\nAddGameCommand, etc (if undoable)
 
 Logic ..> CommandResult
 LogicManager .down.> CommandResult
