@@ -260,7 +260,7 @@ The following activity diagram summarizes what happens when a user executes a ne
 
 **Aspect: No redo support:**
 
-Redo is not implemented. Once a command is undone it is removed from the history stack permanently. This keeps the implementation simple and avoids the complexity of maintaining a separate redo stack.
+Redo is not implemented. Once a command is undone it is removed from the history stack permanently.
 
 
 --------------------------------------------------------------------------------------------------------------------
