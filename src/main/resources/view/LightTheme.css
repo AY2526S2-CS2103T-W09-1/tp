@@ -412,7 +412,7 @@
     -fx-padding: 3 0 0 5;
 }
 
-//* --- ViewPanel Profile Styling --- */
+/* --- ViewPanel Profile Styling --- */
 .profile-tag {
     -fx-background-color: #90caf9;
     -fx-text-fill: #1d1d1d;
