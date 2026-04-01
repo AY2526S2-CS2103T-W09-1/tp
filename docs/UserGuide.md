@@ -170,12 +170,13 @@ Format: `find KEYWORD [MORE_KEYWORDS]`
 * The search is case-insensitive. e.g `hans` will match `Hans`
 * The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
 * Only full words will be matched e.g. `Han` will not match `Hans`
-* Persons matching at least one keyword will be returned (i.e. `OR` search).
-  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
+* All keywords must be present in the name (i.e. `AND` search).
+  e.g. `find Hans Bo` will only return contacts whose name contains both `Hans` and `Bo`
 
 Examples:
 * `find John` returns `john` and `John Doe`
-* `find alex david` returns `Alex Yeoh`, `David Li`
+* `find John Doe` returns `John Doe` but not `John Smith` or `Jane Doe`
+* `find alex david` returns `Alex David` but not `Alex Yeoh` or `David Li`
 
 **Find by game:**
 
@@ -196,6 +197,18 @@ Format: `find al/ALIAS`
 
 Examples:
 * `find al/Benjumpin` returns all persons with the alias `Benjumpin`.
+
+**Combined search:**
+
+Format: `find [KEYWORD]…​ [g/GAME_NAME] [al/ALIAS]`
+
+* All specified constraints must be satisfied (i.e. `AND` search).
+* At least one constraint must be provided.
+
+Examples:
+* `find Alice g/Valorant` returns contacts named `Alice` who have `Valorant` in their game list.
+* `find g/Valorant al/Ace` returns contacts who play `Valorant` with the alias `Ace`.
+* `find Alice g/Valorant al/Ace` returns contacts named `Alice` who play `Valorant` with the alias `Ace`.
 
 ### Deleting a contact : `contact delete`
 
