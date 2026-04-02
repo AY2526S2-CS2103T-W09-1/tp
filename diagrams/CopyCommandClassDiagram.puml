@@ -1,0 +1,19 @@
+@startuml
+!include style.puml
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor LOGIC_COLOR
+
+package Logic as LogicPackage {
+    class "<<interface>>\nParser" as Parser
+    class AddressBookParser
+    class CopyCommandParser
+    class CopyCommand
+    class Command
+}
+
+AddressBookParser ..> CopyCommandParser : creates >
+CopyCommandParser ..> CopyCommand : creates >
+CopyCommandParser ..|> Parser
+CopyCommand -up-|> Command
+@enduml
