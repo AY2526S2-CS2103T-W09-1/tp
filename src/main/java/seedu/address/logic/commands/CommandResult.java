@@ -43,6 +43,11 @@ public class CommandResult {
     private final Person personToView;
 
     /**
+     * Whether the ViewPanel should be cleared.
+     */
+    private final boolean shouldClearView;
+
+    /**
      * Constructs a {@code CommandResult} with the specified fields.
      */
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit, Person personToView) {
@@ -53,6 +58,21 @@ public class CommandResult {
         this.pendingPerson = null;
         this.themeToSwitch = null;
         this.personToView = personToView;
+        this.shouldClearView = false;
+    }
+
+    /**
+     * Constructs a {@code CommandResult} that signals the ViewPanel should be cleared.
+     */
+    public CommandResult(String feedbackToUser, boolean shouldClearView) {
+        this.feedbackToUser = requireNonNull(feedbackToUser);
+        this.isShowHelp = false;
+        this.isExit = false;
+        this.isAwaitingConfirmation = false;
+        this.pendingPerson = null;
+        this.themeToSwitch = null;
+        this.personToView = null;
+        this.shouldClearView = shouldClearView;
     }
 
     /**
@@ -61,6 +81,8 @@ public class CommandResult {
     public CommandResult(String feedbackToUser, boolean showHelp, boolean exit) {
         this(feedbackToUser, showHelp, exit, null);
     }
+
+
 
     /**
      * Constructs a {@code CommandResult} for commands that require a theme switch.
@@ -73,6 +95,7 @@ public class CommandResult {
         this.pendingPerson = null;
         this.themeToSwitch = themeToSwitch;
         this.personToView = null;
+        this.shouldClearView = false;
     }
 
     /**
@@ -94,6 +117,7 @@ public class CommandResult {
         this.pendingPerson = requireNonNull(pendingPerson);
         this.themeToSwitch = null;
         this.personToView = null;
+        this.shouldClearView = false;
     }
 
     public String getFeedbackToUser() {
@@ -122,6 +146,10 @@ public class CommandResult {
 
     public Person getViewedPerson() {
         return personToView;
+    }
+
+    public boolean isClearView() {
+        return shouldClearView;
     }
 
     @Override

@@ -4,7 +4,7 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ALIAS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_GAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
-import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NEW_ALIAS;
 
 import java.util.HashSet;
 import java.util.List;
@@ -22,47 +22,56 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 
 /**
- * Adds an alias to a game of an existing person in Harmony.
+ * Edits an alias of a game of an existing person in Harmony.
  */
-public class AddAliasCommand extends Command implements UndoableCommand {
+public class EditAliasCommand extends Command {
 
-    public static final String COMMAND_WORD = "alias add";
+    public static final String COMMAND_WORD = "alias edit";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Adds an alias to a game of a contact using either their index OR their full name.\n"
+            + ": Edits an alias of a game of a contact using either their index OR their full name.\n"
             + "Parameters (by Index): INDEX (must be a positive integer) "
-            + PREFIX_GAME + "GAME " + PREFIX_ALIAS + "ALIAS\n"
+            + PREFIX_GAME + "GAME " + PREFIX_ALIAS + "OLD_ALIAS " + PREFIX_NEW_ALIAS + "NEW_ALIAS\n"
             + "Parameters (by Name): "
-            + PREFIX_NAME + "CONTACT_NAME " + PREFIX_GAME + "GAME " + PREFIX_ALIAS + "ALIAS\n"
-            + "Example 1: "
-            + COMMAND_WORD + " 1 " + PREFIX_GAME + "Valorant " + PREFIX_ALIAS + "Benjumpin\n"
-            + "Example 2: "
-            + COMMAND_WORD + " " + PREFIX_NAME + "Benjamin " + PREFIX_GAME + "Valorant " + PREFIX_ALIAS + "Benjumpin";
+            + PREFIX_NAME + "CONTACT_NAME " + PREFIX_GAME + "GAME " + PREFIX_ALIAS + "OLD_ALIAS "
+            + PREFIX_NEW_ALIAS + "NEW_ALIAS\n"
+            + "Example 1: " + COMMAND_WORD + " 1 " + PREFIX_GAME + "Valorant "
+            + PREFIX_ALIAS + "JohnnyV " + PREFIX_NEW_ALIAS + "JohnnyValorant\n"
+            + "Example 2: " + COMMAND_WORD + " " + PREFIX_NAME + "John "
+            + PREFIX_GAME + "Valorant " + PREFIX_ALIAS + "JohnnyV " + PREFIX_NEW_ALIAS + "JohnnyValorant";
 
-    public static final String MESSAGE_SUCCESS = "Alias '%3$s' added to %1$s's game: %2$s";
-    public static final String MESSAGE_PERSON_NOT_FOUND = "Error: Contact does not exist.";
-    public static final String MESSAGE_ALIAS_NOT_FOUND = "Error: Alias does not exist for this contact";
-    public static final String MESSAGE_GAME_NOT_FOUND = "Error: This contact does not have this game.";
+    public static final String MESSAGE_SUCCESS = "Alias \"%3$s\" updated to \"%4$s\" for %1$s in %2$s";
+    public static final String MESSAGE_PERSON_NOT_FOUND = "Error: Name not found";
+    public static final String MESSAGE_GAME_NOT_FOUND = "Error: Game not found";
+    public static final String MESSAGE_ALIAS_NOT_FOUND = "Error: Alias not found";
     public static final String MESSAGE_DUPLICATE_ALIAS = "Error: This alias already exists for this game.";
 
     private final Index targetIndex;
     private final Name targetName;
     private final Game targetGame;
-    private final Alias aliasToAdd;
+    private final Alias oldAlias;
+    private final Alias newAlias;
     private final boolean useUserProfile;
-    private Person personBeforeEdit;
-    private Person personAfterEdit;
 
     /**
-     * Creates a AddAliasCommand to add {@code alias} to the person.
+     * Creates an EditAliasCommand to update {@code oldAlias} to {@code newAlias} for the person.
+     * @param targetIndex    index of the contact to edit, or null if using name/profile
+     * @param targetName     current name of the contact to edit, or null if using index/profile
+     * @param targetGame     the game for which the alias belongs to
+     * @param oldAlias       the alias to be edited
+     * @param newAlias       the new alias to update to
+     * @param useUserProfile true if targeting the user profile via index 0
      */
-    public AddAliasCommand(Index targetIndex, Name targetName, Game game, Alias alias, boolean useUserProfile) {
+    public EditAliasCommand(Index targetIndex, Name targetName, Game game,
+                            Alias oldAlias, Alias newAlias, boolean useUserProfile) {
         requireNonNull(game);
-        requireNonNull(alias);
+        requireNonNull(oldAlias);
+        requireNonNull(newAlias);
         this.targetIndex = targetIndex;
         this.targetName = targetName;
         this.targetGame = game;
-        this.aliasToAdd = alias;
+        this.oldAlias = oldAlias;
+        this.newAlias = newAlias;
         this.useUserProfile = useUserProfile;
     }
 
@@ -91,7 +100,6 @@ public class AddAliasCommand extends Command implements UndoableCommand {
             }
         }
 
-        // 2. Find the game
         Optional<Game> gameOptional = personToEdit.getGames().stream()
                 .filter(game -> game.equals(targetGame))
                 .findFirst();
@@ -102,14 +110,17 @@ public class AddAliasCommand extends Command implements UndoableCommand {
 
         Game gameToEdit = gameOptional.get();
 
-        // 3. Check for duplicate alias
-        if (gameToEdit.getAliases().contains(aliasToAdd)) {
+        if (!gameToEdit.getAliases().contains(oldAlias)) {
+            throw new CommandException(MESSAGE_ALIAS_NOT_FOUND);
+        }
+
+        if (gameToEdit.getAliases().contains(newAlias)) {
             throw new CommandException(MESSAGE_DUPLICATE_ALIAS);
         }
 
-        // 4. Update alias set and game set
         Set<Alias> updatedAliases = new HashSet<>(gameToEdit.getAliases());
-        updatedAliases.add(aliasToAdd);
+        updatedAliases.remove(oldAlias);
+        updatedAliases.add(newAlias);
         Game updatedGame = new Game(gameToEdit.gameName, updatedAliases);
 
         Set<Game> updatedGames = new HashSet<>(personToEdit.getGames());
@@ -123,24 +134,17 @@ public class AddAliasCommand extends Command implements UndoableCommand {
                 personToEdit.isUserProfile()
         );
 
-        personBeforeEdit = personToEdit;
-        personAfterEdit = editedPerson;
         model.setPerson(personToEdit, editedPerson);
 
         return new CommandResult(String.format(
                 MESSAGE_SUCCESS,
                 editedPerson.getName(),
                 updatedGame.gameName,
-                aliasToAdd),
+                oldAlias,
+                newAlias),
                 false,
                 false,
                 editedPerson);
-    }
-
-    @Override
-    public void undo(Model model) {
-        model.setPerson(personAfterEdit, personBeforeEdit);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
     }
 
     @Override
@@ -148,14 +152,11 @@ public class AddAliasCommand extends Command implements UndoableCommand {
         if (other == this) {
             return true;
         }
-
-        if (!(other instanceof AddAliasCommand)) {
+        if (!(other instanceof EditAliasCommand)) {
             return false;
         }
+        EditAliasCommand e = (EditAliasCommand) other;
 
-        AddAliasCommand e = (AddAliasCommand) other;
-
-        // Null-safe checks
         boolean isSameIndex = (targetIndex == null && e.targetIndex == null)
                 || (targetIndex != null && targetIndex.equals(e.targetIndex));
         boolean isSameName = (targetName == null && e.targetName == null)
@@ -163,7 +164,8 @@ public class AddAliasCommand extends Command implements UndoableCommand {
 
         return isSameIndex && isSameName
                 && targetGame.equals(e.targetGame)
-                && aliasToAdd.equals(e.aliasToAdd)
+                && oldAlias.equals(e.oldAlias)
+                && newAlias.equals(e.newAlias)
                 && useUserProfile == e.useUserProfile;
     }
 
@@ -173,7 +175,8 @@ public class AddAliasCommand extends Command implements UndoableCommand {
                 .add("targetIndex", targetIndex)
                 .add("targetName", targetName)
                 .add("targetGame", targetGame)
-                .add("aliasToAdd", aliasToAdd)
+                .add("oldAlias", oldAlias)
+                .add("newAlias", newAlias)
                 .toString();
     }
 }

@@ -6,14 +6,43 @@ skinparam classBackgroundColor LOGIC_COLOR
 
 package Logic as LogicPackage {
 
-package "Parser Classes" as ParserClasses{
+' Parser Classes represent all XYZCommandParser classes (e.g. AddContactCommandParser,
+' DeleteContactCommandParser). They are grouped here for clarity.
+package "Parser Classes" as ParserClasses {
 }
-Class XYZCommand
+
+' CommandResult encapsulates the outcome of a command execution,
+' including the feedback message shown to the user.
 Class CommandResult
+
+' Command is the abstract base class for all commands.
+' Every command must implement execute(Model).
 Class "{abstract}\nCommand" as Command
 
+' UndoableCommand is an interface implemented by commands that mutate the model
+' and can be reversed. LogicManager stores these in commandHistory (a Deque)
+' after successful execution.
+Class "<<interface>>\nUndoableCommand" as UndoableCommand
 
+' UndoCommand pops the most recent UndoableCommand from commandHistory
+' and calls its undo(Model) method to reverse the last action.
+Class UndoCommand
+
+' AddGameCommand is a representative undoable command — it mutates the model
+' (adds a game to a contact) and stores before/after state to support undo.
+Class AddGameCommand
+
+' EditContactCommand is a representative undoable command — it mutates
+' the model (renames a contact) and will implement UndoableCommand to support undo.
+Class EditContactCommand
+
+' Logic is the interface exposed to the UI layer.
+' It defines execute(String) and other read-only accessors.
 Class "<<interface>>\nLogic" as Logic
+
+' LogicManager is the concrete implementation of Logic.
+' It owns the AddressBookParser, the commandHistory stack,
+' and coordinates command parsing, execution, and storage saving.
 Class LogicManager
 }
 
@@ -24,24 +53,68 @@ Class HiddenModel #FFFFFF
 package Storage {
 }
 
+' External callers (e.g. UI) interact with LogicManager through the Logic interface.
 Class HiddenOutside #FFFFFF
 HiddenOutside ..> Logic
 
+' LogicManager implements the Logic interface.
 LogicManager .right.|> Logic
-LogicManager -right->"1" ParserClasses
-ParserClasses ..> XYZCommand : <<create>>
 
-XYZCommand -up-|> Command
+' LogicManager delegates parsing to the Parser Classes.
+LogicManager -right->"1" ParserClasses
+
+' LogicManager maintains commandHistory: a Deque of UndoableCommands.
+' After each successful undoable command, the command is pushed onto this stack.
+LogicManager ->"*" UndoableCommand : commandHistory
+
+' Parser Classes instantiate the appropriate Command object based on user input.
+ParserClasses ..> AddGameCommand : <<create>>
+ParserClasses ..> EditContactCommand : <<create>>
+
+' All commands extend the abstract Command class.
+AddGameCommand -up-|> Command
+EditContactCommand -up-|> Command
+
+' Undoable commands additionally implement UndoableCommand.
+AddGameCommand .left.|> UndoableCommand
+EditContactCommand .left.|> UndoableCommand
+
+' UndoCommand extends Command but does NOT implement UndoableCommand
+' (undoing an undo is not supported).
+UndoCommand -up-|> Command
+
+' UndoCommand calls undo(Model) on the command popped from commandHistory.
+UndoCommand .right.> UndoableCommand : <<call undo>>
+
+note bottom of AddGameCommand
+  Undoable commands (implement UndoableCommand):
+  AddContactCommand, DeleteContactCommand,
+  EditContactCommand, AddAliasCommand,
+  DeleteAliasCommand, EditAliasCommand,
+  AddGameCommand, DeleteGameCommand, ClearCommand
+end note
+
+note bottom of EditContactCommand
+  Non-undoable commands (extend Command only):
+  ListCommand, FindCommand, HelpCommand,
+  ThemeCommand, CopyCommand, ExitCommand
+end note
+
+' LogicManager calls execute(Model) on the parsed Command.
 LogicManager .left.> Command : <<call>>
 
+' LogicManager passes the Model to commands and saves to Storage after execution.
 LogicManager --> Model
 LogicManager --> Storage
 Storage --[hidden] Model
-Command .[hidden]up.> Storage
-Command .right.> Model
-note right of XYZCommand: XYZCommand = AddCommand, \nFindCommand, etc
 
+' Commands interact with Model to read or mutate application state.
+Command .right.> Model
+
+' Logic returns a CommandResult to the caller (UI).
 Logic ..> CommandResult
 LogicManager .down.> CommandResult
+
+' Commands create a CommandResult to encapsulate their outcome.
 Command .up.> CommandResult : <<create>>
 @enduml

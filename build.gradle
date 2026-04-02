@@ -20,18 +20,26 @@ checkstyle {
     toolVersion = '11.0.0'
 }
 
+run {
+    enableAssertions = true
+}
+
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
 }
 
+run {
+    jvmArgs '-ea'
+}
+
 task coverage(type: JacocoReport) {
     sourceDirectories.from files(sourceSets.main.allSource.srcDirs)
-    classDirectories.from files(sourceSets.main.output)
     executionData.from files(jacocoTestReport.executionData)
     afterEvaluate {
-        classDirectories.from files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['**/*.jar', '**/ui/**'])
+        classDirectories.setFrom(sourceSets.main.output.classesDirs.collect {
+            fileTree(dir: it, exclude: ['**/ui/**', '**/Main.class', '**/MainApp.class',
+                    '**/AppParameters.class', '**/model/util/SampleDataUtil.class'])
         })
     }
     reports {

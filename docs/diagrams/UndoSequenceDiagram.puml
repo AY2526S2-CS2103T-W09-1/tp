@@ -1,0 +1,53 @@
+@startuml
+!include style.puml
+skinparam ArrowFontStyle plain
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant "u:UndoCommand" as UndoCommand LOGIC_COLOR
+participant ":UndoableCommand" as UndoableCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant "m:Model" as Model MODEL_COLOR
+end box
+
+[-> LogicManager : execute("undo")
+activate LogicManager
+
+create UndoCommand
+LogicManager -> UndoCommand : new UndoCommand(commandHistory)
+activate UndoCommand
+UndoCommand --> LogicManager
+deactivate UndoCommand
+
+LogicManager -> UndoCommand : execute(m)
+activate UndoCommand
+
+UndoCommand -> UndoCommand : commandHistory.pop()
+note right: retrieves most recent\nUndoableCommand
+
+UndoCommand -> UndoableCommand : undo(m)
+activate UndoableCommand
+
+UndoableCommand -> Model : e.g. deletePerson(p)\nor setPerson(after, before)
+activate Model
+Model --> UndoableCommand
+deactivate Model
+
+UndoableCommand --> UndoCommand
+deactivate UndoableCommand
+
+create CommandResult
+UndoCommand -> CommandResult
+activate CommandResult
+CommandResult --> UndoCommand
+deactivate CommandResult
+
+UndoCommand --> LogicManager : r
+deactivate UndoCommand
+
+[<-- LogicManager
+deactivate LogicManager
+@enduml

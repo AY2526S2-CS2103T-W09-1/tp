@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.address.testutil.Assert.assertThrows;
-import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +19,8 @@ import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.DeleteAliasCommand;
 import seedu.address.logic.commands.DeleteContactCommand;
 import seedu.address.logic.commands.DeleteGameCommand;
-import seedu.address.logic.commands.EditCommand;
-import seedu.address.logic.commands.EditCommand.EditPersonDescriptor;
+import seedu.address.logic.commands.EditAliasCommand;
+import seedu.address.logic.commands.EditContactCommand;
 import seedu.address.logic.commands.ExitCommand;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.logic.commands.HelpCommand;
@@ -33,7 +32,6 @@ import seedu.address.model.person.Alias;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.Person;
-import seedu.address.testutil.EditPersonDescriptorBuilder;
 import seedu.address.testutil.PersonBuilder;
 import seedu.address.testutil.PersonUtil;
 
@@ -55,19 +53,43 @@ public class AddressBookParserTest {
     }
 
     @Test
-    public void parseCommand_delete() throws Exception {
+    public void parseCommand_contactDelete() throws Exception {
         DeleteContactCommand command = (DeleteContactCommand) parser.parseCommand(
-                DeleteContactCommand.COMMAND_WORD + " n/Alice Pauline");
-        assertEquals(new DeleteContactCommand(new Name("Alice Pauline")), command);
+                DeleteContactCommand.COMMAND_WORD + " n/Janelle Lum");
+        assertEquals(new DeleteContactCommand(null, new Name("Janelle Lum"), false), command);
     }
 
     @Test
-    public void parseCommand_edit() throws Exception {
-        Person person = new PersonBuilder().build();
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder(person).build();
-        EditCommand command = (EditCommand) parser.parseCommand(EditCommand.COMMAND_WORD + " "
-                + INDEX_FIRST_PERSON.getOneBased() + " " + PersonUtil.getEditPersonDescriptorDetails(descriptor));
-        assertEquals(new EditCommand(INDEX_FIRST_PERSON, descriptor), command);
+    public void parseCommand_contactEditByName() throws Exception {
+        EditContactCommand command = (EditContactCommand) parser.parseCommand(
+                "contact edit n/Janelle e/Jan");
+        assertEquals(new EditContactCommand(null, new Name("Janelle"), new Name("Jan"), false), command);
+    }
+
+    @Test
+    public void parseCommand_contactEditByIndex() throws Exception {
+        EditContactCommand command = (EditContactCommand) parser.parseCommand(
+                "contact edit 1 e/Jan");
+        assertEquals(new EditContactCommand(
+                seedu.address.commons.core.index.Index.fromOneBased(1), null, new Name("Jan"), false), command);
+    }
+
+    @Test
+    public void parseCommand_aliasEditByName() throws Exception {
+        EditAliasCommand command = (EditAliasCommand) parser.parseCommand(
+                "alias edit n/Benjamin g/Valorant al/JohnnyV na/JohnnyValorant");
+        assertEquals(new EditAliasCommand(
+                null, new Name("Benjamin"),
+                new Game("Valorant"), new Alias("JohnnyV"), new Alias("JohnnyValorant"), false), command);
+    }
+
+    @Test
+    public void parseCommand_aliasEditByIndex() throws Exception {
+        EditAliasCommand command = (EditAliasCommand) parser.parseCommand(
+                "alias edit 1 g/Valorant al/JohnnyV na/JohnnyValorant");
+        assertEquals(new EditAliasCommand(
+                seedu.address.commons.core.index.Index.fromOneBased(1), null,
+                new Game("Valorant"), new Alias("JohnnyV"), new Alias("JohnnyValorant"), false), command);
     }
 
     @Test

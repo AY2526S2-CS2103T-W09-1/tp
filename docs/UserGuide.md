@@ -13,6 +13,35 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
 
 --------------------------------------------------------------------------------------------------------------------
 
+## Contents
+
+**Getting Started**
+* [Quick start](#quick-start)
+
+**General**
+* [Listing all contacts : `list`](#listing-all-persons--list)
+* [Viewing help : `help`](#viewing-help--help)
+* [Undoing the last command : `undo`](#undoing-the-last-command--undo)
+* [Clearing all entries : `clear`](#clearing-all-entries--clear)
+* [Exiting the program : `exit`](#exiting-the-program--exit)
+
+**Contact Management**
+* [Adding a contact : `contact add`](#adding-a-contact-contact-add)
+* [Editing a contact's name : `contact edit`](#editing-a-contacts-name--contact-edit)
+* [Deleting a contact : `contact delete`](#deleting-a-contact--contact-delete)
+* [Locating contacts : `find`](#locating-persons-find)
+
+**Alias Management**
+* [Adding an alias : `alias add`](#adding-an-alias-to-a-game--alias-add)
+* [Deleting an alias : `alias delete`](#deleting-an-alias-from-a-game--alias-delete)
+
+**Game Management**
+* [Adding a game : `game add`](#adding-a-game-to-a-contact--game-add)
+* [Deleting a game : `game delete`](#deleting-a-game-from-a-contact--game-delete)
+* [Listing games : `game list`](#listing-games-of-a-contact--game-list)
+
+--------------------------------------------------------------------------------------------------------------------
+
 ## Quick start
 
 1. Ensure you have Java `17` or above installed in your Computer.<br>
@@ -31,13 +60,13 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
 
    * `list` : Lists all contacts.
 
-   * `add n/John Doe` : Adds a contact named `John Doe` to Harmony.
+   * `contact add n/John Doe` : Adds a contact named `John Doe` to Harmony.
 
    * `game add 1 g/Valorant` : Adds the game `Valorant` to the 1st contact shown.
 
    * `alias add 1 g/Valorant al/JohnnyV` : Adds the alias `JohnnyV` to the 1st contact's `Valorant` game.
 
-   * `delete 3` : Deletes the 3rd contact shown in the current list.
+   * `contact delete n/John Doe` : Deletes the contact named `John Doe` (with confirmation prompt).
 
    * `clear` : Deletes all contacts.
 
@@ -53,20 +82,29 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
 
 **Notes about the command format:**<br>
 
+* Commands follow the format `CATEGORY ACTION`, where `CATEGORY` is `contact`, `game`, or `alias`, followed by an action such as `add`, `delete`, or `edit`.<br>
+  e.g. `contact add`, `game delete`, `alias add`.
+
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
-  e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
+  e.g. in `contact add n/NAME`, `NAME` is a parameter which can be used as `contact add n/John Doe`.
 
 * Items in square brackets are optional.<br>
-  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
+  e.g. `contact add n/NAME [t/TAG]` can be used as `contact add n/John Doe t/friend` or as `contact add n/John Doe`.
 
 * Items with `…`​ after them can be used multiple times including zero times.<br>
   e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
 
-* Parameters can be in any order.<br>
-  e.g. if the command specifies `n/NAME t/TAG`, `t/TAG n/NAME` is also acceptable.
+* For `game` and `alias` commands, a contact can be targeted either by their index in the displayed list (`INDEX`) or by name (`n/CONTACT_NAME`).<br>
+  e.g. `game add 1 g/Valorant` and `game add n/John Doe g/Valorant` both add the game to the same contact.
+
+* `INDEX` must be a positive integer and must appear before any prefixed parameters.<br>
+  e.g. `game add 1 g/Valorant`, not `game add g/Valorant 1`.
+
+* Prefixed parameters (those using `n/`, `g/`, `al/`, `t/`, etc.) can be in any order.<br>
+  e.g. `contact add n/John Doe t/friend` and `contact add t/friend n/John Doe` are both acceptable.
 
 * Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.<br>
-  e.g. if the command specifies `help 123`, it will be interpreted as `help`.
+  e.g. `help 123` will be interpreted as `help`.
 
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 </box>
@@ -80,20 +118,21 @@ Shows a message explaining how to access the help page.
 Format: `help`
 
 
-### Adding a person: `add`
+### Adding a contact: `contact add`
 
-Adds a person to Harmony.
+Adds a contact to Harmony.
 
-Format: `add n/NAME [t/TAG]…​`
+Format: `contact add n/NAME [t/TAG]…​ [g/GAME [al/ALIAS]…​]…​`
 
 <box type="tip" seamless>
 
-**Tip:** A person can have any number of tags (including 0)
+**Tip:** A contact can have any number of tags, games, and aliases (including 0). Aliases must be declared after the game they belong to.
 </box>
 
 Examples:
-* `add n/John Doe`
-* `add n/Betsy Crowe t/friend t/classmate`
+* `contact add n/John Doe`
+* `contact add n/Betsy Crowe t/friend t/classmate`
+* `contact add n/Alice g/Valorant al/AliceV g/Minecraft`
 
 ### Listing all persons : `list`
 
@@ -101,21 +140,24 @@ Shows a list of all persons in Harmony.
 
 Format: `list`
 
-### Editing a person : `edit`
+### Editing a contact's name : `contact edit`
 
-Edits an existing person in Harmony.
+Renames an existing contact in Harmony.
 
-Format: `edit INDEX [n/NAME] [t/TAG]…​`
+Format:
+* By index: `contact edit INDEX e/NEW_NAME`
+* By name: `contact edit n/NAME e/NEW_NAME`
 
-* Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
-* At least one of the optional fields must be provided.
-* Existing values will be updated to the input values.
-* When editing tags, the existing tags of the person will be removed i.e. adding of tags is not cumulative.
-* You can remove all the person's tags by typing `t/` without specifying any tags after it.
+* `INDEX` refers to the index number shown in the displayed contact list. Must be a positive integer.
+* Use `0` as the index to edit your own user profile.
+* Providing both `INDEX` and `n/NAME` at the same time is not allowed.
+* The contact's games and aliases are preserved after the rename.
+* `NEW_NAME` must not already belong to another contact.
 
 Examples:
-* `edit 1 n/John Smith` Edits the name of the 1st person to be `John Smith`.
-* `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
+* `contact edit 1 e/John Smith` Renames the 1st contact to `John Smith`.
+* `contact edit n/John Doe e/John Smith` Renames `John Doe` to `John Smith`.
+* `contact edit n/Betsy Crowe e/Elizabeth Crowe` Renames `Betsy Crowe` to `Elizabeth Crowe`.
 
 ### Locating persons: `find`
 
@@ -128,12 +170,13 @@ Format: `find KEYWORD [MORE_KEYWORDS]`
 * The search is case-insensitive. e.g `hans` will match `Hans`
 * The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
 * Only full words will be matched e.g. `Han` will not match `Hans`
-* Persons matching at least one keyword will be returned (i.e. `OR` search).
-  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
+* All keywords must be present in the name (i.e. `AND` search).
+  e.g. `find Hans Bo` will only return contacts whose name contains both `Hans` and `Bo`
 
 Examples:
 * `find John` returns `john` and `John Doe`
-* `find alex david` returns `Alex Yeoh`, `David Li`
+* `find John Doe` returns `John Doe` but not `John Smith` or `Jane Doe`
+* `find alex david` returns `Alex David` but not `Alex Yeoh` or `David Li`
 
 **Find by game:**
 
@@ -155,19 +198,43 @@ Format: `find al/ALIAS`
 Examples:
 * `find al/Benjumpin` returns all persons with the alias `Benjumpin`.
 
-### Deleting a person : `delete`
+**Combined search:**
 
-Deletes the specified person from Harmony.
+Format: `find [KEYWORD]…​ [g/GAME_NAME] [al/ALIAS]`
 
-Format: `delete INDEX`
-
-* Deletes the person at the specified `INDEX`.
-* The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …​
+* All specified constraints must be satisfied (i.e. `AND` search).
+* At least one constraint must be provided.
 
 Examples:
-* `list` followed by `delete 2` deletes the 2nd person in Harmony.
-* `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
+* `find Alice g/Valorant` returns contacts named `Alice` who have `Valorant` in their game list.
+* `find g/Valorant al/Ace` returns contacts who play `Valorant` with the alias `Ace`.
+* `find Alice g/Valorant al/Ace` returns contacts named `Alice` who play `Valorant` with the alias `Ace`.
+
+### Deleting a contact : `contact delete`
+
+Deletes the specified contact from Harmony.
+
+Format: `contact delete INDEX` or `contact delete n/NAME`
+
+* Deletes the contact at the specified `INDEX` in the displayed list, or whose name matches `NAME` (case-insensitive).
+* `INDEX` must be a positive integer (e.g., 1, 2, 3…​). Use `0` to target your own user profile.
+* A confirmation prompt will appear. Type `y` or `yes` to confirm, or `n` or `no` to cancel.
+* Any other input cancels the deletion.
+
+Examples:
+* `contact delete 1` prompts for confirmation, then deletes the 1st contact in the list.
+* `contact delete n/John Doe` prompts for confirmation, then deletes the contact named `John Doe`.
+* `contact delete n/Betsy` prompts for confirmation, then deletes the contact named `Betsy`.
+
+### Undoing the last command : `undo`
+
+Reverses the most recently executed undoable command.
+
+Format: `undo`
+
+* Undoable commands include: `contact add`, `contact delete`, `contact edit`, `game add`, `game delete`, `alias add`, `alias delete`, and `clear`.
+* Multiple consecutive `undo` calls will reverse commands in reverse order of execution.
+* If there are no commands left to undo, an error message is shown.
 
 ### Clearing all entries : `clear`
 
@@ -307,19 +374,20 @@ Furthermore, certain edits can cause Harmony to behave in unexpected ways (e.g.,
 
 ## Command summary
 
-Action              | Format, Examples
---------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-**Add**             | `add n/NAME [t/TAG]…​` <br> e.g., `add n/James Ho t/friend t/colleague`
-**Clear**           | `clear`
-**Delete**          | `delete INDEX`<br> e.g., `delete 3`
-**Edit**            | `edit INDEX [n/NAME] [t/TAG]…​`<br> e.g., `edit 2 n/James Lee t/friend`
-**Find (name)**     | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
-**Find (game)**     | `find g/GAME_NAME`<br> e.g., `find g/Valorant`
-**Find (alias)**    | `find al/ALIAS`<br> e.g., `find al/Benjumpin`
-**List**            | `list`
-**Help**            | `help`
-**Game Add**        | `game add INDEX g/GAME_NAME` or `game add n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game add 1 g/Minecraft`
-**Game Delete**     | `game delete INDEX g/GAME_NAME` or `game delete n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game delete 1 g/Minecraft`
-**Game List**       | `game list INDEX` or `game list n/CONTACT_NAME`<br> e.g., `game list 1`
-**Alias Add**       | `alias add INDEX g/GAME_NAME al/ALIAS` or `alias add n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias add 1 g/Valorant al/Benjumpin`
-**Alias Delete**    | `alias delete INDEX g/GAME_NAME al/ALIAS` or `alias delete n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias delete 1 g/Valorant al/Benjumpin`
+| Action              | Format, Examples |
+|---------------------|-----------------|
+| **List**            | `list` |
+| **Help**            | `help` |
+| **Undo**            | `undo` |
+| **Contact Add**     | `contact add n/NAME [t/TAG]…​ [g/GAME [al/ALIAS]…​]…​` <br> e.g., `contact add n/James Ho t/friend t/colleague` |
+| **Contact Delete**  | `contact delete INDEX` or `contact delete n/NAME`<br> e.g., `contact delete 1` or `contact delete n/James Ho` |
+| **Contact Edit**    | `contact edit INDEX e/NEW_NAME` or `contact edit n/NAME e/NEW_NAME`<br> e.g., `contact edit 1 e/James Lee` or `contact edit n/James Ho e/James Lee` |
+| **Clear**           | `clear` |
+| **Alias Add**       | `alias add INDEX g/GAME_NAME al/ALIAS` or `alias add n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias add 1 g/Valorant al/Benjumpin` |
+| **Alias Delete**    | `alias delete INDEX g/GAME_NAME al/ALIAS` or `alias delete n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias delete 1 g/Valorant al/Benjumpin` |
+| **Game Add**        | `game add INDEX g/GAME_NAME` or `game add n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game add 1 g/Minecraft` |
+| **Game Delete**     | `game delete INDEX g/GAME_NAME` or `game delete n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game delete 1 g/Minecraft` |
+| **Game List**       | `game list INDEX` or `game list n/CONTACT_NAME`<br> e.g., `game list 1` |
+| **Find (name)**     | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake` |
+| **Find (game)**     | `find g/GAME_NAME`<br> e.g., `find g/Valorant` |
+| **Find (alias)**    | `find al/ALIAS`<br> e.g., `find al/Benjumpin` |

@@ -1,0 +1,73 @@
+@startuml
+!include style.puml
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":ThemeCommandParser" as ThemeCommandParser LOGIC_COLOR
+participant "t:ThemeCommand" as ThemeCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box UI UI_COLOR_T1
+participant ":MainWindow" as MainWindow UI_COLOR
+end box
+
+[-> MainWindow : executeCommand("theme light")
+activate MainWindow
+
+MainWindow -> LogicManager : execute("theme light")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("theme light")
+activate AddressBookParser
+
+create ThemeCommandParser
+AddressBookParser -> ThemeCommandParser
+activate ThemeCommandParser
+
+ThemeCommandParser --> AddressBookParser
+deactivate ThemeCommandParser
+
+AddressBookParser -> ThemeCommandParser : parse("light")
+activate ThemeCommandParser
+
+create ThemeCommand
+ThemeCommandParser -> ThemeCommand
+activate ThemeCommand
+
+ThemeCommand --> ThemeCommandParser : t
+deactivate ThemeCommand
+
+ThemeCommandParser --> AddressBookParser : t
+deactivate ThemeCommandParser
+'Hidden delete for ThemeCommandParser
+destroy ThemeCommandParser
+
+AddressBookParser --> LogicManager : t
+deactivate AddressBookParser
+
+LogicManager -> ThemeCommand : execute()
+activate ThemeCommand
+
+create CommandResult
+ThemeCommand -> CommandResult : CommandResult(msg, "light")
+activate CommandResult
+
+CommandResult --> ThemeCommand : r
+deactivate CommandResult
+
+ThemeCommand --> LogicManager : r
+deactivate ThemeCommand
+
+LogicManager --> MainWindow : r
+deactivate LogicManager
+
+MainWindow -> MainWindow : handleThemeSwitch("light")
+activate MainWindow
+MainWindow --> MainWindow
+deactivate MainWindow
+
+[<--MainWindow
+deactivate MainWindow
+@enduml

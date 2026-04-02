@@ -21,6 +21,7 @@ import seedu.address.logic.commands.AddContactCommand;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.DeleteContactCommand;
 import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.UndoCommand;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.Model;
@@ -184,6 +185,42 @@ public class LogicManagerTest {
 
         CommandResult result = logic.execute(ListCommand.COMMAND_WORD);
         assertEquals(ListCommand.MESSAGE_SUCCESS, result.getFeedbackToUser());
+    }
+
+    @Test
+    public void execute_undoCommand_revertsLastCommand() throws Exception {
+        Person person = new PersonBuilder(AMY).withTags().build();
+        String addCommand = AddContactCommand.COMMAND_WORD + NAME_DESC_AMY;
+
+        logic.execute(addCommand);
+        assertTrue(model.getFilteredPersonList().contains(person));
+
+        CommandResult result = logic.execute(UndoCommand.COMMAND_WORD);
+        assertEquals(UndoCommand.MESSAGE_SUCCESS, result.getFeedbackToUser());
+        assertFalse(model.getFilteredPersonList().contains(person));
+    }
+
+    @Test
+    public void getAddressBook_returnsCurrentAddressBook() {
+        assertEquals(model.getAddressBook(), logic.getAddressBook());
+    }
+
+    @Test
+    public void getAddressBookFilePath_returnsCorrectPath() {
+        assertEquals(model.getAddressBookFilePath(), logic.getAddressBookFilePath());
+    }
+
+    @Test
+    public void getGuiSettings_returnsCurrentSettings() {
+        assertEquals(model.getGuiSettings(), logic.getGuiSettings());
+    }
+
+    @Test
+    public void setGuiSettings_updatesSettings() {
+        seedu.address.commons.core.GuiSettings newSettings =
+                new seedu.address.commons.core.GuiSettings(800, 600, 0, 0);
+        logic.setGuiSettings(newSettings);
+        assertEquals(newSettings, logic.getGuiSettings());
     }
 
     /**

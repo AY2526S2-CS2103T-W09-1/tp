@@ -18,7 +18,7 @@ public class ContactCommandParser implements Parser<Command> {
     public static final String MESSAGE_USAGE = """
               contact: Manages contacts.
               contact add n/NAME [t/TAG]...
-              contact delete INDEX""";
+              contact delete n/NAME""";
 
     private static final Pattern ACTION_FORMAT = Pattern.compile("(?<action>\\S+)(?<arguments>.*)");
 
@@ -35,7 +35,7 @@ public class ContactCommandParser implements Parser<Command> {
         return switch (action) {
         case "add" -> new AddContactCommandParser().parse(arguments);
         case "delete" -> new DeleteContactCommandParser().parse(arguments);
-        case "edit" -> throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
+        case "edit" -> new EditContactCommandParser().parse(arguments);
         default -> throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
         };
     }

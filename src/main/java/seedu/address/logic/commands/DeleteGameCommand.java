@@ -20,7 +20,7 @@ import seedu.address.model.person.Person;
 /**
  * Deletes a game from an existing contact in the address book.
  */
-public class DeleteGameCommand extends Command {
+public class DeleteGameCommand extends Command implements UndoableCommand {
 
     public static final String COMMAND_WORD = "delete";
     public static final String MESSAGE_USAGE = "game " + COMMAND_WORD
@@ -37,6 +37,8 @@ public class DeleteGameCommand extends Command {
     private final Index targetIndex;
     private final Name targetName;
     private final Game gameToDelete;
+    private Person personBeforeEdit;
+    private Person personAfterEdit;
     private final boolean useUserProfile;
 
     /**
@@ -78,16 +80,25 @@ public class DeleteGameCommand extends Command {
             }
         }
 
+        if (personToEdit == null) {
+            throw new CommandException(MESSAGE_CONTACT_NOT_FOUND);
+        }
+
+        // Check if they actually have the game
         if (!personToEdit.getGames().contains(gameToDelete)) {
             throw new CommandException(MESSAGE_GAME_NOT_FOUND);
         }
 
+        // Create a new Set of games and remove the target game
         Set<Game> updatedGames = new HashSet<>(personToEdit.getGames());
         updatedGames.remove(gameToDelete);
 
+        // Create a copy of the person with the updated games
         Person editedPerson = new Person(
                 personToEdit.getName(), personToEdit.getTags(), updatedGames, personToEdit.isUserProfile());
 
+        personBeforeEdit = personToEdit;
+        personAfterEdit = editedPerson;
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
 
@@ -97,6 +108,12 @@ public class DeleteGameCommand extends Command {
                 false,
                 false,
                 editedPerson);
+    }
+
+    @Override
+    public void undo(Model model) {
+        model.setPerson(personAfterEdit, personBeforeEdit);
+        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
     }
 
     @Override

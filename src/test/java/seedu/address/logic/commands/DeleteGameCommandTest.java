@@ -1,6 +1,7 @@
 package seedu.address.logic.commands;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
@@ -156,5 +157,64 @@ public class DeleteGameCommandTest {
         CommandResult expectedCommandResult = new CommandResult(expectedMessage, false, false, editedPerson);
 
         assertCommandSuccess(deleteGameCommand, model, expectedCommandResult, expectedModel);
+    }
+
+    @Test
+    public void execute_nullIndexAndName_failure() {
+        Game gameToDelete = new Game("Minecraft");
+        DeleteGameCommand deleteGameCommand = new DeleteGameCommand(null, null, gameToDelete, false);
+        assertCommandFailure(deleteGameCommand, model, DeleteGameCommand.MESSAGE_CONTACT_NOT_FOUND);
+    }
+
+    @Test
+    public void undo_deleteGame_gameRestored() throws Exception {
+        Person firstPerson = model.getFilteredPersonList().get(0);
+        Game gameToProcess = new Game("Minecraft");
+
+        new AddGameCommand(null, firstPerson.getName(), gameToProcess, false).execute(model);
+        DeleteGameCommand deleteGameCommand =
+                new DeleteGameCommand(null, firstPerson.getName(), gameToProcess, false);
+        deleteGameCommand.execute(model);
+        deleteGameCommand.undo(model);
+
+        assertTrue(model.getFilteredPersonList().get(0).getGames().contains(gameToProcess));
+    }
+
+    @Test
+    public void equals() {
+        Game gameA = new Game("Minecraft");
+        Game gameB = new Game("Valorant");
+        Name nameA = new Name("Alice");
+
+        DeleteGameCommand deleteGameByIndex = new DeleteGameCommand(INDEX_FIRST_PERSON, null, gameA, false);
+        DeleteGameCommand deleteGameByName = new DeleteGameCommand(null, nameA, gameA, false);
+
+        // same object -> returns true
+        assertTrue(deleteGameByIndex.equals(deleteGameByIndex));
+
+        // same values -> returns true
+        DeleteGameCommand deleteGameByIndexCopy = new DeleteGameCommand(INDEX_FIRST_PERSON, null, gameA, false);
+        assertTrue(deleteGameByIndex.equals(deleteGameByIndexCopy));
+
+        // different types -> returns false
+        assertFalse(deleteGameByIndex.equals(1));
+
+        // null -> returns false
+        assertFalse(deleteGameByIndex.equals(null));
+
+        // different game -> returns false
+        DeleteGameCommand deleteDiffGame = new DeleteGameCommand(INDEX_FIRST_PERSON, null, gameB, false);
+        assertFalse(deleteGameByIndex.equals(deleteDiffGame));
+
+        // different target types (index vs name) -> returns false
+        assertFalse(deleteGameByIndex.equals(deleteGameByName));
+
+        // different useUserProfile -> returns false
+        DeleteGameCommand deleteGameWithProfile = new DeleteGameCommand(INDEX_FIRST_PERSON, null, gameA, true);
+        assertFalse(deleteGameByIndex.equals(deleteGameWithProfile));
+
+        // same values by name -> returns true
+        DeleteGameCommand deleteGameByNameCopy = new DeleteGameCommand(null, nameA, gameA, false);
+        assertTrue(deleteGameByName.equals(deleteGameByNameCopy));
     }
 }

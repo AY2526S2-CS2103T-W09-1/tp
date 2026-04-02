@@ -358,3 +358,96 @@
     -fx-font-size: 12;
     -fx-padding: 1 0 1 0;
 }
+
+.view-panel-placeholder {
+    -fx-text-fill: #666666; /* Medium grey for light mode */
+    -fx-font-size: 14px;
+    -fx-font-style: italic;
+}
+
+.view-panel-header {
+    -fx-font-size: 26px;
+    -fx-text-fill: #333333; /* Dark text so it's visible on light backgrounds */
+    -fx-font-weight: bold;
+}
+
+/* --- ViewPanel Profile Styling --- */
+.profile-tag {
+    -fx-background-color: #90caf9; /* Lighter blue for light mode */
+    -fx-text-fill: #1d1d1d;
+    -fx-padding: 3 7 3 7;
+    -fx-background-radius: 3;
+    -fx-font-size: 11px;
+}
+
+.profile-empty-label {
+    -fx-text-fill: #666666;
+    -fx-font-style: italic;
+}
+
+.profile-games-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #0056b3; /* Darker blue heading */
+    -fx-font-size: 13px;
+    -fx-padding: 10 0 5 0;
+}
+
+.profile-game-box {
+    -fx-background-color: #f4f4f4; /* Light grey box! */
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+}
+
+.profile-game-name {
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333; /* Dark text for the game name */
+    -fx-font-size: 14px;
+}
+
+.profile-alias-text {
+    -fx-text-fill: #555555; /* Dark grey for the aliases */
+    -fx-font-size: 12px;
+    -fx-padding: 3 0 0 5;
+}
+
+/* --- ViewPanel Profile Styling --- */
+.profile-tag {
+    -fx-background-color: #90caf9;
+    -fx-text-fill: #1d1d1d;
+    -fx-padding: 3 7 3 7;
+    -fx-background-radius: 3;
+    -fx-font-size: 11px;
+}
+
+.profile-empty-label {
+    -fx-text-fill: #666666;
+    -fx-font-style: italic;
+}
+
+.profile-games-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #0056b3;
+    -fx-font-size: 13px;
+    -fx-padding: 10 0 5 0;
+}
+
+.profile-game-box {
+    -fx-background-color: #E0E0E0; /* Clean grey box */
+    -fx-border-width: 0; /* Ensures no leftover borders */
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+}
+
+.profile-game-name {
+    -fx-font-weight: bold;
+    -fx-text-fill: black; /* Pure black text */
+    -fx-font-size: 14px;
+}
+
+.profile-alias-text {
+    -fx-text-fill: black; /* Pure black text */
+    -fx-font-size: 12px;
+    -fx-padding: 3 0 0 5;
+}
