@@ -211,11 +211,24 @@ public class DeleteContactCommandTest {
     }
 
     @Test
-    public void undo_deleteContact_personRestored() {
+    public void performDeletion_deleteContact_success() throws Exception {
         Person personToDelete = ALICE;
         DeleteContactCommand deleteCommand = new DeleteContactCommand(null, personToDelete.getName(), false);
-        deleteCommand.setDeletedPerson(personToDelete);
-        model.deletePerson(personToDelete);
+        deleteCommand.execute(model);
+
+        CommandResult result = deleteCommand.performDeletion(model);
+
+        assertEquals(String.format(DeleteContactCommand.MESSAGE_DELETE_PERSON_SUCCESS, personToDelete.getName()),
+                result.getFeedbackToUser());
+        assertFalse(model.getFilteredPersonList().contains(personToDelete));
+    }
+
+    @Test
+    public void undo_deleteContact_personRestored() throws Exception {
+        Person personToDelete = ALICE;
+        DeleteContactCommand deleteCommand = new DeleteContactCommand(null, personToDelete.getName(), false);
+        deleteCommand.execute(model);
+        deleteCommand.performDeletion(model);
 
         assertFalse(model.getFilteredPersonList().contains(personToDelete));
 

@@ -136,7 +136,8 @@ public class LogicManagerTest {
 
         CommandResult result = logic.execute("n");
 
-        assertEquals("Deletion of " + person.getName() + " cancelled.", result.getFeedbackToUser());
+        assertEquals(String.format(DeleteContactCommand.MESSAGE_DELETE_CANCELLED, person.getName()),
+                result.getFeedbackToUser());
         assertTrue(model.getFilteredPersonList().contains(person));
     }
 
@@ -148,7 +149,8 @@ public class LogicManagerTest {
 
         CommandResult result = logic.execute("no");
 
-        assertEquals("Deletion of " + person.getName() + " cancelled.", result.getFeedbackToUser());
+        assertEquals(String.format(DeleteContactCommand.MESSAGE_DELETE_CANCELLED, person.getName()),
+                result.getFeedbackToUser());
         assertTrue(model.getFilteredPersonList().contains(person));
     }
 
@@ -160,7 +162,7 @@ public class LogicManagerTest {
 
         CommandResult result = logic.execute("maybe");
 
-        assertEquals("Invalid input. Deletion of " + person.getName() + " cancelled.",
+        assertEquals(String.format(DeleteContactCommand.MESSAGE_DELETE_CANCELLED, person.getName()),
                 result.getFeedbackToUser());
         assertTrue(model.getFilteredPersonList().contains(person));
     }

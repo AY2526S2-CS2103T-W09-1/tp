@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
-import static seedu.address.logic.commands.CommandTestUtil.assertCommandSuccess;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalAddressBook;
 
@@ -25,29 +24,45 @@ public class DeleteGameCommandTest {
     private Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
 
     @Test
-    public void execute_deleteGame_success() throws Exception {
+    public void execute_deleteGame_returnsConfirmation() throws Exception {
         Person firstPerson = model.getFilteredPersonList().get(0);
         Game gameToProcess = new Game("Minecraft");
 
-        // Setup: Add the game to the model first so we have something to delete
         new AddGameCommand(null, firstPerson.getName(), gameToProcess, false).execute(model);
+        Person firstPersonAfterSetup = model.getFilteredPersonList().get(0);
 
-        // Now prepare for deletion
         DeleteGameCommand deleteGameCommand =
                 new DeleteGameCommand(null, firstPerson.getName(), gameToProcess, false);
 
-        // The expected model is exactly the original clean model (since adding and deleting leaves it unchanged)
-        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        CommandResult result = deleteGameCommand.execute(model);
 
+        assertTrue(result.isAwaitingConfirmation());
+        assertEquals(firstPersonAfterSetup, result.getPendingPerson());
+    }
+
+    @Test
+    public void performDeletion_deleteGame_success() throws Exception {
+        Person firstPerson = model.getFilteredPersonList().get(0);
+        Game gameToProcess = new Game("Minecraft");
+
+        new AddGameCommand(null, firstPerson.getName(), gameToProcess, false).execute(model);
+
+        DeleteGameCommand deleteGameCommand =
+                new DeleteGameCommand(null, firstPerson.getName(), gameToProcess, false);
+
+        deleteGameCommand.execute(model);
+
+        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
         Person editedPerson = expectedModel.getFilteredPersonList().get(0);
 
         String expectedMessage = String.format(DeleteGameCommand.MESSAGE_SUCCESS,
-                gameToProcess.gameName,
-                firstPerson.getName().fullName);
+                gameToProcess.gameName, firstPerson.getName().fullName);
 
-        CommandResult expectedCommandResult = new CommandResult(expectedMessage, false, false, editedPerson);
+        CommandResult result = deleteGameCommand.performDeletion(model);
 
-        assertCommandSuccess(deleteGameCommand, model, expectedCommandResult, expectedModel);
+        assertEquals(expectedMessage, result.getFeedbackToUser());
+        assertEquals(editedPerson, result.getViewedPerson());
+        assertEquals(expectedModel, model);
     }
 
     @Test
@@ -70,26 +85,19 @@ public class DeleteGameCommandTest {
     }
 
     @Test
-    public void execute_deleteGameByIndex_success() throws Exception {
-        Person firstPerson = model.getFilteredPersonList().get(0);
+    public void execute_deleteGameByIndex_returnsConfirmation() throws Exception {
         Game gameToProcess = new Game("Minecraft");
 
         new AddGameCommand(INDEX_FIRST_PERSON, null, gameToProcess, false).execute(model);
+        Person firstPersonAfterSetup = model.getFilteredPersonList().get(0);
 
         DeleteGameCommand deleteGameCommand =
                 new DeleteGameCommand(INDEX_FIRST_PERSON, null, gameToProcess, false);
 
-        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        CommandResult result = deleteGameCommand.execute(model);
 
-        Person editedPerson = expectedModel.getFilteredPersonList().get(0);
-
-        String expectedMessage = String.format(DeleteGameCommand.MESSAGE_SUCCESS,
-                gameToProcess.gameName,
-                firstPerson.getName().fullName);
-
-        CommandResult expectedCommandResult = new CommandResult(expectedMessage, false, false, editedPerson);
-
-        assertCommandSuccess(deleteGameCommand, model, expectedCommandResult, expectedModel);
+        assertTrue(result.isAwaitingConfirmation());
+        assertEquals(firstPersonAfterSetup, result.getPendingPerson());
     }
 
     @Test
@@ -104,7 +112,7 @@ public class DeleteGameCommandTest {
     }
 
     @Test
-    public void execute_useUserProfile_success() throws Exception {
+    public void execute_useUserProfile_returnsConfirmation() throws Exception {
         Person userProfile = new Person(new seedu.address.model.person.Name("John Doe"),
                 new HashSet<>(), new HashSet<>(), true);
         AddressBook ab = new AddressBook();
@@ -115,14 +123,10 @@ public class DeleteGameCommandTest {
         new AddGameCommand(null, null, gameToAdd, true).execute(profileModel);
 
         DeleteGameCommand deleteGameCommand = new DeleteGameCommand(null, null, gameToAdd, true);
-        String expectedMessage = String.format(DeleteGameCommand.MESSAGE_SUCCESS,
-                gameToAdd.gameName, "John Doe");
-
         CommandResult result = deleteGameCommand.execute(profileModel);
-        assertEquals(expectedMessage, result.getFeedbackToUser());
-        assertTrue(profileModel.getUserProfile().isPresent());
-        assertTrue(profileModel.getUserProfile().get().getGames().isEmpty());
-        assertEquals(profileModel.getUserProfile().get(), result.getViewedPerson());
+
+        assertTrue(result.isAwaitingConfirmation());
+        assertEquals(profileModel.getUserProfile().get(), result.getPendingPerson());
     }
 
     @Test
@@ -135,28 +139,17 @@ public class DeleteGameCommandTest {
     }
 
     @Test
-    public void execute_caseInsensitiveName_success() throws Exception {
+    public void execute_caseInsensitiveName_returnsConfirmation() throws Exception {
         Person firstPerson = model.getFilteredPersonList().get(0);
         Game gameToProcess = new Game("Minecraft");
 
-        // Setup: add game using exact name
         new AddGameCommand(null, firstPerson.getName(), gameToProcess, false).execute(model);
 
-        // Use all-lowercase version of the stored name
         Name lowerCaseName = new Name(firstPerson.getName().fullName.toLowerCase());
         DeleteGameCommand deleteGameCommand = new DeleteGameCommand(null, lowerCaseName, gameToProcess, false);
 
-        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
-
-        Person editedPerson = expectedModel.getFilteredPersonList().get(0);
-
-        String expectedMessage = String.format(DeleteGameCommand.MESSAGE_SUCCESS,
-                gameToProcess.gameName,
-                firstPerson.getName().fullName);
-
-        CommandResult expectedCommandResult = new CommandResult(expectedMessage, false, false, editedPerson);
-
-        assertCommandSuccess(deleteGameCommand, model, expectedCommandResult, expectedModel);
+        CommandResult result = deleteGameCommand.execute(model);
+        assertTrue(result.isAwaitingConfirmation());
     }
 
     @Test
@@ -175,6 +168,7 @@ public class DeleteGameCommandTest {
         DeleteGameCommand deleteGameCommand =
                 new DeleteGameCommand(null, firstPerson.getName(), gameToProcess, false);
         deleteGameCommand.execute(model);
+        deleteGameCommand.performDeletion(model);
         deleteGameCommand.undo(model);
 
         assertTrue(model.getFilteredPersonList().get(0).getGames().contains(gameToProcess));
@@ -189,31 +183,22 @@ public class DeleteGameCommandTest {
         DeleteGameCommand deleteGameByIndex = new DeleteGameCommand(INDEX_FIRST_PERSON, null, gameA, false);
         DeleteGameCommand deleteGameByName = new DeleteGameCommand(null, nameA, gameA, false);
 
-        // same object -> returns true
         assertTrue(deleteGameByIndex.equals(deleteGameByIndex));
 
-        // same values -> returns true
         DeleteGameCommand deleteGameByIndexCopy = new DeleteGameCommand(INDEX_FIRST_PERSON, null, gameA, false);
         assertTrue(deleteGameByIndex.equals(deleteGameByIndexCopy));
 
-        // different types -> returns false
         assertFalse(deleteGameByIndex.equals(1));
-
-        // null -> returns false
         assertFalse(deleteGameByIndex.equals(null));
 
-        // different game -> returns false
         DeleteGameCommand deleteDiffGame = new DeleteGameCommand(INDEX_FIRST_PERSON, null, gameB, false);
         assertFalse(deleteGameByIndex.equals(deleteDiffGame));
 
-        // different target types (index vs name) -> returns false
         assertFalse(deleteGameByIndex.equals(deleteGameByName));
 
-        // different useUserProfile -> returns false
         DeleteGameCommand deleteGameWithProfile = new DeleteGameCommand(INDEX_FIRST_PERSON, null, gameA, true);
         assertFalse(deleteGameByIndex.equals(deleteGameWithProfile));
 
-        // same values by name -> returns true
         DeleteGameCommand deleteGameByNameCopy = new DeleteGameCommand(null, nameA, gameA, false);
         assertTrue(deleteGameByName.equals(deleteGameByNameCopy));
     }

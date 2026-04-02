@@ -16,7 +16,7 @@ import seedu.address.model.person.Person;
 /**
  * Deletes a person identified by index or name from the address book.
  */
-public class DeleteContactCommand extends Command implements UndoableCommand {
+public class DeleteContactCommand extends Command implements ConfirmableDeleteCommand {
 
     public static final String COMMAND_WORD = "contact delete";
 
@@ -31,11 +31,12 @@ public class DeleteContactCommand extends Command implements UndoableCommand {
     public static final String MESSAGE_PERSON_NOT_FOUND = "Error: Name not found";
     public static final String MESSAGE_DELETE_CONFIRMATION =
             "%1$s\nAre you sure you want to delete %2$s? (y/n)";
+    public static final String MESSAGE_DELETE_CANCELLED = "Deletion of contact %1$s cancelled.";
 
     private final Index targetIndex;
     private final Name targetName;
     private final boolean useUserProfile;
-    private Person deletedPerson;
+    private Person personToDelete;
 
     /**
      * @param targetIndex    index of the contact to delete, or null if using name/profile
@@ -46,10 +47,6 @@ public class DeleteContactCommand extends Command implements UndoableCommand {
         this.targetIndex = targetIndex;
         this.targetName = targetName;
         this.useUserProfile = useUserProfile;
-    }
-
-    public void setDeletedPerson(Person person) {
-        this.deletedPerson = person;
     }
 
     @Override
@@ -77,14 +74,26 @@ public class DeleteContactCommand extends Command implements UndoableCommand {
             }
         }
 
+        this.personToDelete = personToDelete;
         String confirmationMessage = String.format(MESSAGE_DELETE_CONFIRMATION,
                 Messages.format(personToDelete), personToDelete.getName());
         return new CommandResult(confirmationMessage, personToDelete);
     }
 
     @Override
+    public String getCancelMessage() {
+        return String.format(MESSAGE_DELETE_CANCELLED, personToDelete.getName());
+    }
+
+    @Override
+    public CommandResult performDeletion(Model model) {
+        model.deletePerson(personToDelete);
+        return new CommandResult(String.format(MESSAGE_DELETE_PERSON_SUCCESS, personToDelete.getName()));
+    }
+
+    @Override
     public void undo(Model model) {
-        model.addPerson(deletedPerson);
+        model.addPerson(personToDelete);
     }
 
     @Override
