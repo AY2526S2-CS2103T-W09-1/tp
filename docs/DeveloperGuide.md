@@ -159,6 +159,62 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
+### Copy Command Feature
+The `copy` command allows users to quickly serialize a specific contact's complex profile (including their name, tags, games, and aliases) into a perfectly formatted, executable CLI string (e.g., `contact add n/John Doe t/friend...`) and saves it directly to their operating system's clipboard.
+
+#### Architecture and Execution
+To avoid cluttering the main logic architecture diagram, the structural relationship of the `CopyCommand` is shown in the feature-specific class diagram below.
+
+![CopyCommandClassDiagram](images/CopyCommandClassDiagram.png)
+
+The command execution heavily relies on the `Logic` and `Model` components to retrieve the target contact, format the string, and then interfaces with the external OS `Clipboard`.
+
+Step-by-step execution:
+1. The user launches the application and inputs `copy 1` into the `CommandBox`.
+2. `LogicManager` passes the input to `AddressBookParser`, which maps the command word to the `CopyCommandParser`.
+3. `CopyCommandParser` parses the index, creates a `CopyCommand` object, and returns it.
+4. `LogicManager` calls `CopyCommand#execute(model)`.
+5. The command fetches the target `Person` from the `Model` using the provided index.
+6. The command formats the person's attributes into a valid CLI string.
+7. The command fetches the system `Clipboard` and sets its content to the formatted string.
+8. A `CommandResult` is returned to indicate success.
+
+The following sequence diagram illustrates this interaction:
+
+![CopySequenceDiagram](images/CopySequenceDiagram.png)
+
+#### Design Considerations:
+* **Alternative 1 (Current):** Interface directly with the `Clipboard` within the `CopyCommand` execution logic, but use a mock/stub clipboard for testing.
+    * **Pros:** Keeps the command highly cohesive and straightforward.
+    * **Cons:** Requires careful testing setup to ensure CI/CD pipelines (which run in headless Linux environments without physical clipboards) do not crash with `IllegalStateException`.
+* **Alternative 2:** Have the `CopyCommand` return the generated string inside the `CommandResult`, and force the `MainWindow` (UI) to push it to the clipboard.
+    * **Pros:** Avoids headless testing issues entirely since the Logic component never touches the OS.
+    * **Cons:** Violates the separation of concerns. The UI should merely display results, not execute system-level operations meant to be triggered by a specific command.
+
+---
+
+### Command History Navigation (Up/Down Arrows)
+To improve the Quality of Life (QoL) of the CLI interface, users can navigate their session's command history using the Up and Down arrow keys.
+
+#### Architecture and Execution
+A naive implementation would store the history state directly inside the UI's `CommandBox`. However, UI components are notoriously difficult to test automatically without relying on heavy frameworks like TestFX.
+
+To maintain strict adherence to testability, the state tracking logic is completely decoupled into a standalone `CommandHistory` class within the `Logic` component.
+
+Step-by-step execution:
+1. The user presses the Up arrow key in the text field.
+2. The `CommandBox` triggers the `handleKeyPress(KeyEvent)` method.
+3. The `CommandBox` queries the `CommandHistory` logic class via `getPrevious()`.
+4. If a previous command exists, the text field is updated, and the cursor (`caret`) is forcefully positioned at the end of the loaded string.
+
+The following sequence diagram proves the UI-Logic decoupling during this interaction:
+
+![CommandHistorySequenceDiagram](images/CommandHistorySequenceDiagram.png)
+
+#### Design Considerations:
+* **UI vs Logic State Tracking:** By placing `CommandHistory.java` inside the `logic` package, we achieve 100% test coverage of the pointer math (including floor and ceiling boundary checks) using standard, lightning-fast headless JUnit tests, entirely bypassing the JavaFX Toolkit lifecycle.
+
+### \[Proposed\] Undo/redo feature
 ### Editing a contact's name feature
 
 #### Implementation
