@@ -4,15 +4,14 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.geometry.Insets?>
-
 <?import javafx.scene.layout.FlowPane?>
+
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       styleClass="pane-with-border" alignment="CENTER" VBox.vgrow="ALWAYS">
 
     <Label fx:id="placeholderText"
            text="No profile selected.&#10;Type 'profile view' or 'profile view [INDEX]' to inspect."
-           styleClass="cell_small_label" style="-fx-text-fill: derive(white, -40%);
-            -fx-font-size: 14px; -fx-font-style: italic;"
+           styleClass="view-panel-placeholder"
            wrapText="true" textAlignment="CENTER">
         <padding>
             <Insets top="20" right="20" bottom="20" left="20" />
@@ -27,8 +26,7 @@
                 <Insets top="25" right="25" bottom="25" left="25" />
             </padding>
 
-            <Label fx:id="name" styleClass="label-header" style="-fx-font-size: 26px;
-             -fx-text-fill: white; -fx-font-weight: bold;" wrapText="true"/>
+            <Label fx:id="name" styleClass="view-panel-header" wrapText="true"/>
 
             <FlowPane fx:id="tags" hgap="5" vgap="5" />
 

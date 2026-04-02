@@ -12,6 +12,7 @@ import seedu.address.logic.commands.DeleteContactCommand;
 import seedu.address.logic.commands.EditContactCommand;
 import seedu.address.model.person.Name;
 import seedu.address.testutil.PersonBuilder;
+import seedu.address.testutil.TypicalIndexes;
 
 public class ContactCommandParserTest {
 
@@ -24,9 +25,15 @@ public class ContactCommandParserTest {
     }
 
     @Test
-    public void parseDelete_validArgs_success() {
-        DeleteContactCommand expected = new DeleteContactCommand(new Name("Alice"));
+    public void parseDelete_validArgsByName_success() {
+        DeleteContactCommand expected = new DeleteContactCommand(null, new Name("Alice"), false);
         assertParseSuccess(parser, " delete n/Alice", expected);
+    }
+
+    @Test
+    public void parseDelete_validArgsByIndex_success() {
+        DeleteContactCommand expected = new DeleteContactCommand(TypicalIndexes.INDEX_FIRST_PERSON, null, false);
+        assertParseSuccess(parser, " delete 1", expected);
     }
 
     @Test

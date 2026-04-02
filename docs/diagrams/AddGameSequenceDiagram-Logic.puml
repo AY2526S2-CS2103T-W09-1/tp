@@ -1,0 +1,83 @@
+@startuml
+!include style.puml
+
+box Logic LOGIC_COLOR_T1
+participant ":LogicManager" as LogicManager LOGIC_COLOR
+participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
+participant ":AddGameCommandParser" as AddGameCommandParser LOGIC_COLOR
+participant "a:AddGameCommand" as AddGameCommand LOGIC_COLOR
+participant "r:CommandResult" as CommandResult LOGIC_COLOR
+end box
+
+box Model MODEL_COLOR_T1
+participant ":Model" as Model MODEL_COLOR
+participant "editedPerson:Person" as Person MODEL_COLOR
+end box
+
+[-> LogicManager : execute("game add 1 g/Minecraft")
+activate LogicManager
+
+LogicManager -> AddressBookParser : parseCommand("game add 1 g/Minecraft")
+activate AddressBookParser
+
+create AddGameCommandParser
+AddressBookParser -> AddGameCommandParser
+activate AddGameCommandParser
+
+AddGameCommandParser --> AddressBookParser
+deactivate AddGameCommandParser
+
+AddressBookParser -> AddGameCommandParser : parse(" 1 g/Minecraft")
+activate AddGameCommandParser
+
+create AddGameCommand
+AddGameCommandParser -> AddGameCommand : AddGameCommand(index, null, Minecraft, false)
+activate AddGameCommand
+
+AddGameCommand --> AddGameCommandParser : a
+deactivate AddGameCommand
+
+AddGameCommandParser --> AddressBookParser : a
+deactivate AddGameCommandParser
+'Hidden delete for Parser
+destroy AddGameCommandParser
+
+AddressBookParser --> LogicManager : a
+deactivate AddressBookParser
+
+LogicManager -> AddGameCommand : execute(model)
+activate AddGameCommand
+
+AddGameCommand -> Model : getFilteredPersonList()
+activate Model
+Model --> AddGameCommand : lastShownList
+deactivate Model
+
+create Person
+AddGameCommand -> Person : Person(name, tags, updatedGames, isUser)
+activate Person
+Person --> AddGameCommand : editedPerson
+deactivate Person
+
+AddGameCommand -> Model : setPerson(personToEdit, editedPerson)
+activate Model
+Model --> AddGameCommand
+deactivate Model
+
+AddGameCommand -> Model : updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS)
+activate Model
+Model --> AddGameCommand
+deactivate Model
+
+create CommandResult
+AddGameCommand -> CommandResult : CommandResult(msg, false, false, editedPerson)
+activate CommandResult
+CommandResult --> AddGameCommand : r
+deactivate CommandResult
+
+AddGameCommand --> LogicManager : r
+deactivate AddGameCommand
+
+[<--LogicManager : r
+deactivate LogicManager
+@enduml

@@ -36,6 +36,19 @@ public class ViewPanel extends UiPart<Region> {
     }
 
     /**
+     * Clears the ViewPanel and shows the placeholder text.
+     */
+    public void clearPerson() {
+        placeholderText.setVisible(true);
+        placeholderText.setManaged(true);
+        profileContainer.setVisible(false);
+        profileContainer.setManaged(false);
+        name.setText("");
+        tags.getChildren().clear();
+        gamesList.getChildren().clear();
+    }
+
+    /**
      * Updates the UI to display the details of the given {@code Person}.
      */
     public void setPerson(Person person) {
@@ -43,65 +56,56 @@ public class ViewPanel extends UiPart<Region> {
             return;
         }
 
-        // Show profile container, hide placeholder text
         placeholderText.setVisible(false);
         placeholderText.setManaged(false);
         profileContainer.setVisible(true);
         profileContainer.setManaged(true);
 
-        // Set the Name
         name.setText("User: " + person.getName().fullName);
 
-        // Clear out any prev tags
         tags.getChildren().clear();
 
         person.getTags().stream()
                 .sorted(Comparator.comparing(tag -> tag.tagName))
                 .forEach(tag -> {
                     Label tagLabel = new Label(tag.tagName);
-                    // Give it a nice, modern blue tag styling to match the dark theme
-                    tagLabel.setStyle("-fx-background-color: #3e7b91; -fx-text-fill: white; "
-                            + "-fx-padding: 3 7 3 7; -fx-background-radius: 3; -fx-font-size: 11px;");
+                    // CHANGED: Use CSS class instead of hardcoded colors
+                    tagLabel.getStyleClass().add("profile-tag");
                     tags.getChildren().add(tagLabel);
                 });
 
-        // Clear out any previous games
         gamesList.getChildren().clear();
 
-        // Populate the Games and Aliases
         if (person.getGames().isEmpty()) {
             Label emptyLabel = new Label("No games added yet.");
-            emptyLabel.setStyle("-fx-text-fill: derive(white, -30%); -fx-font-style: italic;");
+            // CHANGED: Use CSS class
+            emptyLabel.getStyleClass().add("profile-empty-label");
             gamesList.getChildren().add(emptyLabel);
         } else {
             Label gamesTitle = new Label("GAMES & ALIASES");
-            gamesTitle.setStyle("-fx-font-weight: bold;"
-                    + " -fx-text-fill: #b3d4ff;"
-                    + " -fx-font-size: 13px;"
-                    + " -fx-padding: 10 0 5 0;");
+            // CHANGED: Use CSS class
+            gamesTitle.getStyleClass().add("profile-games-title");
             gamesList.getChildren().add(gamesTitle);
 
             person.getGames().forEach(game -> {
                 VBox gameBox = new VBox();
-                gameBox.setStyle("-fx-background-color: derive(#1d1d1d, 20%);"
-                        + " -fx-padding: 10;"
-                        + " -fx-background-radius: 5;");
+                // CHANGED: Use CSS class for the dark box
+                gameBox.getStyleClass().add("profile-game-box");
 
                 Label gameNameLabel = new Label("🎮 " + game.gameName);
-                gameNameLabel.setWrapText(true); // Wrap text
-                //gameNameLabel.setMaxWidth(300); // Force wrap if it's one giant word without spaces
-                gameNameLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: white; -fx-font-size: 14px;");
+                gameNameLabel.setWrapText(true);
+                // CHANGED: Use CSS class
+                gameNameLabel.getStyleClass().add("profile-game-name");
                 gameBox.getChildren().add(gameNameLabel);
 
                 if (!game.getAliases().isEmpty()) {
                     StringBuilder aliasText = new StringBuilder("Alias: ");
                     game.getAliases().forEach(alias -> aliasText.append(alias).append(", "));
-                    aliasText.setLength(aliasText.length() - 2); // Remove trailing comma and space
+                    aliasText.setLength(aliasText.length() - 2);
 
                     Label aliasLabel = new Label(aliasText.toString());
-                    aliasLabel.setStyle("-fx-text-fill: derive(white, -20%);"
-                            + " -fx-font-size: 12px;"
-                            + " -fx-padding: 3 0 0 5;");
+                    // CHANGED: Use CSS class
+                    aliasLabel.getStyleClass().add("profile-alias-text");
                     aliasLabel.setWrapText(true);
                     gameBox.getChildren().add(aliasLabel);
                 }

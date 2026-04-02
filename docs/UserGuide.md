@@ -214,13 +214,15 @@ Examples:
 
 Deletes the specified contact from Harmony.
 
-Format: `contact delete n/NAME`
+Format: `contact delete INDEX` or `contact delete n/NAME`
 
-* Finds the contact whose name matches `NAME` (case-insensitive).
+* Deletes the contact at the specified `INDEX` in the displayed list, or whose name matches `NAME` (case-insensitive).
+* `INDEX` must be a positive integer (e.g., 1, 2, 3…​). Use `0` to target your own user profile.
 * A confirmation prompt will appear. Type `y` or `yes` to confirm, or `n` or `no` to cancel.
 * Any other input cancels the deletion.
 
 Examples:
+* `contact delete 1` prompts for confirmation, then deletes the 1st contact in the list.
 * `contact delete n/John Doe` prompts for confirmation, then deletes the contact named `John Doe`.
 * `contact delete n/Betsy` prompts for confirmation, then deletes the contact named `Betsy`.
 
@@ -378,8 +380,8 @@ Furthermore, certain edits can cause Harmony to behave in unexpected ways (e.g.,
 | **Help**            | `help` |
 | **Undo**            | `undo` |
 | **Contact Add**     | `contact add n/NAME [t/TAG]…​ [g/GAME [al/ALIAS]…​]…​` <br> e.g., `contact add n/James Ho t/friend t/colleague` |
-| **Contact Delete**  | `contact delete n/NAME`<br> e.g., `contact delete n/James Ho` |
-| **Contact Edit**    | `contact edit n/NAME e/NEW_NAME`<br> e.g., `contact edit n/James Ho e/James Lee` |
+| **Contact Delete**  | `contact delete INDEX` or `contact delete n/NAME`<br> e.g., `contact delete 1` or `contact delete n/James Ho` |
+| **Contact Edit**    | `contact edit INDEX e/NEW_NAME` or `contact edit n/NAME e/NEW_NAME`<br> e.g., `contact edit 1 e/James Lee` or `contact edit n/James Ho e/James Lee` |
 | **Clear**           | `clear` |
 | **Alias Add**       | `alias add INDEX g/GAME_NAME al/ALIAS` or `alias add n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias add 1 g/Valorant al/Benjumpin` |
 | **Alias Delete**    | `alias delete INDEX g/GAME_NAME al/ALIAS` or `alias delete n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias delete 1 g/Valorant al/Benjumpin` |

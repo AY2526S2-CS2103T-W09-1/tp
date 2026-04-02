@@ -6,7 +6,7 @@ skinparam classBackgroundColor LOGIC_COLOR
 
 package Logic as LogicPackage {
 
-package "Parser Classes" as ParserClasses{
+package "Parser Classes" as ParserClasses {
 }
 Class XYZCommand
 Class CommandResult
@@ -14,6 +14,9 @@ Class "{abstract}\nCommand" as Command
 Class "<<interface>>\nUndoableCommand" as UndoableCommand
 Class UndoCommand
 
+' --- Specific Commands (Representative Sample) ---
+Class AddGameCommand
+Class ThemeCommand
 
 Class "<<interface>>\nLogic" as Logic
 Class LogicManager
@@ -34,16 +37,42 @@ LogicManager -right->"1" ParserClasses
 LogicManager ->"*" UndoableCommand : commandHistory
 ParserClasses ..> XYZCommand : <<create>>
 
+' Parsers creating specific commands
+ParserClasses ..> AddGameCommand : <<create>>
+ParserClasses ..> ThemeCommand : <<create>>
+
+' --- Inheritance & Implementation ---
+
+' All commands extend the base abstract Command class
+AddGameCommand -up-|> Command
+ThemeCommand -up-|> Command
+
+' Only data-mutating commands implement the UndoableCommand interface
+AddGameCommand .left.|> UndoableCommand
+
 XYZCommand -up-|> Command
 XYZCommand .up.|> UndoableCommand
 UndoCommand -up-|> Command
 UndoCommand .right.> UndoableCommand : <<call undo>>
+
+' --- Notes for Abstraction ---
+note bottom of AddGameCommand
+  Other game, alias, and mutating commands
+  (e.g., DeleteGameCommand, AddAliasCommand, EditCommand)
+  follow this pattern and implement UndoableCommand.
+end note
+
+note bottom of ThemeCommand
+  Standard non-mutating commands
+  (e.g., ListCommand, HelpCommand, UndoCommand)
+  follow this pattern and extend Command directly.
+end note
+
 LogicManager .left.> Command : <<call>>
 
 LogicManager --> Model
 LogicManager --> Storage
 Storage --[hidden] Model
-Command .[hidden]up.> Storage
 Command .right.> Model
 note right of XYZCommand: XYZCommand = AddContactCommand,\nAddGameCommand, etc (if undoable)
 

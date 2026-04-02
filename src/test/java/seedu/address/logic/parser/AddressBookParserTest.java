@@ -53,10 +53,10 @@ public class AddressBookParserTest {
     }
 
     @Test
-    public void parseCommand_delete() throws Exception {
+    public void parseCommand_contactDelete() throws Exception {
         DeleteContactCommand command = (DeleteContactCommand) parser.parseCommand(
-                DeleteContactCommand.COMMAND_WORD + " n/Alice Pauline");
-        assertEquals(new DeleteContactCommand(new Name("Alice Pauline")), command);
+                DeleteContactCommand.COMMAND_WORD + " n/Janelle Lum");
+        assertEquals(new DeleteContactCommand(null, new Name("Janelle Lum"), false), command);
     }
 
     @Test

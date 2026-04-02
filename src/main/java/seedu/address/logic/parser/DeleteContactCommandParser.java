@@ -1,8 +1,8 @@
 package seedu.address.logic.parser;
 
-import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.DeleteContactCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Name;
@@ -21,12 +21,28 @@ public class DeleteContactCommandParser implements Parser<DeleteContactCommand> 
     public DeleteContactCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_NAME);
 
-        if (!argMultimap.getValue(PREFIX_NAME).isPresent() || !argMultimap.getPreamble().isEmpty()) {
-            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteContactCommand.MESSAGE_USAGE));
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME);
+
+        String preamble = argMultimap.getPreamble().trim();
+        boolean useUserProfile = preamble.equals("0");
+        boolean hasNamePrefix = argMultimap.getValue(PREFIX_NAME).isPresent();
+
+        if (!useUserProfile) {
+            ParserUtil.verifyIndexOrNamePresent(preamble, hasNamePrefix, DeleteContactCommand.MESSAGE_USAGE);
+        } else if (hasNamePrefix) {
+            throw new ParseException("Please provide either an index OR a name, not both.");
         }
 
-        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME);
-        Name name = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
-        return new DeleteContactCommand(name);
+        if (useUserProfile) {
+            return new DeleteContactCommand(null, null, true);
+        }
+
+        if (hasNamePrefix) {
+            Name name = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
+            return new DeleteContactCommand(null, name, false);
+        }
+
+        Index index = ParserUtil.parseIndex(preamble);
+        return new DeleteContactCommand(index, null, false);
     }
 }
