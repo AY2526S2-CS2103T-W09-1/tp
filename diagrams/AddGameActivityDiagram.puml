@@ -1,0 +1,54 @@
+@startuml
+!include style.puml
+skinparam arrowColor #333333
+skinparam activityBorderColor #333333
+skinparam activityBackgroundColor #EEEEEE
+
+start
+:User executes ""game add"" command;
+:LogicManager calls ""AddGameCommand#execute(model)"";
+
+if () then ([useUserProfile == true])
+    if () then ([User Profile exists])
+        :Get User Profile;
+    else ([else])
+        :Throw CommandException
+        (No user profile found);
+        stop
+    endif
+else ([useUserProfile == false])
+    :Get Filtered Person List;
+    if () then ([targetIndex != null])
+        if () then ([Index is within list bounds])
+            :Get Person at Index;
+        else ([else])
+            :Throw CommandException
+            (Invalid Index);
+            stop
+        endif
+    else ([targetName != null])
+        if () then ([Name exists in list])
+            :Get matching Person;
+        else ([else])
+            :Throw CommandException
+            (Contact not found);
+            stop
+        endif
+    endif
+endif
+
+' Merge point for the resolved Person
+if () then ([Person already has game])
+    :Throw CommandException
+    (Duplicate Game);
+    stop
+else ([else])
+    :Create a new Game Set;
+    :Add the new Game to the Set;
+    :Create edited Person object\nwith the updated Game Set;
+    :Model replaces original Person\nwith edited Person;
+    :Model updates filtered person list;
+    :Return success CommandResult;
+    stop
+endif
+@enduml
