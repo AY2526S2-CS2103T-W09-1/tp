@@ -183,6 +183,24 @@ public class DeleteAliasCommandTest {
     }
 
     @Test
+    public void getCancelMessage_returnsCorrectMessage() throws Exception {
+        Person firstPerson = model.getFilteredPersonList().get(0);
+        Game game = new Game("Valorant");
+        Alias alias = new Alias("Benjumpin");
+
+        new AddGameCommand(null, firstPerson.getName(), game, false).execute(model);
+        new AddAliasCommand(null, firstPerson.getName(), game, alias, false).execute(model);
+
+        DeleteAliasCommand deleteAliasCommand =
+                new DeleteAliasCommand(null, firstPerson.getName(), game, alias, false);
+        deleteAliasCommand.execute(model);
+
+        String expectedMessage = String.format(DeleteAliasCommand.MESSAGE_DELETE_CANCELLED,
+                firstPerson.getName(), game.gameName, alias);
+        assertEquals(expectedMessage, deleteAliasCommand.getCancelMessage());
+    }
+
+    @Test
     public void execute_nullIndexAndName_failure() {
         Game game = new Game("Valorant");
         Alias alias = new Alias("SomeAlias");

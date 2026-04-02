@@ -153,6 +153,22 @@ public class DeleteGameCommandTest {
     }
 
     @Test
+    public void getCancelMessage_returnsCorrectMessage() throws Exception {
+        Person firstPerson = model.getFilteredPersonList().get(0);
+        Game gameToProcess = new Game("Minecraft");
+
+        new AddGameCommand(null, firstPerson.getName(), gameToProcess, false).execute(model);
+
+        DeleteGameCommand deleteGameCommand =
+                new DeleteGameCommand(null, firstPerson.getName(), gameToProcess, false);
+        deleteGameCommand.execute(model);
+
+        String expectedMessage = String.format(DeleteGameCommand.MESSAGE_DELETE_CANCELLED,
+                gameToProcess.gameName, firstPerson.getName());
+        assertEquals(expectedMessage, deleteGameCommand.getCancelMessage());
+    }
+
+    @Test
     public void execute_nullIndexAndName_failure() {
         Game gameToDelete = new Game("Minecraft");
         DeleteGameCommand deleteGameCommand = new DeleteGameCommand(null, null, gameToDelete, false);
