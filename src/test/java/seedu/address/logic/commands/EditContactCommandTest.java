@@ -119,6 +119,22 @@ public class EditContactCommandTest {
     }
 
     @Test
+    public void undo_editContact_restoresOriginalName() throws Exception {
+        Person personToEdit = model.getFilteredPersonList().get(0);
+        Name originalName = personToEdit.getName();
+        Name newName = new Name("Alicia");
+
+        EditContactCommand command = new EditContactCommand(null, originalName, newName, false);
+        command.execute(model);
+
+        assertEquals(newName, model.getFilteredPersonList().get(0).getName());
+
+        command.undo(model);
+
+        assertEquals(originalName, model.getFilteredPersonList().get(0).getName());
+    }
+
+    @Test
     public void equals() {
         Name alice = new Name("Alice");
         Name bob = new Name("Bob");
