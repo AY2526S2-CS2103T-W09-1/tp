@@ -1,0 +1,34 @@
+@startuml
+!include style.puml
+skinparam arrowThickness 1.1
+skinparam arrowColor LOGIC_COLOR_T4
+skinparam classBackgroundColor LOGIC_COLOR
+
+package Logic {
+
+Class "{abstract}\nCommand" as Command
+Class "<<interface>>\nUndoableCommand" as UndoableCommand
+Class LogicManager
+Class DeleteContactCommand
+Class DeleteGameCommand
+Class DeleteAliasCommand
+
+}
+
+DeleteContactCommand -up-|> Command
+DeleteGameCommand -up-|> Command
+DeleteAliasCommand -up-|> Command
+
+DeleteContactCommand .up.|> UndoableCommand
+DeleteGameCommand .up.|> UndoableCommand
+DeleteAliasCommand .up.|> UndoableCommand
+
+LogicManager .right.> Command : <<call>>
+LogicManager --> DeleteContactCommand : stores for confirmation
+
+note right of DeleteContactCommand
+  execute() returns a confirmation prompt.
+  Deletion only occurs after user types "y".
+end note
+
+@enduml
