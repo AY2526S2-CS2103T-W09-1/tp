@@ -17,7 +17,7 @@ import seedu.address.model.person.Person;
 /**
  * Edits the name of an existing contact in the address book.
  */
-public class EditContactCommand extends Command {
+public class EditContactCommand extends Command implements UndoableCommand {
 
     public static final String COMMAND_WORD = "contact edit";
 
@@ -36,6 +36,8 @@ public class EditContactCommand extends Command {
     private final Name targetName;
     private final Name newName;
     private final boolean useUserProfile;
+    private Person personBeforeEdit;
+    private Person personAfterEdit;
 
     /**
      * @param targetIndex    index of the contact to edit, or null if using name/profile
@@ -80,11 +82,19 @@ public class EditContactCommand extends Command {
             throw new CommandException(MESSAGE_DUPLICATE_PERSON);
         }
 
+        personBeforeEdit = personToEdit;
+        personAfterEdit = editedPerson;
         model.setPerson(personToEdit, editedPerson);
         model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
         return new CommandResult(
                 String.format(MESSAGE_EDIT_PERSON_SUCCESS, personToEdit.getName(), newName),
                 false, false, editedPerson);
+    }
+
+    @Override
+    public void undo(Model model) {
+        model.setPerson(personAfterEdit, personBeforeEdit);
+        model.updateFilteredPersonList(Model.PREDICATE_SHOW_ALL_PERSONS);
     }
 
     @Override
