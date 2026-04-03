@@ -16,7 +16,7 @@ public class ListGameCommandParser implements Parser<ListGameCommand> {
     public ListGameCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME);
-
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME);
         String preamble = argMultimap.getPreamble().trim();
         boolean useUserProfile = preamble.equalsIgnoreCase("me"); // Now checks for 'me'
         boolean hasNamePrefix = argMultimap.getValue(PREFIX_NAME).isPresent();
