@@ -114,6 +114,8 @@ public class EditContactCommandTest {
     public void execute_noUserProfile_throwsCommandException() {
         Model emptyModel = new ModelManager(new AddressBook(), new UserPrefs());
         EditContactCommand command = new EditContactCommand(null, null, new Name("Johnny"), true);
+        emptyModel.deletePerson(emptyModel.getFilteredPersonList().get(0));
+
         assertCommandFailure(command, emptyModel, "No user profile found.");
     }
 
