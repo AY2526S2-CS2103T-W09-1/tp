@@ -24,12 +24,14 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
 * [Undoing the last command : `undo`](#undoing-the-last-command--undo)
 * [Clearing all entries : `clear`](#clearing-all-entries--clear)
 * [Exiting the program : `exit`](#exiting-the-program--exit)
+* [Changing the UI theme : `theme`](#changing-the-ui-theme--theme)
 
 **Contact Management**
 * [Adding a contact : `contact add`](#adding-a-contact-contact-add)
 * [Editing a contact's name : `contact edit`](#editing-a-contacts-name--contact-edit)
 * [Deleting a contact : `contact delete`](#deleting-a-contact--contact-delete)
 * [Locating contacts : `find`](#locating-persons-find)
+* [Viewing a contact's profile : `contact view`](#viewing-a-contacts-profile--contact-view)
 
 **Alias Management**
 * [Adding an alias : `alias add`](#adding-an-alias-to-a-game--alias-add)
@@ -71,6 +73,10 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
    * `clear` : Deletes all contacts.
 
    * `exit` : Exits the app.
+   
+   * `contact view me` : Opens the profile view panel to display your own user profile.
+   
+   * `theme light` : Switches the application's visual interface to Light Mode.
 
 1. Refer to the [Features](#features) below for details of each command.
 
@@ -116,6 +122,20 @@ Shows a message explaining how to access the help page.
 ![help message](images/helpMessage.png)
 
 Format: `help`
+
+### Changing the UI theme : `theme`
+
+Changes the visual appearance of the Harmony application.
+
+Format: `theme THEME_NAME`
+
+* Currently supported themes are `dark`, `light`, and `rainbow`.
+* The `dark` theme is the default appearance.
+* The application will immediately update its interface to the specified theme.
+
+Examples:
+* `theme light`
+* `theme rainbow`
 
 
 ### Adding a contact: `contact add`
@@ -225,6 +245,23 @@ Examples:
 * `contact delete 1` prompts for confirmation, then deletes the 1st contact in the list.
 * `contact delete n/John Doe` prompts for confirmation, then deletes the contact named `John Doe`.
 * `contact delete n/Betsy` prompts for confirmation, then deletes the contact named `Betsy`.
+
+### Viewing a contact's profile : `contact view`
+
+Displays the full details, including all games and aliases, of a specific contact or your own user profile in the side panel.
+
+Format (by index): `contact view INDEX`
+Format (by name): `contact view n/CONTACT_NAME`
+Format (User Profile): `contact view me`
+
+* `INDEX` must be a positive integer 1, 2, 3, …​
+* `CONTACT_NAME` must match the contact's full name exactly (case-insensitive). 
+* Use the exact keyword `me` to view your own user profile.
+
+Examples:
+* `contact view 1`
+* `contact view n/John Doe`
+* `contact view me`
 
 ### Undoing the last command : `undo`
 
@@ -374,20 +411,22 @@ Furthermore, certain edits can cause Harmony to behave in unexpected ways (e.g.,
 
 ## Command summary
 
-| Action              | Format, Examples |
-|---------------------|-----------------|
-| **List**            | `list` |
-| **Help**            | `help` |
-| **Undo**            | `undo` |
-| **Contact Add**     | `contact add n/NAME [t/TAG]…​ [g/GAME [al/ALIAS]…​]…​` <br> e.g., `contact add n/James Ho t/friend t/colleague` |
-| **Contact Delete**  | `contact delete INDEX` or `contact delete n/NAME`<br> e.g., `contact delete 1` or `contact delete n/James Ho` |
+| Action              | Format, Examples                                                                                                                                    |
+|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| **List**            | `list`                                                                                                                                              |
+| **Help**            | `help`                                                                                                                                              |
+| **Undo**            | `undo`                                                                                                                                              |
+| **Contact Add**     | `contact add n/NAME [t/TAG]…​ [g/GAME [al/ALIAS]…​]…​` <br> e.g., `contact add n/James Ho t/friend t/colleague`                                     |
+| **Contact Delete**  | `contact delete INDEX` or `contact delete n/NAME`<br> e.g., `contact delete 1` or `contact delete n/James Ho`                                       |
 | **Contact Edit**    | `contact edit INDEX e/NEW_NAME` or `contact edit n/NAME e/NEW_NAME`<br> e.g., `contact edit 1 e/James Lee` or `contact edit n/James Ho e/James Lee` |
-| **Clear**           | `clear` |
-| **Alias Add**       | `alias add INDEX g/GAME_NAME al/ALIAS` or `alias add n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias add 1 g/Valorant al/Benjumpin` |
-| **Alias Delete**    | `alias delete INDEX g/GAME_NAME al/ALIAS` or `alias delete n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias delete 1 g/Valorant al/Benjumpin` |
-| **Game Add**        | `game add INDEX g/GAME_NAME` or `game add n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game add 1 g/Minecraft` |
-| **Game Delete**     | `game delete INDEX g/GAME_NAME` or `game delete n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game delete 1 g/Minecraft` |
-| **Game List**       | `game list INDEX` or `game list n/CONTACT_NAME`<br> e.g., `game list 1` |
-| **Find (name)**     | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake` |
-| **Find (game)**     | `find g/GAME_NAME`<br> e.g., `find g/Valorant` |
-| **Find (alias)**    | `find al/ALIAS`<br> e.g., `find al/Benjumpin` |
+| **Contact View** | `contact view INDEX`, `contact view n/NAME`, or `contact view me`<br> e.g., `contact view me` or `contact view 1` or `contact view n/Jamie Ho`      |
+| **Clear**           | `clear`                                                                                                                                             |
+| **Alias Add**       | `alias add INDEX g/GAME_NAME al/ALIAS` or `alias add n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias add 1 g/Valorant al/Benjumpin`           |
+| **Alias Delete**    | `alias delete INDEX g/GAME_NAME al/ALIAS` or `alias delete n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias delete 1 g/Valorant al/Benjumpin`  |
+| **Game Add**        | `game add INDEX g/GAME_NAME` or `game add n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game add 1 g/Minecraft`                                            |
+| **Game Delete**     | `game delete INDEX g/GAME_NAME` or `game delete n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game delete 1 g/Minecraft`                                   |
+| **Game List**       | `game list INDEX` or `game list n/CONTACT_NAME`<br> e.g., `game list 1`                                                                             |
+| **Find (name)**     | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`                                                                                          |
+| **Find (game)**     | `find g/GAME_NAME`<br> e.g., `find g/Valorant`                                                                                                      |
+| **Find (alias)**    | `find al/ALIAS`<br> e.g., `find al/Benjumpin`                                                                                                       |
+| **Theme** | `theme THEME_NAME`<br> e.g., `theme light`                                                                                                          |
