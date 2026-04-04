@@ -200,6 +200,7 @@ public class EditAliasCommandTest {
         Game game = new Game("Valorant");
         Alias oldAlias = new Alias("JohnnyV");
         Alias newAlias = new Alias("JohnnyValorant");
+        emptyModel.deletePerson(emptyModel.getFilteredPersonList().get(0));
 
         EditAliasCommand editAliasCommand =
                 new EditAliasCommand(null, null, game, oldAlias, newAlias, true);

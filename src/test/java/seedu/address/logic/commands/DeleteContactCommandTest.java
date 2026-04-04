@@ -163,6 +163,7 @@ public class DeleteContactCommandTest {
     public void execute_noUserProfile_throwsCommandException() {
         Model emptyModel = new ModelManager(new AddressBook(), new UserPrefs());
         DeleteContactCommand deleteCommand = new DeleteContactCommand(null, null, true);
+        emptyModel.deletePerson(emptyModel.getFilteredPersonList().get(0));
 
         assertCommandFailure(deleteCommand, emptyModel, "No user profile found.");
     }

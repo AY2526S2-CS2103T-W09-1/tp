@@ -218,6 +218,7 @@ public class AddAliasCommandTest {
         Model emptyModel = new ModelManager(new AddressBook(), new UserPrefs());
         Game game = new Game("Valorant");
         Alias alias = new Alias("JohnV");
+        emptyModel.deletePerson(emptyModel.getFilteredPersonList().get(0));
 
         AddAliasCommand addAliasCommand = new AddAliasCommand(null, null, game, alias, true);
         assertCommandFailure(addAliasCommand, emptyModel, "No user profile found.");

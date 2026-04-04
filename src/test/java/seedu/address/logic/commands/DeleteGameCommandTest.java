@@ -130,6 +130,7 @@ public class DeleteGameCommandTest {
         Model emptyModel = new ModelManager(new AddressBook(), new UserPrefs());
         Game gameToDelete = new Game("Valorant");
         DeleteGameCommand deleteGameCommand = new DeleteGameCommand(null, null, gameToDelete, true);
+        emptyModel.deletePerson(emptyModel.getFilteredPersonList().get(0));
 
         assertCommandFailure(deleteGameCommand, emptyModel, "No user profile found.");
     }

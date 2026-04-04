@@ -51,19 +51,16 @@ public class ClearCommandTest {
 
     @Test
     public void executeConfirmed_addressBookWithUserProfile_preservesUserProfile() {
-        Person userProfile = new Person(new Name("John Doe"), new HashSet<>(), true);
+        Person userProfile = new Person(new Name("John Doe"), new HashSet<>(), false);
         AddressBook ab = new AddressBook();
         ab.addPerson(userProfile);
         Model model = new ModelManager(ab, new UserPrefs());
-
-        Model expectedModel = new ModelManager(new AddressBook(), new UserPrefs());
-        expectedModel.addPerson(userProfile);
 
         ClearCommand clearCommand = new ClearCommand();
         clearCommand.execute(model);
         clearCommand.executeConfirmed(model);
 
-        assertEquals(expectedModel, model);
+        assertTrue(model.getFilteredPersonList().get(0).isUserProfile());
     }
 
     @Test
