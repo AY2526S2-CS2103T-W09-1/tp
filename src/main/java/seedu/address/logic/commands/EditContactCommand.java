@@ -22,11 +22,13 @@ public class EditContactCommand extends Command implements UndoableCommand {
     public static final String COMMAND_WORD = "contact edit";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Edits the name of a contact identified by index or current name.\n"
+            + ": Edits the name of a contact identified by index, name, or 'me' for your own profile.\n"
             + "Parameters (by Index): INDEX (must be a positive integer) " + PREFIX_NEW_NAME + "NEW_NAME\n"
             + "Parameters (by Name): " + PREFIX_NAME + "NAME " + PREFIX_NEW_NAME + "NEW_NAME\n"
+            + "Parameters (User Profile): me " + PREFIX_NEW_NAME + "NEW_NAME\n"
             + "Example 1: " + COMMAND_WORD + " 1 " + PREFIX_NEW_NAME + "Jan\n"
-            + "Example 2: " + COMMAND_WORD + " " + PREFIX_NAME + "Janelle " + PREFIX_NEW_NAME + "Jan";
+            + "Example 2: " + COMMAND_WORD + " " + PREFIX_NAME + "Janelle " + PREFIX_NEW_NAME + "Jan\n"
+            + "Example 3: " + COMMAND_WORD + " me " + PREFIX_NEW_NAME + "Jan";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Contact updated: %1$s \u2192 %2$s";
     public static final String MESSAGE_PERSON_NOT_FOUND = "Error: Name not found";

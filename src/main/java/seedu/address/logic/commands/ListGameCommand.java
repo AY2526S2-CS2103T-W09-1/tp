@@ -21,11 +21,13 @@ public class ListGameCommand extends Command {
     public static final String COMMAND_WORD = "list";
 
     public static final String MESSAGE_USAGE = "game " + COMMAND_WORD
-            + ": Lists all games of a contact using either their index OR their full name.\n"
+            + ": Lists all games of a contact using either their index, full name, or 'me' for your own profile.\n"
             + "Parameters (by Index): INDEX (must be a positive integer)\n"
             + "Parameters (by Name): " + PREFIX_NAME + "CONTACT_NAME\n"
+            + "Parameters (User Profile): me\n"
             + "Example 1: game " + COMMAND_WORD + " 1\n"
-            + "Example 2: game " + COMMAND_WORD + " " + PREFIX_NAME + "Zi Xuan";
+            + "Example 2: game " + COMMAND_WORD + " " + PREFIX_NAME + "Zi Xuan\n"
+            + "Example 3: game " + COMMAND_WORD + " me";
 
     public static final String MESSAGE_SUCCESS = "%1$s's games: %2$s";
     public static final String MESSAGE_NO_GAMES = "%1$s currently has no games.";

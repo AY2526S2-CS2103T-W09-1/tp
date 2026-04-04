@@ -29,15 +29,19 @@ public class AddAliasCommand extends Command implements UndoableCommand {
     public static final String COMMAND_WORD = "alias add";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Adds an alias to a game of a contact using either their index OR their full name.\n"
+            + ": Adds an alias to a game of a contact using either their index, full name,"
+            + " or 'me' for your own profile.\n"
             + "Parameters (by Index): INDEX (must be a positive integer) "
             + PREFIX_GAME + "GAME " + PREFIX_ALIAS + "ALIAS\n"
             + "Parameters (by Name): "
             + PREFIX_NAME + "CONTACT_NAME " + PREFIX_GAME + "GAME " + PREFIX_ALIAS + "ALIAS\n"
+            + "Parameters (User Profile): me " + PREFIX_GAME + "GAME " + PREFIX_ALIAS + "ALIAS\n"
             + "Example 1: "
             + COMMAND_WORD + " 1 " + PREFIX_GAME + "Valorant " + PREFIX_ALIAS + "Benjumpin\n"
             + "Example 2: "
-            + COMMAND_WORD + " " + PREFIX_NAME + "Benjamin " + PREFIX_GAME + "Valorant " + PREFIX_ALIAS + "Benjumpin";
+            + COMMAND_WORD + " " + PREFIX_NAME + "Benjamin " + PREFIX_GAME + "Valorant " + PREFIX_ALIAS + "Benjumpin\n"
+            + "Example 3: "
+            + COMMAND_WORD + " me " + PREFIX_GAME + "Valorant " + PREFIX_ALIAS + "Benjumpin";
 
     public static final String MESSAGE_SUCCESS = "Alias '%3$s' added to %1$s's game: %2$s";
     public static final String MESSAGE_PERSON_NOT_FOUND = "Error: Contact does not exist.";

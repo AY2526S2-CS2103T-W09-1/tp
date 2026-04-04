@@ -29,15 +29,18 @@ public class DeleteAliasCommand extends Command implements ConfirmableDeleteComm
     public static final String COMMAND_WORD = "alias delete";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Deletes an alias from a game of a contact using either their index OR their full name.\n"
+            + ": Deletes an alias from a game of a contact using either their index, full name,"
+            + " or 'me' for your own profile.\n"
             + "Parameters (by Index): INDEX (must be a positive integer) "
             + PREFIX_GAME + "GAME " + PREFIX_ALIAS + "ALIAS\n"
             + "Parameters (by Name): "
             + PREFIX_NAME + "CONTACT_NAME " + PREFIX_GAME + "GAME " + PREFIX_ALIAS + "ALIAS\n"
+            + "Parameters (User Profile): me " + PREFIX_GAME + "GAME " + PREFIX_ALIAS + "ALIAS\n"
             + "Example 1: " + COMMAND_WORD + " 1 " + PREFIX_GAME + "Valorant "
             + PREFIX_ALIAS + "Benjumpin\n"
             + "Example 2: " + COMMAND_WORD + " " + PREFIX_NAME + "Benjamin "
-            + PREFIX_GAME + "Valorant " + PREFIX_ALIAS + "Benjumpin";
+            + PREFIX_GAME + "Valorant " + PREFIX_ALIAS + "Benjumpin\n"
+            + "Example 3: " + COMMAND_WORD + " me " + PREFIX_GAME + "Valorant " + PREFIX_ALIAS + "Benjumpin";
 
     public static final String MESSAGE_SUCCESS = "Alias \"%3$s\" removed from %1$s in %2$s";
     public static final String MESSAGE_PERSON_NOT_FOUND = "Error: Name does not exist";

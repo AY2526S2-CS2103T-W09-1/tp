@@ -21,11 +21,13 @@ public class DeleteContactCommand extends Command implements ConfirmableDeleteCo
     public static final String COMMAND_WORD = "contact delete";
 
     public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Deletes the contact identified by index or name.\n"
+            + ": Deletes the contact identified by index, name, or 'me' for your own profile.\n"
             + "Parameters (by Index): INDEX (must be a positive integer)\n"
             + "Parameters (by Name): " + PREFIX_NAME + "NAME\n"
+            + "Parameters (User Profile): me\n"
             + "Example 1: " + COMMAND_WORD + " 1\n"
-            + "Example 2: " + COMMAND_WORD + " " + PREFIX_NAME + "bob";
+            + "Example 2: " + COMMAND_WORD + " " + PREFIX_NAME + "bob\n"
+            + "Example 3: " + COMMAND_WORD + " me";
 
     public static final String MESSAGE_DELETE_PERSON_SUCCESS = "Contact deleted: %1$s";
     public static final String MESSAGE_PERSON_NOT_FOUND = "Error: Name not found";
