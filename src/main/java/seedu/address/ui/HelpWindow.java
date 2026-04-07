@@ -39,7 +39,7 @@ public class HelpWindow extends UiPart<Stage> {
 
         root.getScene().setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
-                hide(); 
+                hide();
             }
         });
     }
