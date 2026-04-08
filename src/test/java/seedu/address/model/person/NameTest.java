@@ -24,13 +24,20 @@ public class NameTest {
         // null name
         assertThrows(NullPointerException.class, () -> Name.isValidName(null));
 
-        // invalid name
+        // invalid name - standard constraints
         assertFalse(Name.isValidName("")); // empty string
         assertFalse(Name.isValidName(" ")); // spaces only
         assertFalse(Name.isValidName("^")); // only non-alphanumeric characters
         assertFalse(Name.isValidName("peter*")); // contains non-alphanumeric characters
 
-        // valid name
+        // invalid name - contains greedy command prefixes
+        assertFalse(Name.isValidName("Peter n/")); // contains " n/"
+        assertFalse(Name.isValidName("John g/")); // contains " g/"
+        assertFalse(Name.isValidName("Alice al/")); // contains " al/"
+        assertFalse(Name.isValidName("Bob e/")); // contains " e/"
+        assertFalse(Name.isValidName("Charlie na/")); // contains " na/"
+
+        // valid name - standard
         assertTrue(Name.isValidName("peter jack")); // alphabets only
         assertTrue(Name.isValidName("12345")); // numbers only
         assertTrue(Name.isValidName("peter the 2nd")); // alphanumeric characters

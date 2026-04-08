@@ -11,4 +11,13 @@ public class CliSyntax {
     public static final Prefix PREFIX_ALIAS = new Prefix("al/");
     public static final Prefix PREFIX_NEW_ALIAS = new Prefix("na/");
     public static final Prefix PREFIX_NEW_NAME = new Prefix("e/");
+
+    /* Array containing all prefix definitions for easy iteration */
+    public static final Prefix[] ALL_PREFIXES = new Prefix[] {
+        PREFIX_NAME,
+        PREFIX_GAME,
+        PREFIX_ALIAS,
+        PREFIX_NEW_ALIAS,
+        PREFIX_NEW_NAME
+    };
 }

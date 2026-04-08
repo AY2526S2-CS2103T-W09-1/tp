@@ -2,6 +2,9 @@ package seedu.address.model.person;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
+import static seedu.address.logic.parser.CliSyntax.ALL_PREFIXES;
+
+import seedu.address.logic.parser.Prefix;
 
 /**
  * Represents one alias used by a person in Harmony.
@@ -12,7 +15,8 @@ public class Alias {
     public static final int MAX_LENGTH = 200;
     public static final String MESSAGE_CONSTRAINTS =
             "Aliases can take any values, but must not be blank and must be at most "
-                    + MAX_LENGTH + " characters long";
+                    + MAX_LENGTH + " characters long"
+                    + "Additionally, aliases cannot contain spaces followed by command prefixes (e.g., ' al/', ' g/').";
 
     public final String value;
 
@@ -34,6 +38,13 @@ public class Alias {
     public static boolean isValidAlias(String test) {
         requireNonNull(test);
         String trimmedTest = test.trim();
+
+        for (Prefix prefix : ALL_PREFIXES) {
+            if (test.contains(" " + prefix.getPrefix())) {
+                return false;
+            }
+        }
+
         return !trimmedTest.isEmpty() && trimmedTest.length() <= MAX_LENGTH;
     }
 
