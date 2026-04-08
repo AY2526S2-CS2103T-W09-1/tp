@@ -80,9 +80,8 @@ public class MainApp extends Application {
         ReadOnlyAddressBook initialData;
         try {
             addressBookOptional = storage.readAddressBook();
-            if (!addressBookOptional.isPresent()) {
-                logger.info("Creating a new data file " + storage.getAddressBookFilePath()
-                        + " populated with a sample Harmony.");
+            if (addressBookOptional.isEmpty()) {
+                logger.info("Creating a new data file " + storage.getAddressBookFilePath());
             }
             initialData = addressBookOptional.orElseGet(GeneratePlaceholder::getPlaceHolderddressBook);
         } catch (DataLoadingException e) {
