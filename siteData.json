@@ -41,7 +41,6 @@
       "title": "Developer Guide",
       "headings": {
         "harmony-developer-guide": "Harmony Developer Guide",
-        "acknowledgements": "Acknowledgements",
         "setting-up-getting-started": "Setting up, getting started",
         "design": "Design",
         "architecture": "Architecture",
@@ -67,8 +66,7 @@
         "appendix-instructions-for-manual-testing": "Appendix: Instructions for manual testing",
         "launch-and-shutdown": "Launch and shutdown",
         "deleting-a-person": "Deleting a person",
-        "editing-a-contact-s-name": "Editing a contact's name",
-        "saving-data": "Saving data"
+        "editing-a-contact-s-name": "Editing a contact's name"
       },
       "headingKeywords": {}
     },
