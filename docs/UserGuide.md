@@ -19,7 +19,7 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
 
 **General**
 * [Viewing help : `help`](#viewing-help--help)
-* [Listing all contacts : `list`](#listing-all-persons--list)
+* [Listing all contacts : `list`](#listing-all-contacts--list)
 * [Undoing the last command : `undo`](#undoing-the-last-command--undo)
 * [Clearing all entries : `clear`](#clearing-all-entries--clear)
 * [Changing the UI theme : `theme`](#changing-the-ui-theme--theme)
@@ -29,7 +29,7 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
 * [Adding a contact : `contact add`](#adding-a-contact--contact-add)
 * [Viewing a contact's profile : `contact view`](#viewing-a-contacts-profile--contact-view)
 * [Editing a contact's name : `contact edit`](#editing-a-contacts-name--contact-edit)
-* [Locating contacts : `find`](#locating-persons--find)
+* [Locating contacts : `find`](#locating-contacts--find)
 * [Deleting a contact : `contact delete`](#deleting-a-contact--contact-delete)
 * [Copying a contact : `copy`](#copying-a-contact--copy)
 
@@ -131,9 +131,9 @@ Shows a message explaining how to access the help page.
 Format: `help`
 
 
-### Listing all persons : `list`
+### Listing all contacts : `list`
 
-Shows a list of all persons in Harmony.
+Shows a list of all contacts in Harmony.
 
 Format: `list`
 
@@ -236,9 +236,9 @@ Examples:
 * `contact edit me e/ProGamer99` Renames your own user profile to `ProGamer99`.
 
 
-### Locating persons: `find`
+### Locating contacts: `find`
 
-Finds persons by name, game, or alias.
+Finds contacts by name, game, or alias.
 
 **Find by name:**
 
@@ -259,21 +259,21 @@ Examples:
 
 Format: `find g/GAME_NAME`
 
-* Returns all persons who have the specified game.
+* Returns all contacts who have the specified game.
 * The search is case-insensitive.
 
 Examples:
-* `find g/Valorant` returns all persons who have `Valorant` in their game list.
+* `find g/Valorant` returns all contacts who have `Valorant` in their game list.
 
 **Find by alias:**
 
 Format: `find al/ALIAS`
 
-* Returns all persons who have the specified alias (across all games).
+* Returns all contacts who have the specified alias (across all games).
 * The search is case-insensitive.
 
 Examples:
-* `find al/Benjumpin` returns all persons with the alias `Benjumpin`.
+* `find al/Benjumpin` returns all contacts with the alias `Benjumpin`.
 
 **Combined search:**
 
