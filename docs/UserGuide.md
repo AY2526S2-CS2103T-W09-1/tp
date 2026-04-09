@@ -27,7 +27,8 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
 
 **Contact Management**
 * [Adding a contact : `contact add`](#adding-a-contact--contact-add)
-* [Viewing a contact's profile : `contact view`](#viewing-a-contacts-profile--contact-view)
+* [Viewing a contact's profile : `view`](#viewing-a-contacts-profile--view)
+* [Copying a contact : `copy`](#copying-a-contact--copy)
 * [Editing a contact's name : `contact edit`](#editing-a-contacts-name--contact-edit)
 * [Locating contacts : `find`](#locating-contacts-find)
 * [Deleting a contact : `contact delete`](#deleting-a-contact--contact-delete)
@@ -71,7 +72,7 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
 
     * `contact edit me e/Benny` : Edits your User Profile to display `Benny` as the name.
 
-    * `contact view me` : Opens the profile view panel to display your own user profile.
+    * `view me` : Opens the profile view panel to display your own user profile.
 
     * `copy 1` : Copies the exact command needed to recreate the 1st contact to your system clipboard.
 
@@ -197,23 +198,24 @@ Examples:
 * `contact add n/Alice g/Valorant al/AliceV g/Minecraft`
 
 
-### Viewing a contact's profile : `contact view`
+### Viewing a contact's profile : `view`
 
 Displays the full details, including all games and aliases, of a specific contact or your own user profile in the side panel.
 
 Format:
-* By index: `contact view INDEX`
-* By name: `contact view n/NAME`
-* User Profile: `contact view me`
+* By index: `view INDEX`
+* By name: `view n/NAME`
+* User Profile: `view me`
 
 * `INDEX` must be a positive integer 1, 2, 3, …​
 * `NAME` must match the contact's full name exactly (case-insensitive).
 * Use the exact keyword `me` to view your own user profile.
+* `contact view` also works as an alternative form.
 
 Examples:
-* `contact view 1`
-* `contact view n/John Doe`
-* `contact view me`
+* `view 1`
+* `view n/John Doe`
+* `view me`
 
 
 ### Editing a contact's name : `contact edit`
@@ -488,7 +490,7 @@ Furthermore, certain edits can cause Harmony to behave in unexpected ways (e.g.,
 | **Undo** | `undo` |
 | **Theme** | `theme THEME_NAME`<br> e.g., `theme light` |
 | **Contact Add** | `contact add n/NAME [g/GAME [al/ALIAS]…​]…​` <br> e.g., `contact add n/James Ho` |
-| **Contact View** | `contact view INDEX` or `contact view n/NAME` or `contact view me`<br> e.g., `contact view me` |
+| **View** | `view INDEX` or `view n/NAME` or `view me`<br> e.g., `view me` (also: `contact view me`) |
 | **Contact Delete** | `contact delete INDEX` or `contact delete n/NAME`<br> e.g., `contact delete 1` or `contact delete n/James Ho` |
 | **Contact Edit** | `contact edit INDEX e/NEW_NAME` or `contact edit n/NAME e/NEW_NAME` or `contact edit me e/NEW_NAME`<br> e.g., `contact edit me e/James Lee` |
 | **Copy** | `copy INDEX` or `copy n/NAME` or `copy me`<br> e.g., `copy 1` |

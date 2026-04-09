@@ -142,6 +142,9 @@ public class ModelManagerTest {
 
         // Verify that a user profile has been generated and added
         assertFalse(modelManager.getUserProfile().isEmpty());
+
+        // Verify that the UserProfile is in index 0
+        assertTrue(modelManager.getFilteredPersonList().get(0).isUserProfile());
     }
 
     @Test

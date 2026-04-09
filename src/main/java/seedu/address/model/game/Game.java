@@ -2,6 +2,7 @@ package seedu.address.model.game;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
+import static seedu.address.logic.parser.CliSyntax.hasPrefix;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -15,7 +16,8 @@ import seedu.address.model.person.Alias;
  */
 public class Game {
 
-    public static final String MESSAGE_CONSTRAINTS = "Game names must be 1 to 200 characters long and cannot be empty.";
+    public static final String MESSAGE_CONSTRAINTS = "Game names must be 1 to 200 characters long and cannot be empty."
+            + "Additionally, names cannot contain spaces followed by command prefixes (e.g., ' al/', ' g/', ' n/').";
 
     // Accepts any string that is between 1 and 200 characters long (ignoring leading/trailing spaces)
     public static final String VALIDATION_REGEX = "^.{1,200}$";
@@ -54,7 +56,7 @@ public class Game {
      * Returns true if a given string is a valid game name.
      */
     public static boolean isValidGameName(String test) {
-        return test.trim().matches(VALIDATION_REGEX);
+        return test.trim().matches(VALIDATION_REGEX) && !hasPrefix(test);
     }
 
     public Set<Alias> getAliases() {

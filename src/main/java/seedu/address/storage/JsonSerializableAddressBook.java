@@ -47,13 +47,43 @@ class JsonSerializableAddressBook {
      */
     public AddressBook toModelType() throws IllegalValueException {
         AddressBook addressBook = new AddressBook();
+
+        int userProfileCount = 0;
+        Person userProfile = null;
+        List<Person> normalContacts = new ArrayList<>();
+
+        // Step 1: Parse all persons and separate the profile from normal contacts
         for (JsonAdaptedPerson jsonAdaptedPerson : persons) {
             Person person = jsonAdaptedPerson.toModelType();
-            if (addressBook.hasPerson(person)) {
+
+            if (person.isUserProfile()) {
+                userProfileCount++;
+                // Enforce maximum of 1 profile
+                if (userProfileCount > 1) {
+                    throw new IllegalValueException("Data file contains multiple user profiles! Only 1 is allowed.");
+                }
+                userProfile = person;
+            } else {
+                normalContacts.add(person);
+            }
+        }
+
+        // Step 2: Handle the User Profile (Add it FIRST so it is at index 0)
+        if (userProfile != null) {
+            addressBook.addPerson(userProfile);
+        } else {
+            addressBook.addUserProfile();
+        }
+
+        // Step 3: Add the rest of the normal contacts
+        for (Person normalContact : normalContacts) {
+            // Check for duplicates (this will also check against the user profile we just added!)
+            if (addressBook.hasPerson(normalContact)) {
                 throw new IllegalValueException(MESSAGE_DUPLICATE_PERSON);
             }
-            addressBook.addPerson(person);
+            addressBook.addPerson(normalContact);
         }
+
         return addressBook;
     }
 

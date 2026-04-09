@@ -1,5 +1,6 @@
 package seedu.address.logic.commands;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
@@ -134,8 +135,19 @@ public class ViewContactCommandTest {
         // different target types (index vs profile) -> returns false
         assertFalse(viewFirstCommand.equals(viewProfileCommand));
 
+        // same name -> returns true
+        ViewContactCommand viewNameCommandCopy = new ViewContactCommand(null, ALICE.getName(), false);
+        assertTrue(viewNameCommand.equals(viewNameCommandCopy));
+
         // Ensure profile equals its own copy
         ViewContactCommand viewProfileCommandCopy = new ViewContactCommand(null, null, true);
         assertTrue(viewProfileCommand.equals(viewProfileCommandCopy));
+    }
+
+    @Test
+    public void hashCode_sameValues_sameHash() {
+        ViewContactCommand a = new ViewContactCommand(INDEX_FIRST_PERSON, null, false);
+        ViewContactCommand b = new ViewContactCommand(INDEX_FIRST_PERSON, null, false);
+        assertEquals(a.hashCode(), b.hashCode());
     }
 }

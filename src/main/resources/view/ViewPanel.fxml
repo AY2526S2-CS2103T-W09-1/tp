@@ -10,7 +10,7 @@
       styleClass="pane-with-border" alignment="CENTER" VBox.vgrow="ALWAYS">
 
     <Label fx:id="placeholderText"
-           text="No profile selected.&#10;Type 'profile view' or 'profile view [INDEX]' to inspect."
+           text="No profile selected.&#10;Type 'view me' or 'view [INDEX]' to inspect."
            styleClass="view-panel-placeholder"
            wrapText="true" textAlignment="CENTER">
         <padding>

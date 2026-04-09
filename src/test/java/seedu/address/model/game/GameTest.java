@@ -24,15 +24,26 @@ public class GameTest {
         // null game name
         assertThrows(NullPointerException.class, () -> Game.isValidGameName(null));
 
-        // invalid game name
+        // invalid game name - blank/spaces
         assertFalse(Game.isValidGameName("")); // empty string
         assertFalse(Game.isValidGameName(" ")); // spaces only
 
-        // valid game names
+        // invalid game name - contains greedy command prefixes
+        assertFalse(Game.isValidGameName("Minecraft al/")); // contains " al/"
+        assertFalse(Game.isValidGameName("Valorant g/")); // contains " g/"
+        assertFalse(Game.isValidGameName("CSGO n/")); // contains " n/"
+        assertFalse(Game.isValidGameName("Mario e/")); // contains " e/"
+
+        // valid game names - standard
         assertTrue(Game.isValidGameName("Minecraft"));
         assertTrue(Game.isValidGameName("a")); // 1 character
         assertTrue(Game.isValidGameName("League of Legends")); // long name
         assertTrue(Game.isValidGameName("CS:GO 2!")); // special characters
+
+        // valid game names - contains prefix text WITHOUT leading spaces (Greedy Parsing safe)
+        assertTrue(Game.isValidGameName("Jamal/"));
+        assertTrue(Game.isValidGameName("Sign/"));
+        assertTrue(Game.isValidGameName("Dog/"));
     }
 
     @Test
@@ -57,7 +68,7 @@ public class GameTest {
         // null -> returns false
         assertFalse(game1.equals(null));
 
-        // different types -> returns false
-        assertFalse(game1.equals(5.0f));
+        // different type -> returns false
+        assertFalse(game1.equals(5));
     }
 }

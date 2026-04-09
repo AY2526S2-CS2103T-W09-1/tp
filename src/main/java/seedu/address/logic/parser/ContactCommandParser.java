@@ -17,8 +17,8 @@ public class ContactCommandParser implements Parser<Command> {
     public static final String COMMAND_WORD = "contact";
     public static final String MESSAGE_USAGE = """
               contact: Manages contacts.
-              contact add n/NAME [t/TAG]...
-              contact view me
+              contact add n/NAME
+              contact view me  (or shorthand: view me)
               contact delete n/NAME""";
 
     private static final Pattern ACTION_FORMAT = Pattern.compile("(?<action>\\S+)(?<arguments>.*)");
