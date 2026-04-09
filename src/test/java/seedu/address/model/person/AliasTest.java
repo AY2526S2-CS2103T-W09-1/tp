@@ -23,20 +23,32 @@ public class AliasTest {
         // null alias
         assertThrows(NullPointerException.class, () -> Alias.isValidAlias(null));
 
-        // invalid alias
+        // invalid alias - blank/spaces
         assertFalse(Alias.isValidAlias("")); // empty string
         assertFalse(Alias.isValidAlias("   ")); // spaces only
         assertFalse(Alias.isValidAlias("a".repeat(Alias.MAX_LENGTH + 1))); // too long
 
-        // valid alias
+        // invalid alias - contains greedy command prefixes
+        assertFalse(Alias.isValidAlias("Benjumpin al/")); // contains " al/"
+        assertFalse(Alias.isValidAlias("Striker g/")); // contains " g/"
+        assertFalse(Alias.isValidAlias("Sniper n/")); // contains " n/"
+        assertFalse(Alias.isValidAlias("Pro e/")); // contains " e/"
+        assertFalse(Alias.isValidAlias("Noob na/")); // contains " na/"
+
+        // valid alias - standard
         assertTrue(Alias.isValidAlias("fr1edDucky"));
         assertTrue(Alias.isValidAlias("da biggus brain"));
         assertTrue(Alias.isValidAlias("a".repeat(Alias.MAX_LENGTH)));
         assertTrue(Alias.isValidAlias("  trimmed alias  "));
+
+        // valid alias - contains prefix text WITHOUT leading spaces (Greedy Parsing safe)
+        assertTrue(Alias.isValidAlias("Jamal/"));
+        assertTrue(Alias.isValidAlias("Sign/"));
+        assertTrue(Alias.isValidAlias("Dog/"));
     }
 
     @Test
-    public void constructor_trimsSurroundingWhitespace() {
+    public void constructor_trimsSurroundingWhitespace_success() {
         Alias alias = new Alias("  supportMain  ");
         assertTrue(alias.equals(new Alias("supportMain")));
         assertTrue(alias.toString().equals("supportMain"));

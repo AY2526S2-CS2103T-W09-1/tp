@@ -2,6 +2,7 @@ package seedu.address.model.person;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
+import static seedu.address.logic.parser.CliSyntax.hasPrefix;
 
 /**
  * Represents a Person's name in the address book.
@@ -10,8 +11,9 @@ import static seedu.address.commons.util.AppUtil.checkArgument;
 public class Name {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Names should only contain alphanumeric characters and spaces, and it should not be blank";
-
+            "Names should only contain alphanumeric characters and spaces, and it should not be blank. "
+                    + "Additionally, names cannot contain spaces followed by command prefixes "
+                    + "(e.g., ' n/', ' p/', ' g/', ' al/').";
     /*
      * The first character of the address must not be a whitespace,
      * otherwise " " (a blank string) becomes a valid input.
@@ -35,9 +37,8 @@ public class Name {
      * Returns true if a given string is a valid name.
      */
     public static boolean isValidName(String test) {
-        return test.matches(VALIDATION_REGEX);
+        return test.matches(VALIDATION_REGEX) && !hasPrefix(test);
     }
-
 
     @Override
     public String toString() {
