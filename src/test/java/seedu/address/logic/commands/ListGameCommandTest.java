@@ -89,7 +89,8 @@ public class ListGameCommandTest {
         ListGameCommand listGameCommand = new ListGameCommand(outOfBoundIndex, null, false);
 
         assertCommandFailure(listGameCommand, model,
-                seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+                seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX
+                        + "\n" + ListGameCommand.MESSAGE_USAGE);
     }
 
     @Test

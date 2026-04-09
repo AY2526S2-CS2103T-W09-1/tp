@@ -67,7 +67,7 @@ public class EditContactCommand extends Command implements UndoableCommand {
         } else if (targetIndex != null) {
             List<Person> lastShownList = model.getFilteredPersonList();
             if (targetIndex.getZeroBased() >= lastShownList.size()) {
-                throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+                throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + "\n" + MESSAGE_USAGE);
             }
             personToEdit = lastShownList.get(targetIndex.getZeroBased());
         } else {

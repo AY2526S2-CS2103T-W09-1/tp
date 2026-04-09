@@ -156,7 +156,8 @@ public class EditAliasCommandTest {
         EditAliasCommand editAliasCommand =
                 new EditAliasCommand(outOfBoundIndex, null, game, oldAlias, newAlias, false);
         assertCommandFailure(editAliasCommand, model,
-                seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+                seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX
+                        + "\n" + EditAliasCommand.MESSAGE_USAGE);
     }
 
     @Test

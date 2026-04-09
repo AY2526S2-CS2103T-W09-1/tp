@@ -138,7 +138,8 @@ public class AddGameCommandTest {
 
         assertCommandFailure(addGameCommand,
                 model,
-                seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+                seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX
+                        + "\n" + AddGameCommand.MESSAGE_USAGE);
     }
 
     @Test

@@ -107,7 +107,8 @@ public class DeleteGameCommandTest {
         DeleteGameCommand deleteGameCommand = new DeleteGameCommand(outOfBoundIndex, null, gameToDelete, false);
 
         assertCommandFailure(deleteGameCommand, model,
-                seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+                seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX
+                        + "\n" + DeleteGameCommand.MESSAGE_USAGE);
     }
 
     @Test

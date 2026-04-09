@@ -72,7 +72,8 @@ public class DeleteContactCommandTest {
         Index outOfBoundIndex = Index.fromZeroBased(model.getFilteredPersonList().size() + 1);
         DeleteContactCommand deleteCommand = new DeleteContactCommand(outOfBoundIndex, null, false);
 
-        assertCommandFailure(deleteCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertCommandFailure(deleteCommand, model,
+                Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX + "\n" + DeleteContactCommand.MESSAGE_USAGE);
     }
 
     @Test

@@ -189,7 +189,8 @@ public class AddAliasCommandTest {
 
         assertCommandFailure(addAliasCommand,
                 model,
-                seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+                seedu.address.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX
+                        + "\n" + AddAliasCommand.MESSAGE_USAGE);
     }
 
     @Test
