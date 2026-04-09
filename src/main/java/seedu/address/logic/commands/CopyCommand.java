@@ -71,7 +71,7 @@ public class CopyCommand extends Command {
                 personToCopy = lastShownList.get(targetIndex.getZeroBased());
             } else {
                 personToCopy = lastShownList.stream()
-                        .filter(p -> p.getName().equals(targetName))
+                        .filter(p -> p.getName().fullName.equalsIgnoreCase(targetName.fullName))
                         .findFirst()
                         .orElseThrow(() -> new CommandException(MESSAGE_PERSON_NOT_FOUND));
             }
