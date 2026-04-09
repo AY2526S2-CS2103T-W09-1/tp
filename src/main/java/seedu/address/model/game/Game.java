@@ -2,13 +2,12 @@ package seedu.address.model.game;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
-import static seedu.address.logic.parser.CliSyntax.ALL_PREFIXES;
+import static seedu.address.logic.parser.CliSyntax.hasPrefix;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import seedu.address.logic.parser.Prefix;
 import seedu.address.model.person.Alias;
 
 /**
@@ -57,12 +56,7 @@ public class Game {
      * Returns true if a given string is a valid game name.
      */
     public static boolean isValidGameName(String test) {
-        for (Prefix prefix : ALL_PREFIXES) {
-            if (test.contains(" " + prefix.getPrefix())) {
-                return false;
-            }
-        }
-        return test.trim().matches(VALIDATION_REGEX);
+        return test.trim().matches(VALIDATION_REGEX) && !hasPrefix(test);
     }
 
     public Set<Alias> getAliases() {

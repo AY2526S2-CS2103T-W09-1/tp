@@ -2,9 +2,7 @@ package seedu.address.model.person;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
-import static seedu.address.logic.parser.CliSyntax.ALL_PREFIXES;
-
-import seedu.address.logic.parser.Prefix;
+import static seedu.address.logic.parser.CliSyntax.hasPrefix;
 
 /**
  * Represents one alias used by a person in Harmony.
@@ -39,13 +37,7 @@ public class Alias {
         requireNonNull(test);
         String trimmedTest = test.trim();
 
-        for (Prefix prefix : ALL_PREFIXES) {
-            if (test.contains(" " + prefix.getPrefix())) {
-                return false;
-            }
-        }
-
-        return !trimmedTest.isEmpty() && trimmedTest.length() <= MAX_LENGTH;
+        return !trimmedTest.isEmpty() && trimmedTest.length() <= MAX_LENGTH && !hasPrefix(test);
     }
 
     @Override

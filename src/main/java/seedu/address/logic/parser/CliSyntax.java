@@ -20,4 +20,23 @@ public class CliSyntax {
         PREFIX_NEW_ALIAS,
         PREFIX_NEW_NAME
     };
+
+    /**
+     * Checks if the specified string contains any defined command prefixes preceded by a space.
+     * This method is typically used for validation to prevent greedy parsing. It returns
+     * {@code false} if a reserved prefix is found, indicating the string is invalid or
+     * contains illegal prefix sequences.
+     *
+     * @param test The string to be tested.
+     * @return {@code false} if the string contains a space followed by any prefix defined
+     *     in {@code ALL_PREFIXES}; {@code true} if no such prefixes are found.
+     */
+    public static boolean hasPrefix(String test) {
+        for (Prefix prefix : ALL_PREFIXES) {
+            if (test.contains(" " + prefix.getPrefix())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

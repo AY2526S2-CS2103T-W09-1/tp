@@ -2,9 +2,7 @@ package seedu.address.model.person;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.AppUtil.checkArgument;
-import static seedu.address.logic.parser.CliSyntax.ALL_PREFIXES;
-
-import seedu.address.logic.parser.Prefix;
+import static seedu.address.logic.parser.CliSyntax.hasPrefix;
 
 /**
  * Represents a Person's name in the address book.
@@ -39,12 +37,7 @@ public class Name {
      * Returns true if a given string is a valid name.
      */
     public static boolean isValidName(String test) {
-        for (Prefix prefix : ALL_PREFIXES) {
-            if (test.contains(" " + prefix.getPrefix())) {
-                return false;
-            }
-        }
-        return test.matches(VALIDATION_REGEX);
+        return test.matches(VALIDATION_REGEX) && !hasPrefix(test);
     }
 
     @Override
