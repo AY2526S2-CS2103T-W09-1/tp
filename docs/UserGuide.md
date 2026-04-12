@@ -18,31 +18,30 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
 * [Quick start](#quick-start)
 
 **General**
-* [Viewing help : `help`](#viewing-help--help)
-* [Listing all contacts : `list`](#listing-all-contacts--list)
-* [Undoing the last command : `undo`](#undoing-the-last-command--undo)
-* [Clearing all entries : `clear`](#clearing-all-entries--clear)
-* [Changing the UI theme : `theme`](#changing-the-ui-theme--theme)
-* [Exiting the program : `exit`](#exiting-the-program--exit)
+* [Viewing help: `help`](#viewing-help-help)
+* [Listing all contacts: `list`](#listing-all-contacts-list)
+* [Undoing the last command: `undo`](#undoing-the-last-command-undo)
+* [Clearing all entries: `clear`](#clearing-all-entries-clear)
+* [Changing the UI theme: `theme`](#changing-the-ui-theme-theme)
+* [Exiting the program: `exit`](#exiting-the-program-exit)
 
 **Contact Management**
-* [Adding a contact : `contact add`](#adding-a-contact--contact-add)
-* [Viewing a contact's profile : `view`](#viewing-a-contacts-profile--view)
-* [Copying a contact : `copy`](#copying-a-contact--copy)
-* [Editing a contact's name : `contact edit`](#editing-a-contacts-name--contact-edit)
-* [Locating contacts : `find`](#locating-contacts-find)
-* [Deleting a contact : `contact delete`](#deleting-a-contact--contact-delete)
-* [Copying a contact : `copy`](#copying-a-contact--copy)
+* [Adding a contact: `contact add`](#adding-a-contact-contact-add)
+* [Viewing a contact's profile: `view`](#viewing-a-contacts-profile-view)
+* [Copying a contact: `copy`](#copying-a-contact-copy)
+* [Editing a contact's name: `contact edit`](#editing-a-contacts-name-contact-edit)
+* [Locating contacts: `find`](#locating-contacts-find)
+* [Deleting a contact: `contact delete`](#deleting-a-contact-contact-delete)
 
 **Game Management**
-* [Adding a game : `game add`](#adding-a-game-to-a-contact--game-add)
-* [Deleting a game : `game delete`](#deleting-a-game-from-a-contact--game-delete)
-* [Listing games : `game list`](#listing-games-of-a-contact--game-list)
+* [Adding a game: `game add`](#adding-a-game-to-a-contact-game-add)
+* [Deleting a game: `game delete`](#deleting-a-game-from-a-contact-game-delete)
+* [Listing games: `game list`](#listing-games-of-a-contact-game-list)
 
 **Alias Management**
-* [Adding an alias : `alias add`](#adding-an-alias-to-a-game--alias-add)
-* [Editing an alias : `alias edit`](#editing-an-alias-of-a-game--alias-edit)
-* [Deleting an alias : `alias delete`](#deleting-an-alias-from-a-game--alias-delete)
+* [Adding an alias: `alias add`](#adding-an-alias-to-a-game-alias-add)
+* [Editing an alias: `alias edit`](#editing-an-alias-of-a-game-alias-edit)
+* [Deleting an alias: `alias delete`](#deleting-an-alias-from-a-game-alias-delete)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -123,7 +122,7 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
 
 ## General
 
-### Viewing help : `help`
+### Viewing help: `help`
 
 Shows a message explaining how to access the help page.
 
@@ -132,14 +131,14 @@ Shows a message explaining how to access the help page.
 Format: `help`
 
 
-### Listing all contacts : `list`
+### Listing all contacts: `list`
 
 Shows a list of all contacts in Harmony.
 
 Format: `list`
 
 
-### Undoing the last command : `undo`
+### Undoing the last command: `undo`
 
 Reverses the most recently executed undoable command.
 
@@ -150,14 +149,14 @@ Format: `undo`
 * If there are no commands left to undo, an error message is shown.
 
 
-### Clearing all entries : `clear`
+### Clearing all entries: `clear`
 
 Clears all entries from Harmony.
 
 Format: `clear`
 
 
-### Changing the UI theme : `theme`
+### Changing the UI theme: `theme`
 
 Changes the visual appearance of the Harmony application.
 
@@ -172,7 +171,7 @@ Examples:
 * `theme rainbow`
 
 
-### Exiting the program : `exit`
+### Exiting the program: `exit`
 
 Exits the program.
 
@@ -182,7 +181,7 @@ Format: `exit`
 
 ## Contact Management
 
-### Adding a contact : `contact add`
+### Adding a contact: `contact add`
 
 Adds a contact to Harmony.
 
@@ -198,7 +197,7 @@ Examples:
 * `contact add n/Alice g/Valorant al/AliceV g/Minecraft`
 
 
-### Viewing a contact's profile : `view`
+### Viewing a contact's profile: `view`
 
 Displays the full details, including all games and aliases, of a specific contact or your own user profile in the side panel.
 
@@ -218,7 +217,7 @@ Examples:
 * `view me`
 
 
-### Editing a contact's name : `contact edit`
+### Editing a contact's name: `contact edit`
 
 Renames an existing contact or your own User Profile in Harmony.
 
@@ -290,7 +289,7 @@ Examples:
 * `find Alice g/Valorant al/Ace` returns contacts named `Alice` who play `Valorant` with the alias `Ace`.
 
 
-### Deleting a contact : `contact delete`
+### Deleting a contact: `contact delete`
 
 Deletes the specified contact from Harmony.
 
@@ -306,7 +305,7 @@ Examples:
 * `contact delete n/John Doe` prompts for confirmation, then deletes the contact named `John Doe`.
 
 
-### Copying a contact : `copy`
+### Copying a contact: `copy`
 
 Copies the exact `contact add` command for the specified contact (or your own profile) to your system clipboard. This makes it easy to share contact details with other Harmony users!
 
@@ -331,7 +330,7 @@ Examples:
 
 ## Game Management
 
-### Adding a game to a contact : `game add`
+### Adding a game to a contact: `game add`
 
 Adds a game to an existing contact or your user profile.
 
@@ -348,7 +347,7 @@ Examples:
 * `game add n/John Doe g/Valorant`
 * `game add me g/Overwatch`
 
-### Deleting a game from a contact : `game delete`
+### Deleting a game from a contact: `game delete`
 
 Removes a game from an existing contact or your user profile.
 
@@ -366,7 +365,7 @@ Examples:
 * `game delete 1 g/Minecraft` prompts for confirmation, then removes Minecraft from the 1st contact.
 * `game delete me g/Valorant` prompts for confirmation, then removes Valorant from your profile.
 
-### Listing games of a contact : `game list`
+### Listing games of a contact: `game list`
 
 Lists all games of an existing contact or your user profile.
 
@@ -391,7 +390,7 @@ Examples:
 
 </box>
 
-### Adding an alias to a game : `alias add`
+### Adding an alias to a game: `alias add`
 
 Adds an alias to a game of an existing contact or your user profile.
 
@@ -408,7 +407,7 @@ Examples:
 * `alias add 1 g/Valorant al/Benjumpin`
 * `alias add me g/Valorant al/Benjumpin`
 
-### Editing an alias of a game : `alias edit`
+### Editing an alias of a game: `alias edit`
 
 Updates an existing alias of a game for a contact or your user profile.
 
@@ -427,7 +426,7 @@ Examples:
 * `alias edit n/John Doe g/Valorant al/JohnnyV na/JohnnyValorant`
 * `alias edit me g/Valorant al/JohnnyV na/JohnnyValorant`
 
-### Deleting an alias from a game : `alias delete`
+### Deleting an alias from a game: `alias delete`
 
 Removes an alias from a game of an existing contact or your user profile.
 
