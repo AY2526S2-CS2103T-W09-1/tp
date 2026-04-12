@@ -102,7 +102,11 @@ public class DeleteContactCommand extends Command implements ConfirmableDeleteCo
 
     @Override
     public void undo(Model model) {
-        model.addPerson(personToDelete);
+        if (useUserProfile) {
+            model.setPerson(PLACEHOLDER_PROFILE, personToDelete);
+        } else {
+            model.addPerson(personToDelete);
+        }
     }
 
     @Override
