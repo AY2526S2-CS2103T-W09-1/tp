@@ -244,7 +244,7 @@ If the User Profile is not detected during runtime or start up, a PLACEHOLDER wi
 </box>
 
 <box type="warning" seamless>
-If multiple User Profiles are detected on start up, it will be deemed as a corrupt addressbook.json. This can be remedied by modifying the `addressbook.json` to only contain one `"isUserProfile" : true`
+If multiple User Profiles are detected on start up, it will be deemed as a corrupt addressbook.json. This can be remedied by modifying the `data/addressbook.json` to only contain one `"isUserProfile" : true`
 </box>
 
 --------------------------------------------------------------------------------------------------------------------
