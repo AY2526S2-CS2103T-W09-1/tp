@@ -8,10 +8,8 @@ package Logic {
 
 Class "{abstract}\nCommand" as Command
 Class "<<interface>>\nUndoableCommand" as UndoableCommand
-<<<<<<< HEAD
 Class "<<interface>>\nConfirmableDeleteCommand" as ConfirmableDeleteCommand
-=======
->>>>>>> upstream/master
+
 Class LogicManager
 Class DeleteContactCommand
 Class DeleteGameCommand
@@ -23,7 +21,6 @@ DeleteContactCommand -up-|> Command
 DeleteGameCommand -up-|> Command
 DeleteAliasCommand -up-|> Command
 
-<<<<<<< HEAD
 DeleteContactCommand .up.|> ConfirmableDeleteCommand
 DeleteGameCommand .up.|> ConfirmableDeleteCommand
 DeleteAliasCommand .up.|> ConfirmableDeleteCommand
@@ -39,18 +36,6 @@ note bottom of ConfirmableDeleteCommand
   Decoupled from UndoableCommand.
   Future commands may implement only
   one of the two interfaces.
-=======
-DeleteContactCommand .up.|> UndoableCommand
-DeleteGameCommand .up.|> UndoableCommand
-DeleteAliasCommand .up.|> UndoableCommand
-
-LogicManager .right.> Command : <<call>>
-LogicManager --> DeleteContactCommand : stores for confirmation
-
-note right of DeleteContactCommand
-  execute() returns a confirmation prompt.
-  Deletion only occurs after user types "y".
->>>>>>> upstream/master
 end note
 
 @enduml
