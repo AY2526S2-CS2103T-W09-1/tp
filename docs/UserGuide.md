@@ -94,11 +94,13 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
 **Notes about the command format:**<br>
 
 * Commands follow the format `CATEGORY ACTION`, where `CATEGORY` is `contact`, `game`, or `alias`, followed by an action such as `add`, `delete`, or `edit`.<br>
-  e.g. `contact add`, `game delete`, `alias add`.
+  e.g. `contact add`, `game delete`, `alias edit`. Note: `game` do have not `edit` but instead have `list`. Eg. `game list`
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `contact add n/NAME`, `NAME` is a parameter which can be used as `contact add n/John Doe`.
 
+* For `game` and `alias` commands, a contact can be targeted either by their index in the displayed list (`INDEX`) or by name (`n/CONTACT_NAME`).<br>
+  e.g. `game add 1 g/Valorant` and `game add n/John Doe g/Valorant` both add the game to the same contact.
 * Items in square brackets are optional.<br>
   e.g. `find KEYWORD [MORE_KEYWORDS]` can be used as `find John Doe` or as `find John`.
 
@@ -112,10 +114,12 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
   e.g. `game add 1 g/Valorant`, not `game add g/Valorant 1`.
 
 * Prefixed parameters (those using `n/`, `g/`, `al/`, etc.) can be in any order.<br>
-  e.g. `alias add n/John Doe g/Valorant al/JohnV` and `alias add g/Valorant n/John Doe al/JohnV` are both acceptable.
+  e.g. `contact add n/John Doe g/Minecraft` and `contact add g/Valorant n/John Doe` are both acceptable. Note: Game must exist before alias can be added 
 
 * Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `undo`, `clear` and `exit`) will be ignored.<br>
   e.g. `help 123` will be interpreted as `help`.
+
+* **Whitespace trimming:** Extra spaces immediately following a prefix (e.g., `n/    John`) or trailing at the end of a parameter will be automatically ignored by the system. `contact add n/John` and `contact add n/      John` will result in the exact same contact being added.
 
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
   </box>
@@ -164,13 +168,13 @@ Changes the visual appearance of the Harmony application.
 
 Format: `theme THEME_NAME`
 
-* Currently supported themes are `dark`, `light`, and `rainbow`.
+* Currently supported themes are `dark`, `light`, and an Easter Egg!
 * The `dark` theme is the default appearance.
 * The application will immediately update its interface to the specified theme.
 
 Examples:
 * `theme light`
-* `theme`
+* `theme dark`
 
 
 ### Exiting the program: `exit`
@@ -191,7 +195,12 @@ Format: `contact add n/NAME [g/GAME [al/ALIAS]…​]…​`
 
 <box type="tip" seamless>
 
-**Tip:** A contact can have any number of games and aliases (including 0). Aliases must be declared after the game they belong to.
+**Tip:** A contact can have any number of games, and aliases (including 0). Aliases must be declared after the game they belong to.
+</box>
+
+<box type="info" seamless>
+
+**Note about spacing:** Harmony automatically ignores extra spaces after prefixes. Typing `contact add n/      John Doe` is perfectly valid and will be saved correctly as `John Doe`.
 </box>
 
 Examples:
@@ -484,24 +493,22 @@ Furthermore, certain edits can cause Harmony to behave in unexpected ways (e.g.,
 
 ## Command summary
 
-| Action              | Format, Examples |
-|---------------------|-----------------|
-| **List** | `list` |
-| **Help** | `help` |
-| **Undo** | `undo` |
-| **Theme** | `theme THEME_NAME`<br> e.g., `theme light` |
-| **Contact Add** | `contact add n/NAME [g/GAME [al/ALIAS]…​]…​` <br> e.g., `contact add n/James Ho` |
-| **View** | `view INDEX` or `view n/NAME` or `view me`<br> e.g., `view me` (also: `contact view me`) |
-| **Contact Delete** | `contact delete INDEX` or `contact delete n/NAME`<br> e.g., `contact delete 1` or `contact delete n/James Ho` |
-| **Contact Edit** | `contact edit INDEX e/NEW_NAME` or `contact edit n/NAME e/NEW_NAME` or `contact edit me e/NEW_NAME`<br> e.g., `contact edit me e/James Lee` |
-| **Copy** | `copy INDEX` or `copy n/NAME` or `copy me`<br> e.g., `copy 1` |
-| **Clear** | `clear` |
-| **Alias Add** | `alias add INDEX g/GAME_NAME al/ALIAS` or `alias add n/CONTACT_NAME g/GAME_NAME al/ALIAS` or `alias add me g/GAME_NAME al/ALIAS`<br> e.g., `alias add 1 g/Valorant al/Benjumpin` |
-| **Alias Edit** | `alias edit INDEX g/GAME_NAME al/OLD_ALIAS na/NEW_ALIAS` or `alias edit n/CONTACT_NAME g/GAME_NAME al/OLD_ALIAS na/NEW_ALIAS` or `alias edit me g/GAME_NAME al/OLD_ALIAS na/NEW_ALIAS`<br> e.g., `alias edit 1 g/Valorant al/JohnnyV na/JohnnyValorant` |
-| **Alias Delete** | `alias delete INDEX g/GAME_NAME al/ALIAS` or `alias delete n/CONTACT_NAME g/GAME_NAME al/ALIAS` or `alias delete me g/GAME_NAME al/ALIAS`<br> e.g., `alias delete 1 g/Valorant al/Benjumpin` |
-| **Game Add** | `game add INDEX g/GAME_NAME` or `game add n/CONTACT_NAME g/GAME_NAME` or `game add me g/GAME_NAME`<br> e.g., `game add 1 g/Minecraft` |
-| **Game Delete** | `game delete INDEX g/GAME_NAME` or `game delete n/CONTACT_NAME g/GAME_NAME` or `game delete me g/GAME_NAME`<br> e.g., `game delete 1 g/Minecraft` |
-| **Game List** | `game list INDEX` or `game list n/CONTACT_NAME` or `game list me`<br> e.g., `game list 1` |
-| **Find (name)** | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake` |
-| **Find (game)** | `find g/GAME_NAME`<br> e.g., `find g/Valorant` |
-| **Find (alias)** | `find al/ALIAS`<br> e.g., `find al/Benjumpin` |
+| Action             | Format, Examples                                                                                                                                                       |
+|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **List**           | `list`                                                                                                                                                                 |
+| **Help**           | `help`                                                                                                                                                                 |
+| **Undo**           | `undo`                                                                                                                                                                 |
+| **Contact Add**    | `contact add n/NAME [g/GAME [al/ALIAS]…​]…​` <br> e.g., `contact add n/James Ho t/friend t/colleague`                                                                  |
+| **Contact Delete** | `contact delete INDEX` or `contact delete n/NAME`<br> e.g., `contact delete 1` or `contact delete n/James Ho`                                                          |
+| **Contact Edit**   | `contact edit INDEX e/NEW_NAME` or `contact edit n/NAME e/NEW_NAME`<br> e.g., `contact edit 1 e/James Lee` or `contact edit n/James Ho e/James Lee`                    |
+| **Contact View**   | `contact view INDEX`, `contact view n/NAME`, or `contact view me`<br> e.g., `contact view me` or `contact view 1` or `contact view n/Jamie Ho`                         |
+| **Clear**          | `clear`                                                                                                                                                                |
+| **Alias Add**      | `alias add INDEX g/GAME_NAME al/ALIAS` or `alias add n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias add 1 g/Valorant al/Benjumpin`                              |
+| **Alias Delete**   | `alias delete INDEX g/GAME_NAME al/ALIAS` or `alias delete n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias delete 1 g/Valorant al/Benjumpin`                     |
+| **Game Add**       | `game add INDEX g/GAME_NAME` or `game add n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game add 1 g/Minecraft`                                                               |
+| **Game Delete**    | `game delete INDEX g/GAME_NAME` or `game delete n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game delete 1 g/Minecraft`                                                      |
+| **Game List**      | `game list INDEX` or `game list n/CONTACT_NAME`<br> e.g., `game list 1`                                                                                                |
+| **Find (name)**    | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`                                                                                                             |
+| **Find (game)**    | `find g/GAME_NAME`<br> e.g., `find g/Valorant`                                                                                                                         |
+| **Find (alias)**   | `find al/ALIAS`<br> e.g., `find al/Benjumpin`                                                                                                                          |
+| **Theme**          | `theme THEME_NAME`<br> e.g., `theme light`                                                                                                                             |
