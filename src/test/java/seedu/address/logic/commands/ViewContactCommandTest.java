@@ -66,21 +66,31 @@ public class ViewContactCommandTest {
 
     @Test
     public void execute_validUserProfile_success() {
-        Person userProfile = model.getFilteredPersonList().get(0);
+        Person userProfile = model.getUserProfile().get();
 
         ViewContactCommand viewContactCommand = new ViewContactCommand(null, null, true);
 
-        // 2. Use the correct success message for the "me" command
         String expectedMessage = ViewContactCommand.MESSAGE_SUCCESS_SELF;
 
-        // 3. Since the command does model.updateFilteredPersonList(Person::isUserProfile);
-        // we must do the same to our expectedModel so they match at the end!
-        expectedModel.updateFilteredPersonList(Person::isUserProfile);
-
+        // view me should NOT filter the contact list — expectedModel remains unchanged
         CommandResult expectedCommandResult = new CommandResult(expectedMessage,
                 false, false, userProfile);
 
         assertCommandSuccess(viewContactCommand, model, expectedCommandResult, expectedModel);
+    }
+
+    @Test
+    public void execute_viewMe_doesNotFilterContactList() {
+        int sizeBefore = model.getFilteredPersonList().size();
+
+        ViewContactCommand viewContactCommand = new ViewContactCommand(null, null, true);
+        try {
+            viewContactCommand.execute(model);
+        } catch (Exception e) {
+            throw new AssertionError("Unexpected exception: " + e.getMessage());
+        }
+
+        assertEquals(sizeBefore, model.getFilteredPersonList().size());
     }
 
     @Test

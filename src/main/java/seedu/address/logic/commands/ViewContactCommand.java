@@ -80,7 +80,6 @@ public class ViewContactCommand extends Command {
             if (model.getUserProfile().isEmpty()) {
                 throw new CommandException(MESSAGE_NO_PROFILE);
             }
-            model.updateFilteredPersonList(Person::isUserProfile);
             Person userProfile = model.getUserProfile().get();
             return new CommandResult(MESSAGE_SUCCESS_SELF, false, false, userProfile);
         }
