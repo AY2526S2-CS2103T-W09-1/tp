@@ -144,14 +144,14 @@ Reverses the most recently executed undoable command.
 
 Format: `undo`
 
-* Undoable commands include: `contact add`, `contact delete`, `contact edit`, `game add`, `game delete`, `alias add`, `alias delete`, and `clear`.
+* Undoable commands include: `contact add`, `contact delete`, `contact edit`, `game add`, `game delete`, `alias add`, `alias edit`, `alias delete`, and `clear`.
 * Multiple consecutive `undo` calls will reverse commands in reverse order of execution.
 * If there are no commands left to undo, an error message is shown.
 
 
 ### Clearing all entries: `clear`
 
-Clears all entries from Harmony.
+Clears all contacts from Harmony. Your own user profile is preserved.
 
 Format: `clear`
 
@@ -296,7 +296,7 @@ Deletes the specified contact from Harmony.
 Format: `contact delete INDEX` or `contact delete n/NAME`
 
 * Deletes the contact at the specified `INDEX` in the displayed list, or whose name matches `NAME` (case-insensitive).
-* `INDEX` must be a positive integer (e.g., 1, 2, 3…​). Note: You can also use `0` to target your own user profile.
+* `INDEX` must be a positive integer (e.g., 1, 2, 3…​).
 * A confirmation prompt will appear. Type `y` or `yes` to confirm, or `n` or `no` to cancel.
 * Any other input cancels the deletion.
 
