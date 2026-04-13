@@ -81,7 +81,7 @@ public class CommandResult {
 
     /** Constructs a {@code CommandResult} that awaits deletion confirmation for the given person. */
     public CommandResult(String feedbackToUser, Person pendingPerson) {
-        this(feedbackToUser, false, false, true, false, requireNonNull(pendingPerson), null, null, false);
+        this(feedbackToUser, false, false, true, false, requireNonNull(pendingPerson), null, pendingPerson, false);
     }
 
     /** Returns a {@code CommandResult} that awaits clear confirmation. */

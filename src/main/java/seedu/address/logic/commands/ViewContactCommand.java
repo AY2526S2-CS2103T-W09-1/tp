@@ -2,6 +2,7 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.List;
 import java.util.Objects;
@@ -80,7 +81,7 @@ public class ViewContactCommand extends Command {
             if (model.getUserProfile().isEmpty()) {
                 throw new CommandException(MESSAGE_NO_PROFILE);
             }
-            model.updateFilteredPersonList(Person::isUserProfile);
+            model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
             Person userProfile = model.getUserProfile().get();
             return new CommandResult(MESSAGE_SUCCESS_SELF, false, false, userProfile);
         }

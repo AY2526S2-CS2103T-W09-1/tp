@@ -1,7 +1,9 @@
 package seedu.address.ui;
 
+import java.util.Optional;
 import java.util.logging.Logger;
 
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -17,6 +19,7 @@ import seedu.address.logic.Logic;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
+import seedu.address.model.person.Person;
 
 /**
  * The Main Window. Provides the basic application layout containing
@@ -36,6 +39,7 @@ public class MainWindow extends UiPart<Stage> {
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
     private ViewPanel viewPanel;
+    private Person currentlyViewedPerson = null;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -130,6 +134,35 @@ public class MainWindow extends UiPart<Stage> {
 
         viewPanel = new ViewPanel();
         viewPanelPlaceholder.getChildren().add(viewPanel.getRoot());
+
+        bindViewPanelToModel();
+    }
+    /**
+     * Passively listens to the database for any changes (edits, deletions, undos).
+     * If the currently viewed person is modified, it updates the ViewPanel automatically.
+     */
+    private void bindViewPanelToModel() {
+        // Listen to the master list of all contacts
+        logic.getFilteredPersonList().addListener((ListChangeListener<Person>) change -> {
+
+            if (currentlyViewedPerson != null && !currentlyViewedPerson.isUserProfile()) {
+
+                // Find if our viewed person is still in the newly updated list
+                Optional<Person> updatedPerson = logic.getFilteredPersonList().stream()
+                        .filter(p -> p.isSamePerson(currentlyViewedPerson))
+                        .findFirst();
+
+                if (updatedPerson.isEmpty()) {
+                    // They were deleted or undone!
+                    viewPanel.clearPerson();
+                    currentlyViewedPerson = null;
+                } else {
+                    // They were edited (e.g., a game was added)! Refresh the panel.
+                    currentlyViewedPerson = updatedPerson.get();
+                    viewPanel.setPerson(currentlyViewedPerson);
+                }
+            }
+        });
     }
 
     /**
@@ -189,8 +222,10 @@ public class MainWindow extends UiPart<Stage> {
 
             if (commandResult.isClearView()) {
                 viewPanel.clearPerson();
+                currentlyViewedPerson = null;
             } else if (commandResult.getViewedPerson() != null) {
                 viewPanel.setPerson(commandResult.getViewedPerson());
+                currentlyViewedPerson = commandResult.getViewedPerson();
             }
 
             if (commandResult.isShowHelp()) {
