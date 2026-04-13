@@ -65,7 +65,7 @@ public class LogicManager implements Logic {
         }
 
         CommandResult commandResult;
-        Command command = commandText.trim().equals(UndoCommand.COMMAND_WORD)
+        Command command = commandText.trim().split("\\s+")[0].equals(UndoCommand.COMMAND_WORD)
                 ? new UndoCommand(commandHistory)
                 : addressBookParser.parseCommand(commandText);
         commandResult = command.execute(model);

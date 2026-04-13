@@ -114,7 +114,7 @@ Harmony is a **desktop app for managing contacts and their gaming aliases, optim
 * Prefixed parameters (those using `n/`, `g/`, `al/`, etc.) can be in any order.<br>
   e.g. `alias add n/John Doe g/Valorant al/JohnV` and `alias add g/Valorant n/John Doe al/JohnV` are both acceptable.
 
-* Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.<br>
+* Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `undo`, `clear` and `exit`) will be ignored.<br>
   e.g. `help 123` will be interpreted as `help`.
 
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
