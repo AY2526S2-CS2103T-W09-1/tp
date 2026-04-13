@@ -17,6 +17,10 @@ Harmony is a **desktop app built for gamers** 🎮 who want to **manage their ga
 **Getting Started**
 * [Quick start](#quick-start)
 
+**Features**
+* [Notes about the command format](#features)
+* [Your User Profile](#your-user-profile)
+
 **General**
 * [Viewing help: `help`](#viewing-help-help)
 * [Listing all contacts: `list`](#listing-all-contacts-list)
@@ -42,6 +46,15 @@ Harmony is a **desktop app built for gamers** 🎮 who want to **manage their ga
 * [Adding an alias: `alias add`](#adding-an-alias-to-a-game-alias-add)
 * [Editing an alias: `alias edit`](#editing-an-alias-of-a-game-alias-edit)
 * [Deleting an alias: `alias delete`](#deleting-an-alias-from-a-game-alias-delete)
+
+**Data Management**
+* [Saving the data](#saving-the-data)
+* [Editing the data file](#editing-the-data-file)
+
+**Reference**
+* [FAQ](#faq)
+* [Known issues](#known-issues)
+* [Command summary](#command-summary)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -169,12 +182,13 @@ Harmony is a **desktop app built for gamers** 🎮 who want to **manage their ga
 
 ## Features
 
-<box type="info" seamless>
+### Notes about the command format
 
-**Notes about the command format:**<br>
+<box type="info" seamless>
+<br>
 
 * Commands follow the format `CATEGORY ACTION`, where `CATEGORY` is `contact`, `game`, or `alias`, followed by an action such as `add`, `delete`, or `edit`.<br>
-  e.g. `contact add`, `game delete`, `alias edit`. Note: `game` do have not `edit` but instead have `list`. Eg. `game list`
+  e.g. `contact add`, `game delete`, `alias edit`. Note: `game` does not support `edit` — to rename a game, delete it and add a new one.
 
 * Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
   e.g. in `contact add n/NAME`, `NAME` is a parameter which can be used as `contact add n/John Doe`.
@@ -320,6 +334,7 @@ Examples:
 
 ### Viewing a contact's profile: `view`
 
+
 Displays the full details, including all games and aliases, of a specific contact or your own user profile in the side panel.
 
 Format:
@@ -340,6 +355,28 @@ Examples:
 * `view 1`
 * `view n/John Doe`
 * `view me`
+
+
+### Copying a contact: `copy`
+
+Copies the exact `contact add` command for the specified contact (or your own profile) to your system clipboard. This makes it easy to share contact details with other Harmony users!
+
+Format:
+* By index: `copy INDEX`
+* By name: `copy n/NAME`
+* User Profile: `copy me`
+
+The copied output will look like:
+```
+contact add n/John Doe g/Valorant al/JohnnyV g/Minecraft
+```
+
+Your friend can paste this command directly into their own Harmony command box to add you as a contact, complete with all your games and aliases.
+
+Examples:
+* `copy 1`
+* `copy n/John Doe`
+* `copy me`
 
 
 ### Editing a contact's name: `contact edit`
@@ -408,27 +445,6 @@ Examples:
 * `contact delete 1` prompts for confirmation, then deletes the 1st contact in the list.
 * `contact delete n/John Doe` prompts for confirmation, then deletes the contact named `John Doe`.
 
-
-### Copying a contact: `copy`
-
-Copies the exact `contact add` command for the specified contact (or your own profile) to your system clipboard. This makes it easy to share contact details with other Harmony users!
-
-Format:
-* By index: `copy INDEX`
-* By name: `copy n/NAME`
-* User Profile: `copy me`
-
-The copied output will look like:
-```
-contact add n/John Doe g/Valorant al/JohnnyV g/Minecraft
-```
-
-Your friend can paste this command directly into their own Harmony command box to add you as a contact, complete with all your games and aliases.
-
-Examples:
-* `copy 1`
-* `copy n/John Doe`
-* `copy me`
 
 --------------------------------------------------------------------------------------------------------------------
 
