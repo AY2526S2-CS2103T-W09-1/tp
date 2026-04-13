@@ -599,6 +599,7 @@ It is recommended to regularly back up your `addressbook.json` file to a secure 
 ### Editing the data file
 
 Harmony data is saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
+* With the addition of the User Profile, a common data corruption issue was due to having multiple UserProfiles. This can be remedied by ensuring only one `"isUserProfile" : true` exists.
 
 <box type="warning" seamless>
 
