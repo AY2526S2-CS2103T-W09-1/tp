@@ -441,16 +441,20 @@ Examples:
 
 Deletes the specified contact from Harmony.
 
-Format: `contact delete INDEX` or `contact delete n/NAME`
+Format: 
+* By index: `contact delete INDEX`
+* By name: `contact delete n/NAME`
+* User Profile: `contact delete me`
 
 * Deletes the contact at the specified `INDEX` in the displayed list, or whose name matches `NAME` (case-insensitive).
+* If `me` is specified, the User Profile will be targeted to be reset to `PLACEHOLDER`.
 * A confirmation prompt will appear. Type `y` or `yes` to confirm, or `n` or `no` to cancel.
 * Any other input cancels the deletion.
 
 Examples:
 * `contact delete 1` prompts for confirmation, then deletes the 1st contact in the list.
 * `contact delete n/John Doe` prompts for confirmation, then deletes the contact named `John Doe`.
-
+* `contact delete me` prompts for confirmation, then reset the User Profile to `PLACEHOLDER`
 
 --------------------------------------------------------------------------------------------------------------------
 
