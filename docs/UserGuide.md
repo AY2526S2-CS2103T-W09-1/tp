@@ -155,6 +155,8 @@ Clears all contacts from Harmony. Your own user profile is preserved.
 
 Format: `clear`
 
+* A confirmation prompt will appear. Type `y` or `yes` to confirm, or `n` or `no` to cancel.
+
 
 ### Changing the UI theme: `theme`
 
@@ -168,7 +170,7 @@ Format: `theme THEME_NAME`
 
 Examples:
 * `theme light`
-* `theme rainbow`
+* `theme`
 
 
 ### Exiting the program: `exit`
