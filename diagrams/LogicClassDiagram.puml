@@ -86,20 +86,6 @@ UndoCommand -up-|> Command
 ' UndoCommand calls undo(Model) on the command popped from commandHistory.
 UndoCommand .right.> UndoableCommand : <<call undo>>
 
-note bottom of AddGameCommand
-  Undoable commands (implement UndoableCommand):
-  AddContactCommand, DeleteContactCommand,
-  EditContactCommand, AddAliasCommand,
-  DeleteAliasCommand, EditAliasCommand,
-  AddGameCommand, DeleteGameCommand, ClearCommand
-end note
-
-note bottom of EditContactCommand
-  Non-undoable commands (extend Command only):
-  ListCommand, FindCommand, HelpCommand,
-  ThemeCommand, CopyCommand, ExitCommand
-end note
-
 ' LogicManager calls execute(Model) on the parsed Command.
 LogicManager .left.> Command : <<call>>
 
