@@ -208,7 +208,7 @@ The following sequence diagram proves the UI-Logic decoupling during this intera
 #### Design Considerations:
 * **UI vs Logic State Tracking:** By placing `CommandHistory.java` inside the `logic` package, we achieve 100% test coverage of the pointer math (including floor and ceiling boundary checks) using standard, lightning-fast headless JUnit tests, entirely bypassing the JavaFX Toolkit lifecycle.
 
-### \[Proposed\] Undo/redo feature
+
 ### Editing a contact's name feature
 
 #### Implementation
