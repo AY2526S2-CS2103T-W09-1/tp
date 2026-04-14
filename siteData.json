@@ -52,7 +52,6 @@
         "implementation": "Implementation",
         "copy-command-feature": "Copy Command Feature",
         "command-history-navigation-up-down-arrows": "Command History Navigation (Up/Down Arrows)",
-        "proposed-undo-redo-feature": "[Proposed] Undo/redo feature",
         "editing-a-contact-s-name-feature": "Editing a contact's name feature",
         "undo-feature": "Undo feature",
         "delete-confirmation-feature": "Delete Confirmation Feature",
