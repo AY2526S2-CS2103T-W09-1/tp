@@ -31,9 +31,9 @@ Harmony is a **desktop app built for gamers** 🎮 who want to **manage their ga
 
 **Contact Management**
 * [Adding a contact: `contact add`](#adding-a-contact-contact-add)
-* [Viewing a contact's profile: `view`](#viewing-a-contacts-profile-view)
+* [Viewing a contact's profile: `view`](#viewing-a-contact-s-profile-view)
 * [Copying a contact: `copy`](#copying-a-contact-copy)
-* [Editing a contact's name: `contact edit`](#editing-a-contacts-name-contact-edit)
+* [Editing a contact's name: `contact edit`](#editing-a-contact-s-name-contact-edit)
 * [Locating contacts: `find`](#locating-contacts-find)
 * [Deleting a contact: `contact delete`](#deleting-a-contact-contact-delete)
 
