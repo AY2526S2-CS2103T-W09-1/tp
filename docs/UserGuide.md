@@ -381,7 +381,7 @@ Examples:
 Displays the full details, including all games and aliases, of a specific contact or your own user profile in the side panel.
 
 **Side panel after `view n/Alice`**<br>
-<p align="center"><img width="70%" alt="View command result" src="images/he"/></p>
+<p align="center"><img width="70%" alt="View command result" src="images/viewResult.png"/></p>
 
 Format:
 * By index: `view INDEX`
