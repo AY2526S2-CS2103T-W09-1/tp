@@ -18,7 +18,7 @@ public class AddContactCommand extends Command implements UndoableCommand {
 
     public static final String COMMAND_WORD = "contact add";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a person to the address book. "
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds a person to the contact list. "
             + "Parameters: "
             + PREFIX_NAME + "NAME "
             + "[" + PREFIX_GAME + "GAME] "
@@ -31,7 +31,7 @@ public class AddContactCommand extends Command implements UndoableCommand {
             + PREFIX_GAME + "Minecraft";
 
     public static final String MESSAGE_SUCCESS = "Contact added: %1$s";
-    public static final String MESSAGE_DUPLICATE_PERSON = "Error: Contact already exists in the address book";
+    public static final String MESSAGE_DUPLICATE_PERSON = "Error: Contact already exists in the contact list";
 
     private final Person toAdd;
 
