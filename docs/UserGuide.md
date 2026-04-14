@@ -86,7 +86,7 @@ Harmony is a **desktop app built for gamers** 🎮 who want to **manage their ga
    Open the **DOS prompt** or **PowerShell** (**not** the WSL terminal) and run:
    ```
    cd path\to\folder
-   java -jar "harmony.jar"
+   java -jar "[CS2103-T09-1][Harmony].jar"
    ```
 
    <box type="info" seamless>
@@ -102,7 +102,7 @@ Harmony is a **desktop app built for gamers** 🎮 who want to **manage their ga
    Open **Terminal** and run:
    ```
    cd path/to/folder
-   java -jar "harmony.jar"
+   java -jar "[CS2103-T09-1][Harmony].jar"
    ```
 
    <box type="info" seamless>
@@ -118,7 +118,7 @@ Harmony is a **desktop app built for gamers** 🎮 who want to **manage their ga
    Open a **terminal** and run:
    ```
    cd path/to/folder
-   java -jar "harmony.jar"
+   java -jar "[CS2103-T09-1][Harmony].jar"
    ```
 
    <box type="info" seamless>
@@ -132,7 +132,7 @@ Harmony is a **desktop app built for gamers** 🎮 who want to **manage their ga
 
    **Wayland display server:** If the app fails with a `Gdk-CRITICAL` error, run this instead:
    ```
-   GDK_BACKEND=x11 java -jar "harmony.jar"
+   GDK_BACKEND=x11 java -jar "[CS2103-T09-1][Harmony].jar"
    ```
 
    </box>
@@ -228,17 +228,23 @@ You can interact with your User Profile using the `me` keyword in place of an in
 * `contact edit me e/ProGamer` — rename your profile
 * `game add me g/Valorant` — add a game to your profile
 * `alias add me g/Valorant al/ProV` — add an alias to a game on your profile
-
+* `contact delete me` — resets the profile to "PLACEHOLDER"
 <box type="tip" seamless>
 
 Your User Profile always appears at the top of the contact list. It is not counted in the contact list total displayed after commands like `list` or `find`.
 
 </box>
 
+<box type="tip" seamless>
+If the User Profile is not detected during runtime or start up, a PLACEHOLDER will be generated.
+</box>
+
 <box type="warning" seamless>
-
 `me` is a special reserved keyword — it is **not** the same as `n/me`. Parameter `n/me` refers to contacts whose name is "me", whereas `me` specifically targets your own User Profile.
+</box>
 
+<box type="warning" seamless>
+If multiple User Profiles are detected on start up, it will be deemed as a corrupt addressbook.json. This can be remedied by modifying the `data/addressbook.json` to only contain one `"isUserProfile" : true`
 </box>
 
 --------------------------------------------------------------------------------------------------------------------
@@ -435,16 +441,20 @@ Examples:
 
 Deletes the specified contact from Harmony.
 
-Format: `contact delete INDEX` or `contact delete n/NAME`
+Format: 
+* By index: `contact delete INDEX`
+* By name: `contact delete n/NAME`
+* User Profile: `contact delete me`
 
 * Deletes the contact at the specified `INDEX` in the displayed list, or whose name matches `NAME` (case-insensitive).
+* If `me` is specified, the User Profile will be targeted to be reset to `PLACEHOLDER`.
 * A confirmation prompt will appear. Type `y` or `yes` to confirm, or `n` or `no` to cancel.
 * Any other input cancels the deletion.
 
 Examples:
 * `contact delete 1` prompts for confirmation, then deletes the 1st contact in the list.
 * `contact delete n/John Doe` prompts for confirmation, then deletes the contact named `John Doe`.
-
+* `contact delete me` prompts for confirmation, then reset the User Profile to `PLACEHOLDER`
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -589,6 +599,7 @@ It is recommended to regularly back up your `addressbook.json` file to a secure 
 ### Editing the data file
 
 Harmony data is saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
+* With the addition of the User Profile, a common data corruption issue was due to having multiple UserProfiles. This can be remedied by ensuring only one `"isUserProfile" : true` exists.
 
 <box type="warning" seamless>
 
@@ -615,20 +626,20 @@ Furthermore, certain edits can cause Harmony to behave in unexpected ways (e.g.,
 
 ## Command summary
 
-| Action             | Format, Examples                                                                                                                                                       |
-|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **List**           | `list`                                                                                                                                                                 |
-| **Help**           | `help`                                                                                                                                                                 |
-| **Undo**           | `undo`                                                                                                                                                                 |
-| **Contact Add**    | `contact add n/NAME [g/GAME [al/ALIAS]…​]…​` <br> e.g., `contact add n/James Ho t/friend t/colleague`                                                                  |
-| **Contact Delete** | `contact delete INDEX` or `contact delete n/NAME`<br> e.g., `contact delete 1` or `contact delete n/James Ho`                                                          |
-| **Contact Edit**   | `contact edit INDEX e/NEW_NAME` or `contact edit n/NAME e/NEW_NAME`<br> e.g., `contact edit 1 e/James Lee` or `contact edit n/James Ho e/James Lee`                    |
-| **Contact View**   | `contact view INDEX`, `contact view n/NAME`, or `contact view me`<br> e.g., `contact view me` or `contact view 1` or `contact view n/Jamie Ho`                         |
-| **Clear**          | `clear`                                                                                                                                                                |
-| **Alias Add**      | `alias add INDEX g/GAME_NAME al/ALIAS` or `alias add n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias add 1 g/Valorant al/Benjumpin`                              |
-| **Alias Delete**   | `alias delete INDEX g/GAME_NAME al/ALIAS` or `alias delete n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias delete 1 g/Valorant al/Benjumpin`                     |
-| **Game Add**       | `game add INDEX g/GAME_NAME` or `game add n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game add 1 g/Minecraft`                                                               |
-| **Game Delete**    | `game delete INDEX g/GAME_NAME` or `game delete n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game delete 1 g/Minecraft`                                                      |
-| **Game List**      | `game list INDEX` or `game list n/CONTACT_NAME`<br> e.g., `game list 1`                                                                                                |
-| **Find**           | `find [n/NAME] [g/GAME_NAME] [al/ALIAS]`<br> e.g., `find n/Alice`, `find g/Valorant`, `find n/Alice g/Valorant al/Ace`                                                 |
-| **Theme**          | `theme THEME_NAME`<br> e.g., `theme light`                                                                                                                             |
+| Action             | Format, Examples                                                                                                                                              |
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **List**           | `list`                                                                                                                                                        |
+| **Help**           | `help`                                                                                                                                                        |
+| **Undo**           | `undo`                                                                                                                                                        |
+| **Contact Add**    | `contact add n/NAME [g/GAME [al/ALIAS]…​]…​` <br> e.g., `contact add n/James Ho t/friend t/colleague`                                                         |
+| **Contact Delete** | `contact delete INDEX` or `contact delete n/NAME` or `contact delete me` <br> e.g., `contact delete 1` or `contact delete n/James Ho` or `contact delete me`  |
+| **Contact Edit**   | `contact edit INDEX e/NEW_NAME` or `contact edit n/NAME e/NEW_NAME`<br> e.g., `contact edit 1 e/James Lee` or `contact edit n/James Ho e/James Lee`           |
+| **Contact View**   | `contact view INDEX`, `contact view n/NAME`, or `contact view me`<br> e.g., `contact view me` or `contact view 1` or `contact view n/Jamie Ho`                |
+| **Clear**          | `clear`                                                                                                                                                       |
+| **Alias Add**      | `alias add INDEX g/GAME_NAME al/ALIAS` or `alias add n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias add 1 g/Valorant al/Benjumpin`                     |
+| **Alias Delete**   | `alias delete INDEX g/GAME_NAME al/ALIAS` or `alias delete n/CONTACT_NAME g/GAME_NAME al/ALIAS`<br> e.g., `alias delete 1 g/Valorant al/Benjumpin`            |
+| **Game Add**       | `game add INDEX g/GAME_NAME` or `game add n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game add 1 g/Minecraft`                                                      |
+| **Game Delete**    | `game delete INDEX g/GAME_NAME` or `game delete n/CONTACT_NAME g/GAME_NAME`<br> e.g., `game delete 1 g/Minecraft`                                             |
+| **Game List**      | `game list INDEX` or `game list n/CONTACT_NAME`<br> e.g., `game list 1`                                                                                       |
+| **Find**           | `find [n/NAME] [g/GAME_NAME] [al/ALIAS]`<br> e.g., `find n/Alice`, `find g/Valorant`, `find n/Alice g/Valorant al/Ace`                                        |
+| **Theme**          | `theme THEME_NAME`<br> e.g., `theme light`                                                                                                                    |

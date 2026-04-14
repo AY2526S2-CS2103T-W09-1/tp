@@ -544,10 +544,20 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 1. User requests to remove a specific game from a contact.
-2. System removes the game from the contact.
-3. System displays the contact’s detail panel.
+2. System displays confirmation message for deletion
+3. User enters "y"
+4. System removes the game from the contact.
+5. System displays the contact’s detail panel.
 
    Use case ends.
+
+**Extensions**
+* 3a. User enters "n"
+    * 3a1. System aborts the deletion
+    * 3a2. System displays message that the deletion was aborted
+
+      Use case ends.
+
 
 ### Non-Functional Requirements
 
@@ -593,13 +603,13 @@ testers are expected to do more *exploratory* testing.
    1. Prerequisites: List all persons using the `list` command. Multiple persons in the list.
 
    2. Test case: `contact delete 1`<br>
-      Expected: First contact is deleted from the list. Details of the deleted contact shown in the status message. Timestamp in the status bar is updated.
+      Expected: First contact is deleted from the list. A message appears confirming the reset of the UserProfile. y/yes results in deletion and details of the deleted contact shown in the status message, n/no cancels the operation. Timestamp in the status bar is updated.
 
-   3. Test case: `contact delete 0`<br>
-      Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
+   3. Test case: `contact delete me`<br>
+      Expected: A message appears confirming the reset of the UserProfile. y/yes results in reset to PLACEHOLDER UserProfile, n/no cancels the operation.
 
    4. Other incorrect delete commands to try: `contact delete`, `contact delete x`, `...` (where x is larger than the list size)<br>
-      Expected: Similar to previous.
+      Expected: No person is deleted. Error details shown in the status message. Status bar remains the same.
 
 
 ### Editing a contact's name
