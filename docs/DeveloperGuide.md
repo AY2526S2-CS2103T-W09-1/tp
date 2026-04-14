@@ -647,3 +647,5 @@ Team size: 5
 * <b>Make the command result window to scale with text.</b> The current command result window is too small to fully view the result of the command. This might prevent users from viewing the full result without breaking from "full CLI"
 * <b>Make the Contact List panel scroll without mouse input.</b> The current Contact List panel can only be manipulated with a mouse (barring the find command to reduce the size of the list) once again breaking from "full CLI"
 * <b>Modify the scaling of components when application window is resized.</b> Currently, resizing the application window makes the command result wider, and the bottom view panels the same scaling, which does not translate well for the user experience on larger screens.
+* <b>Make the UI reflect the changes from the undo command.</b> Currently undo command only refresh the UI but does not show the previous changes.
+* <b>Add the ability to edit Game.</b> At the moment, Games can only be created, deleted, and listed. If a Game were to be entered wrongly, the user would have to delete it and recreate it, which is troublesome.
