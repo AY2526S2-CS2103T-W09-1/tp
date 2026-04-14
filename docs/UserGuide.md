@@ -147,10 +147,10 @@ Harmony is a **desktop app built for gamers** 🎮 who want to **manage their ga
    </box>
 
    A GUI similar to the below should appear in a few seconds.<br>
-   ![Ui](images/Ui.png)
+   <p align="center"><img width="70%" alt="Ui" src="images/Ui.png"/></p>
 
    **Harmony UI components**<br>
-   ![Harmony UI Components](images/UiAnnotated.png)
+   <p align="center"><img width="70%" alt="Harmony UI Components" src="images/UiAnnotated.png"/></p>
 
 6. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br><br>
    Some example commands you can try:
@@ -262,7 +262,7 @@ If multiple User Profiles are detected on start up, it will be deemed as a corru
 
 Shows a message explaining how to access the help page.
 
-![help message](images/helpMessage.png)
+<p align="center"><img width="70%" alt="help message" src="images/helpMessage.png"/></p>
 
 Format: `help`
 
@@ -310,7 +310,7 @@ A confirmation prompt will appear. Type `y` or `yes` to confirm, or `n` or `no` 
 </box>
 
 **Confirmation prompt**<br>
-![Clear confirmation prompt](images/clearConfirmation.png)
+<p align="center"><img width="70%" alt="Clear confirmation prompt" src="images/clearConfirmation.png"/></p>
 
 
 ### Changing the UI theme: `theme`
@@ -328,10 +328,10 @@ Format: `theme THEME_NAME`
 </box>
 
 **Light theme**<br>
-![Light theme](images/themeLight.png)
+<p align="center"><img width="70%" alt="Light theme" src="images/themeLight.png"/></p>
 
 **Dark theme**<br>
-![Dark theme](images/themeDark.png)
+<p align="center"><img width="70%" alt="Dark theme" src="images/themeDark.png"/></p>
 
 Examples:
 * `theme light`
@@ -381,7 +381,7 @@ Examples:
 Displays the full details, including all games and aliases, of a specific contact or your own user profile in the side panel.
 
 **Side panel after `view n/Alice`**<br>
-![View command result](images/he)
+<p align="center"><img width="70%" alt="View command result" src="images/he"/></p>
 
 Format:
 * By index: `view INDEX`
