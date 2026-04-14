@@ -65,7 +65,8 @@
         "appendix-instructions-for-manual-testing": "Appendix: Instructions for manual testing",
         "launch-and-shutdown": "Launch and shutdown",
         "deleting-a-person": "Deleting a person",
-        "editing-a-contact-s-name": "Editing a contact's name"
+        "editing-a-contact-s-name": "Editing a contact's name",
+        "appendix-planned-enhancement": "Appendix: Planned Enhancement"
       },
       "headingKeywords": {}
     },
