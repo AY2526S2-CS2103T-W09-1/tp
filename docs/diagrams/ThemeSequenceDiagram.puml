@@ -6,7 +6,6 @@ participant ":LogicManager" as LogicManager LOGIC_COLOR
 participant ":AddressBookParser" as AddressBookParser LOGIC_COLOR
 participant ":ThemeCommandParser" as ThemeCommandParser LOGIC_COLOR
 participant "t:ThemeCommand" as ThemeCommand LOGIC_COLOR
-participant "r:CommandResult" as CommandResult LOGIC_COLOR
 end box
 
 box UI UI_COLOR_T1
@@ -50,17 +49,10 @@ deactivate AddressBookParser
 LogicManager -> ThemeCommand : execute()
 activate ThemeCommand
 
-create CommandResult
-ThemeCommand -> CommandResult : CommandResult(msg, "light")
-activate CommandResult
-
-CommandResult --> ThemeCommand : r
-deactivate CommandResult
-
-ThemeCommand --> LogicManager : r
+ThemeCommand --> LogicManager : CommandResult(msg, "light")
 deactivate ThemeCommand
 
-LogicManager --> MainWindow : r
+LogicManager --> MainWindow : CommandResult(msg, "light")
 deactivate LogicManager
 
 MainWindow -> MainWindow : handleThemeSwitch("light")
