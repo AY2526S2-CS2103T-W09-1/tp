@@ -7,21 +7,18 @@ participant ":CommandBox" as CommandBox UI_COLOR
 participant "commandTextField:TextField" as TextField UI_COLOR
 end box
 
-box Logic LOGIC_COLOR_T1
-participant "commandHistory:CommandHistory" as CommandHistory LOGIC_COLOR
-end box
-
-[-> CommandBox : handleKeyPress(KeyEvent.UP)
+[-> CommandBox : handleKeyPress(event)
 activate CommandBox
 
-CommandBox -> CommandHistory : getPrevious()
-activate CommandHistory
+opt [KeyCode.UP pressed && historyPointer > 0]
+    CommandBox -> CommandBox : historyPointer--
+    activate CommandBox
+    deactivate CommandBox
 
-CommandHistory --> CommandBox : previousCommandText
-deactivate CommandHistory
+    CommandBox -> CommandBox : setCommandTextFromHistory()
+    activate CommandBox
 
-opt previousCommandText is not empty
-    CommandBox -> TextField : setText(previousCommandText)
+    CommandBox -> TextField : setText(commandText)
     activate TextField
     TextField --> CommandBox
     deactivate TextField
@@ -30,6 +27,8 @@ opt previousCommandText is not empty
     activate TextField
     TextField --> CommandBox
     deactivate TextField
+
+    deactivate CommandBox
 end
 
 [<-- CommandBox
