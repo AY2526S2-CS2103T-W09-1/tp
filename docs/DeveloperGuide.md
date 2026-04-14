@@ -193,8 +193,14 @@ To improve the Quality of Life (QoL) of the CLI interface, users can navigate th
 The command history state is managed directly within the `CommandBox` UI component. Because the history is only relevant to the current user session and involves direct manipulation of the JavaFX text field and caret position, a lightweight, self-contained implementation was chosen to minimize unnecessary dependencies between the UI and Logic components.
 
 The state is tracked using two internal variables:
-* `commandHistory`: An `ArrayList` storing the string values of previously executed commands.
+* `commandHistory`: An `ArrayList` storing the string values of previously submitted commands.
 * `historyPointer`: An integer tracking the user's current index during navigation.
+
+<box type="info" seamless>
+
+Commands are added to `commandHistory` **before** execution is attempted. This means commands that fail (e.g. due to invalid input) are still stored and accessible via the Up arrow. This is intentional — it allows users to quickly retrieve and correct a malformed command without retyping it.
+
+</box>
 
 Step-by-step execution for navigating backwards:
 1. The user presses the Up arrow key while focused on the text field.
